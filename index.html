@@ -682,6 +682,9 @@
     }
 
     function switchTab(tab) {
+      // simpan tab aktif ke localStorage
+      localStorage.setItem("sakit_active_tab", tab);
+    
       tabButtons.forEach((btn) => {
         btn.classList.toggle("active", btn.dataset.tab === tab);
       });
@@ -1243,6 +1246,16 @@
       await loadInputTable();
       await loadRekapTable();
       await loadRekapBulanan();
+    
+      // baca tab terakhir dari localStorage
+      const savedTab = localStorage.getItem("sakit_active_tab");
+      const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
+    
+      if (savedTab && allowedTabs.includes(savedTab)) {
+        switchTab(savedTab);
+      } else {
+        switchTab("input"); // default kalau belum ada
+      }
     });
   </script>
 </body>
