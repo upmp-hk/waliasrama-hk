@@ -192,7 +192,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 520px; /* lebih kecil biar nggak terlalu melebar di mobile */
+      min-width: 520px;
     }
 
     thead {
@@ -506,7 +506,6 @@
             <thead>
               <tr>
                 <th class="col-no">No</th>
-                <th>NIS</th>
                 <th>Nama Santri</th>
                 <th>Alasan Sakit</th>
               </tr>
@@ -706,10 +705,9 @@
     }
 
     function getMonthRange(monthStr) {
-      // monthStr: 'YYYY-MM'
       const [yearStr, monthStr2] = monthStr.split("-");
       const year = Number(yearStr);
-      const month = Number(monthStr2); // 1-12
+      const month = Number(monthStr2);
       if (!year || !month) return null;
       const first = new Date(year, month - 1, 1);
       const last = new Date(year, month, 0);
@@ -788,7 +786,7 @@
 
       if (!santri || santri.length === 0) {
         inputTableBody.innerHTML =
-          '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
+          '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
         return;
       }
 
@@ -818,10 +816,6 @@
         tdNo.classList.add("col-no");
         tdNo.textContent = index + 1;
 
-        const tdNis = document.createElement("td");
-        tdNis.classList.add("nis-cell");
-        tdNis.textContent = s.nis;
-
         const tdNama = document.createElement("td");
         tdNama.textContent = s.nama;
 
@@ -835,7 +829,6 @@
         tdAlasan.appendChild(inp);
 
         tr.appendChild(tdNo);
-        tr.appendChild(tdNis);
         tr.appendChild(tdNama);
         tr.appendChild(tdAlasan);
 
