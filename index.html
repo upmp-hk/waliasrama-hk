@@ -505,485 +505,557 @@
     </p>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // =======================
-    // 1. DATA SANTRI (MASTER)
-    // =======================
-    // Ganti data contoh ini dengan data asli (bisa di-generate dari database / Supabase).
-    const santriMaster = [
-      {
-        id: 1,
-        nis: "20230001",
-        nama: "Ahmad Fulan",
-        tahunAjaran: "2025/2026",
-        semester: "Ganjil",
-        jenjang: "MTs",
-        kelas: "VII",
-        paralel: "A",
-      },
-      {
-        id: 2,
-        nis: "20230002",
-        nama: "Muhammad Yusuf",
-        tahunAjaran: "2025/2026",
-        semester: "Ganjil",
-        jenjang: "MTs",
-        kelas: "VII",
-        paralel: "B",
-      },
-      {
-        id: 3,
-        nis: "20220011",
-        nama: "Siti Aisyah",
-        tahunAjaran: "2025/2026",
-        semester: "Ganjil",
-        jenjang: "MA",
-        kelas: "X IPA 1",
-        paralel: "A",
-      },
-      // Tambah lagi sesuai kebutuhan...
+  // =======================
+  // 0. KONFIGURASI SUPABASE
+  // =======================
+  const { createClient } = supabase;
+
+  const SUPABASE_URL = "https://szbhghiryzbfivriksnu.supabase.co"; // ganti
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6YmhnaGlyeXpiZml2cmlrc251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzIwNTYsImV4cCI6MjA3OTkwODA1Nn0.0FJ_Fu5qv7n6mnsNd9rWRJ80yHr2T31ar4q8Rv4rWbo"; // ganti
+
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // =======================
+  // 1. DATA SANTRI (MASTER)
+  // =======================
+  // Akan di-load dari tabel santri_master
+  let santriMaster = [];
+
+  async function loadSantriMaster() {
+    const { data, error } = await db
+      .from("santri_master")
+      .select(
+        "id, nis, nama, tahun_ajaran, semester, jenjang, kelas, paralel, aktif"
+      )
+      .eq("aktif", true)
+      .order("nama", { ascending: true });
+
+    if (error) {
+      console.error("Gagal load santri_master:", error);
+      alert("Gagal memuat data santri. Cek koneksi/Supabase.");
+      return;
+    }
+
+    santriMaster = data || [];
+    console.log("Santri master loaded:", santriMaster.length);
+  }
+
+  // =======================
+  // 2. DOM ELEMENTS
+  // =======================
+  const tanggalInput = document.getElementById("tanggalInput");
+  const filterKelasInput = document.getElementById("filterKelas");
+  const filterParalelInput = document.getElementById("filterParalel");
+  const tableBody = document.getElementById("tableBody");
+
+  const btnLoad = document.getElementById("btnLoad");
+  const btnAddRow = document.getElementById("btnAddRow");
+  const btnAddRowBottom = document.getElementById("btnAddRowBottom");
+  const btnSave = document.getElementById("btnSave");
+  const btnPrint = document.getElementById("btnPrint");
+
+  // Set default tanggal = hari ini
+  (function setDefaultDate() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    tanggalInput.value = `${yyyy}-${mm}-${dd}`;
+  })();
+
+  // =======================
+  // 3. TABEL & BARIS
+  // =======================
+  function clearTable() {
+    tableBody.innerHTML = "";
+  }
+
+  function createStatusCell(selectedStatus = "") {
+    const td = document.createElement("td");
+    td.classList.add("col-status");
+
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("status-group");
+
+    const statuses = [
+      { value: "S", label: "S" },
+      { value: "I", label: "I" },
+      { value: "A", label: "A" },
     ];
 
-    // =======================
-    // 2. UTIL LOCALSTORAGE
-    // =======================
-    const STORAGE_KEY = "rekap_ketidakhadiran_santri";
+    statuses.forEach((s) => {
+      const label = document.createElement("label");
+      label.classList.add("status-pill");
 
-    function loadAllLogs() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return {};
-      try {
-        return JSON.parse(raw);
-      } catch (e) {
-        console.error("Gagal parse data:", e);
-        return {};
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = ""; // akan di-set per baris di addRow
+      input.value = s.value;
+      if (selectedStatus === s.value) {
+        input.checked = true;
       }
-    }
 
-    function saveAllLogs(allLogs) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(allLogs));
-    }
+      const span = document.createElement("span");
+      span.textContent = s.label;
 
-    function loadLogsByDate(dateStr) {
-      if (!dateStr) return [];
-      const all = loadAllLogs();
-      return all[dateStr] || [];
-    }
+      label.appendChild(input);
+      label.appendChild(span);
+      wrapper.appendChild(label);
+    });
 
-    function saveLogsByDate(dateStr, logs) {
-      if (!dateStr) return;
-      const all = loadAllLogs();
-      all[dateStr] = logs;
-      saveAllLogs(all);
-    }
+    td.appendChild(wrapper);
+    return td;
+  }
 
-    // =======================
-    // 3. DOM ELEMENTS
-    // =======================
-    const tanggalInput = document.getElementById("tanggalInput");
-    const filterKelasInput = document.getElementById("filterKelas");
-    const filterParalelInput = document.getElementById("filterParalel");
-    const tableBody = document.getElementById("tableBody");
+  function createRow(data = {}) {
+    const tr = document.createElement("tr");
 
-    const btnLoad = document.getElementById("btnLoad");
-    const btnAddRow = document.getElementById("btnAddRow");
-    const btnAddRowBottom = document.getElementById("btnAddRowBottom");
-    const btnSave = document.getElementById("btnSave");
-    const btnPrint = document.getElementById("btnPrint");
+    // kolom No (akan diisi ulang saat render)
+    const tdNo = document.createElement("td");
+    tdNo.classList.add("col-no");
+    tdNo.textContent = "-";
+    tr.appendChild(tdNo);
 
-    // Set default tanggal = hari ini
-    (function setDefaultDate() {
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      tanggalInput.value = `${yyyy}-${mm}-${dd}`;
-    })();
+    // kolom Nama + auto-complete
+    const tdNama = document.createElement("td");
+    const namaWrapper = document.createElement("div");
+    namaWrapper.classList.add("autocomplete-wrapper");
 
-    // =======================
-    // 4. TABEL & BARIS
-    // =======================
-    function clearTable() {
-      tableBody.innerHTML = "";
-    }
+    const namaInput = document.createElement("input");
+    namaInput.type = "text";
+    namaInput.classList.add("nama-input");
+    namaInput.placeholder = "Ketik nama santri yang tidak hadir...";
+    namaInput.value = data.nama || "";
 
-    function createStatusCell(selectedStatus = "") {
-      const td = document.createElement("td");
-      td.classList.add("col-status");
+    const hiddenSantriId = document.createElement("input");
+    hiddenSantriId.type = "hidden";
+    hiddenSantriId.classList.add("santri-id");
+    hiddenSantriId.value = data.santriId || "";
 
-      const wrapper = document.createElement("div");
-      wrapper.classList.add("status-group");
+    const suggestions = document.createElement("div");
+    suggestions.classList.add("suggestions");
 
-      const statuses = [
-        { value: "S", label: "S" },
-        { value: "I", label: "I" },
-        { value: "A", label: "A" },
-      ];
+    namaWrapper.appendChild(namaInput);
+    namaWrapper.appendChild(hiddenSantriId);
+    namaWrapper.appendChild(suggestions);
+    tdNama.appendChild(namaWrapper);
+    tr.appendChild(tdNama);
 
-      statuses.forEach((s) => {
-        const label = document.createElement("label");
-        label.classList.add("status-pill");
+    // kolom Kelas
+    const tdKelas = document.createElement("td");
+    const kelasMain = document.createElement("div");
+    kelasMain.classList.add("kelas-text");
+    kelasMain.textContent = data.kelas || "-";
+    const kelasSub = document.createElement("div");
+    kelasSub.classList.add("kelas-sub");
+    kelasSub.textContent = data.jenjang ? data.jenjang : "";
+    tdKelas.appendChild(kelasMain);
+    tdKelas.appendChild(kelasSub);
+    tr.appendChild(tdKelas);
 
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.name = ""; // akan di-set per baris di addRow
-        input.value = s.value;
-        if (selectedStatus === s.value) {
-          input.checked = true;
-        }
+    // kolom Paralel
+    const tdParalel = document.createElement("td");
+    const paralelMain = document.createElement("div");
+    paralelMain.classList.add("paralel-text");
+    paralelMain.textContent = data.paralel || "-";
+    const paralelSub = document.createElement("div");
+    paralelSub.classList.add("paralel-sub");
+    paralelSub.textContent = data.tahunAjaran || "";
+    tdParalel.appendChild(paralelMain);
+    tdParalel.appendChild(paralelSub);
+    tr.appendChild(tdParalel);
 
-        const span = document.createElement("span");
-        span.textContent = s.label;
+    // kolom status S/I/A
+    const tdStatus = createStatusCell(data.status || "");
+    tr.appendChild(tdStatus);
 
-        label.appendChild(input);
-        label.appendChild(span);
-        wrapper.appendChild(label);
-      });
+    // kolom keterangan
+    const tdKet = document.createElement("td");
+    const ketInput = document.createElement("input");
+    ketInput.type = "text";
+    ketInput.classList.add("ket-input");
+    ketInput.placeholder =
+      "Keterangan ketidakhadiran (misal: demam, izin pulang...)";
+    ketInput.value = data.keterangan || "";
+    tdKet.appendChild(ketInput);
+    tr.appendChild(tdKet);
 
-      td.appendChild(wrapper);
-      return td;
-    }
-
-    function createRow(data = {}) {
-      const tr = document.createElement("tr");
-
-      // kolom No (akan diisi ulang saat render)
-      const tdNo = document.createElement("td");
-      tdNo.classList.add("col-no");
-      tdNo.textContent = "-";
-      tr.appendChild(tdNo);
-
-      // kolom Nama + auto-complete
-      const tdNama = document.createElement("td");
-      const namaWrapper = document.createElement("div");
-      namaWrapper.classList.add("autocomplete-wrapper");
-
-      const namaInput = document.createElement("input");
-      namaInput.type = "text";
-      namaInput.classList.add("nama-input");
-      namaInput.placeholder = "Ketik nama santri yang tidak hadir...";
-      namaInput.value = data.nama || "";
-
-      const hiddenSantriId = document.createElement("input");
-      hiddenSantriId.type = "hidden";
-      hiddenSantriId.classList.add("santri-id");
-      hiddenSantriId.value = data.santriId || "";
-
-      const suggestions = document.createElement("div");
-      suggestions.classList.add("suggestions");
-
-      namaWrapper.appendChild(namaInput);
-      namaWrapper.appendChild(hiddenSantriId);
-      namaWrapper.appendChild(suggestions);
-      tdNama.appendChild(namaWrapper);
-      tr.appendChild(tdNama);
-
-      // kolom Kelas
-      const tdKelas = document.createElement("td");
-      const kelasMain = document.createElement("div");
-      kelasMain.classList.add("kelas-text");
-      kelasMain.textContent = data.kelas || "-";
-      const kelasSub = document.createElement("div");
-      kelasSub.classList.add("kelas-sub");
-      kelasSub.textContent = data.jenjang ? data.jenjang : "";
-      tdKelas.appendChild(kelasMain);
-      tdKelas.appendChild(kelasSub);
-      tr.appendChild(tdKelas);
-
-      // kolom Paralel
-      const tdParalel = document.createElement("td");
-      const paralelMain = document.createElement("div");
-      paralelMain.classList.add("paralel-text");
-      paralelMain.textContent = data.paralel || "-";
-      const paralelSub = document.createElement("div");
-      paralelSub.classList.add("paralel-sub");
-      paralelSub.textContent = data.tahunAjaran || "";
-      tdParalel.appendChild(paralelMain);
-      tdParalel.appendChild(paralelSub);
-      tr.appendChild(tdParalel);
-
-      // kolom status S/I/A
-      const tdStatus = createStatusCell(data.status || "");
-      tr.appendChild(tdStatus);
-
-      // kolom keterangan
-      const tdKet = document.createElement("td");
-      const ketInput = document.createElement("input");
-      ketInput.type = "text";
-      ketInput.classList.add("ket-input");
-      ketInput.placeholder = "Keterangan ketidakhadiran (misal: demam, izin pulang...)";
-      ketInput.value = data.keterangan || "";
-      tdKet.appendChild(ketInput);
-      tr.appendChild(tdKet);
-
-      // kolom aksi (hapus)
-      const tdAksi = document.createElement("td");
-      tdAksi.classList.add("col-aksi");
-      const btnDelete = document.createElement("button");
-      btnDelete.type = "button";
-      btnDelete.classList.add("btn-danger");
-      btnDelete.style.fontSize = "0.7rem";
-      btnDelete.textContent = "Hapus";
-      btnDelete.addEventListener("click", () => {
-        tr.remove();
-        renumberRows();
-      });
-      tdAksi.appendChild(btnDelete);
-      tr.appendChild(tdAksi);
-
-      // event untuk auto-complete
-      setupAutocomplete(namaInput, hiddenSantriId, tdKelas, tdParalel, suggestions);
-
-      return tr;
-    }
-
-    function addRow(data = {}) {
-      const tr = createRow(data);
-      tableBody.appendChild(tr);
-
-      // set name radio status agar unik per baris
-      const radios = tr.querySelectorAll(".status-pill input[type='radio']");
-      const rowIndex = tableBody.querySelectorAll("tr").length;
-      radios.forEach((r) => {
-        r.name = "status_row_" + rowIndex;
-      });
-
+    // kolom aksi (hapus)
+    const tdAksi = document.createElement("td");
+    tdAksi.classList.add("col-aksi");
+    const btnDelete = document.createElement("button");
+    btnDelete.type = "button";
+    btnDelete.classList.add("btn-danger");
+    btnDelete.style.fontSize = "0.7rem";
+    btnDelete.textContent = "Hapus";
+    btnDelete.addEventListener("click", () => {
+      tr.remove();
       renumberRows();
-    }
+    });
+    tdAksi.appendChild(btnDelete);
+    tr.appendChild(tdAksi);
 
-    function renumberRows() {
-      const rows = tableBody.querySelectorAll("tr");
-      rows.forEach((row, idx) => {
-        const tdNo = row.querySelector("td.col-no");
-        if (tdNo) tdNo.textContent = idx + 1;
-        const radios = row.querySelectorAll(".status-pill input[type='radio']");
-        radios.forEach((r) => {
-          r.name = "status_row_" + (idx + 1);
-        });
-      });
-    }
+    // event untuk auto-complete
+    setupAutocomplete(namaInput, hiddenSantriId, tdKelas, tdParalel, suggestions);
 
-    // =======================
-    // 5. AUTOCOMPLETE NAMA
-    // =======================
-    function setupAutocomplete(inputEl, hiddenIdEl, tdKelas, tdParalel, suggestionsEl) {
-      function hideSuggestions() {
-        suggestionsEl.style.display = "none";
-        suggestionsEl.innerHTML = "";
-      }
+    return tr;
+  }
 
-      inputEl.addEventListener("input", () => {
-        const query = inputEl.value.trim().toLowerCase();
-        hiddenIdEl.value = "";
-        if (!query) {
-          hideSuggestions();
-          tdKelas.querySelector(".kelas-text").textContent = "-";
-          tdKelas.querySelector(".kelas-sub").textContent = "";
-          tdParalel.querySelector(".paralel-text").textContent = "-";
-          tdParalel.querySelector(".paralel-sub").textContent = "";
-          return;
-        }
+  function addRow(data = {}) {
+    const tr = createRow(data);
+    tableBody.appendChild(tr);
 
-        // cari santri yang mengandung query di nama
-        const matches = santriMaster.filter((s) =>
-          s.nama.toLowerCase().includes(query)
-        );
-
-        if (matches.length === 0) {
-          hideSuggestions();
-          return;
-        }
-
-        suggestionsEl.innerHTML = "";
-        matches.slice(0, 20).forEach((s) => {
-          const item = document.createElement("div");
-          item.classList.add("suggestion-item");
-
-          const left = document.createElement("div");
-          const nameDiv = document.createElement("div");
-          nameDiv.classList.add("suggestion-name");
-          nameDiv.textContent = s.nama;
-          const metaDiv = document.createElement("div");
-          metaDiv.classList.add("suggestion-meta");
-          metaDiv.textContent = `Kelas ${s.kelas} • Paralel ${s.paralel}`;
-
-          left.appendChild(nameDiv);
-          left.appendChild(metaDiv);
-
-          const right = document.createElement("div");
-          right.style.display = "flex";
-          right.style.gap = "0.25rem";
-          const badgeJenjang = document.createElement("span");
-          badgeJenjang.classList.add("badge-jenjang");
-          badgeJenjang.textContent = s.jenjang;
-          const badgeKelas = document.createElement("span");
-          badgeKelas.classList.add("badge-kelas");
-          badgeKelas.textContent = s.tahunAjaran;
-
-          right.appendChild(badgeJenjang);
-          right.appendChild(badgeKelas);
-
-          item.appendChild(left);
-          item.appendChild(right);
-
-          item.addEventListener("click", () => {
-            inputEl.value = s.nama;
-            hiddenIdEl.value = s.id;
-
-            tdKelas.querySelector(".kelas-text").textContent = s.kelas || "-";
-            tdKelas.querySelector(".kelas-sub").textContent = s.jenjang || "";
-
-            tdParalel.querySelector(".paralel-text").textContent =
-              s.paralel || "-";
-            tdParalel.querySelector(".paralel-sub").textContent =
-              s.tahunAjaran || "";
-
-            hideSuggestions();
-          });
-
-          suggestionsEl.appendChild(item);
-        });
-
-        suggestionsEl.style.display = "block";
-      });
-
-      // hide suggestions saat blur (dengan sedikit delay biar klik masih terdeteksi)
-      inputEl.addEventListener("blur", () => {
-        setTimeout(() => hideSuggestions(), 180);
-      });
-    }
-
-    // =======================
-    // 6. AMBIL DATA DARI TABEL
-    // =======================
-    function getRowsDataFromTable() {
-      const rows = tableBody.querySelectorAll("tr");
-      const tanggal = tanggalInput.value;
-      const kelasFilter = filterKelasInput.value.trim().toLowerCase();
-      const paralelFilter = filterParalelInput.value.trim().toLowerCase();
-
-      const data = [];
-
-      rows.forEach((row) => {
-        const namaInput = row.querySelector(".nama-input");
-        const santriIdInput = row.querySelector(".santri-id");
-        const kelasText = row.querySelector(".kelas-text");
-        const kelasSub = row.querySelector(".kelas-sub");
-        const paralelText = row.querySelector(".paralel-text");
-        const paralelSub = row.querySelector(".paralel-sub");
-        const ketInput = row.querySelector(".ket-input");
-        const radios = row.querySelectorAll(
-          ".status-pill input[type='radio']"
-        );
-
-        const nama = namaInput.value.trim();
-        if (!nama) return; // skip baris kosong
-
-        let status = "";
-        radios.forEach((r) => {
-          if (r.checked) status = r.value;
-        });
-
-        const kelas = kelasText.textContent === "-" ? "" : kelasText.textContent;
-        const jenjang = kelasSub.textContent || "";
-        const paralel =
-          paralelText.textContent === "-" ? "" : paralelText.textContent;
-        const tahunAjaran = paralelSub.textContent || "";
-
-        const rowData = {
-          tanggal,
-          santriId: santriIdInput.value || null,
-          nama,
-          kelas,
-          jenjang,
-          paralel,
-          tahunAjaran,
-          status,
-          keterangan: ketInput.value.trim(),
-        };
-
-        // Filter di level data (opsional)
-        if (kelasFilter && !kelas.toLowerCase().includes(kelasFilter)) return;
-        if (
-          paralelFilter &&
-          !paralel.toLowerCase().includes(paralelFilter)
-        )
-          return;
-
-        data.push(rowData);
-      });
-
-      return data;
-    }
-
-    // =======================
-    // 7. RENDER DATA KE TABEL
-    // =======================
-    function renderLogsToTable(logs) {
-      clearTable();
-      logs.forEach((log) => {
-        addRow(log);
-      });
-      if (logs.length === 0) {
-        // minimal 1 baris kosong
-        addRow();
-      }
-    }
-
-    // =======================
-    // 8. EVENT HANDLER
-    // =======================
-    btnAddRow.addEventListener("click", () => {
-      addRow();
+    // set name radio status agar unik per baris
+    const radios = tr.querySelectorAll(".status-pill input[type='radio']");
+    const rowIndex = tableBody.querySelectorAll("tr").length;
+    radios.forEach((r) => {
+      r.name = "status_row_" + rowIndex;
     });
 
-    btnAddRowBottom.addEventListener("click", () => {
-      addRow();
-      // scroll ke bawah sedikit supaya baris baru kelihatan
-      tableBody.parentElement.scrollTop = tableBody.parentElement.scrollHeight;
-    });
+    renumberRows();
+  }
 
-    btnSave.addEventListener("click", () => {
-      const tanggal = tanggalInput.value;
-      if (!tanggal) {
-        alert("Silakan pilih tanggal terlebih dahulu.");
+  function renumberRows() {
+    const rows = tableBody.querySelectorAll("tr");
+    rows.forEach((row, idx) => {
+      const tdNo = row.querySelector("td.col-no");
+      if (tdNo) tdNo.textContent = idx + 1;
+      const radios = row.querySelectorAll(".status-pill input[type='radio']");
+      radios.forEach((r) => {
+        r.name = "status_row_" + (idx + 1);
+      });
+    });
+  }
+
+  // =======================
+  // 4. AUTOCOMPLETE NAMA
+  // =======================
+  function setupAutocomplete(
+    inputEl,
+    hiddenIdEl,
+    tdKelas,
+    tdParalel,
+    suggestionsEl
+  ) {
+    function hideSuggestions() {
+      suggestionsEl.style.display = "none";
+      suggestionsEl.innerHTML = "";
+    }
+
+    inputEl.addEventListener("input", () => {
+      const query = inputEl.value.trim().toLowerCase();
+      hiddenIdEl.value = "";
+      if (!query) {
+        hideSuggestions();
+        tdKelas.querySelector(".kelas-text").textContent = "-";
+        tdKelas.querySelector(".kelas-sub").textContent = "";
+        tdParalel.querySelector(".paralel-text").textContent = "-";
+        tdParalel.querySelector(".paralel-sub").textContent = "";
         return;
       }
 
-      const data = getRowsDataFromTable();
-      if (data.length === 0) {
-        alert("Belum ada data ketidakhadiran santri yang diisi.");
+      // cari santri yang mengandung query di nama
+      const matches = santriMaster.filter((s) =>
+        s.nama.toLowerCase().includes(query)
+      );
+
+      if (matches.length === 0) {
+        hideSuggestions();
         return;
       }
 
-      saveLogsByDate(tanggal, data);
+      suggestionsEl.innerHTML = "";
+      matches.slice(0, 20).forEach((s) => {
+        const item = document.createElement("div");
+        item.classList.add("suggestion-item");
+
+        const left = document.createElement("div");
+        const nameDiv = document.createElement("div");
+        nameDiv.classList.add("suggestion-name");
+        nameDiv.textContent = s.nama;
+        const metaDiv = document.createElement("div");
+        metaDiv.classList.add("suggestion-meta");
+        metaDiv.textContent = `Kelas ${s.kelas} • Paralel ${s.paralel}`;
+
+        left.appendChild(nameDiv);
+        left.appendChild(metaDiv);
+
+        const right = document.createElement("div");
+        right.style.display = "flex";
+        right.style.gap = "0.25rem";
+        const badgeJenjang = document.createElement("span");
+        badgeJenjang.classList.add("badge-jenjang");
+        badgeJenjang.textContent = s.jenjang;
+        const badgeKelas = document.createElement("span");
+        badgeKelas.classList.add("badge-kelas");
+        badgeKelas.textContent = s.tahun_ajaran;
+
+        right.appendChild(badgeJenjang);
+        right.appendChild(badgeKelas);
+
+        item.appendChild(left);
+        item.appendChild(right);
+
+        item.addEventListener("click", () => {
+          inputEl.value = s.nama;
+          hiddenIdEl.value = s.id;
+
+          tdKelas.querySelector(".kelas-text").textContent = s.kelas || "-";
+          tdKelas.querySelector(".kelas-sub").textContent = s.jenjang || "";
+
+          tdParalel.querySelector(".paralel-text").textContent =
+            s.paralel || "-";
+          tdParalel.querySelector(".paralel-sub").textContent =
+            s.tahun_ajaran || "";
+
+          hideSuggestions();
+        });
+
+        suggestionsEl.appendChild(item);
+      });
+
+      suggestionsEl.style.display = "block";
+    });
+
+    // hide suggestions saat blur (dengan sedikit delay biar klik masih terdeteksi)
+    inputEl.addEventListener("blur", () => {
+      setTimeout(() => hideSuggestions(), 180);
+    });
+  }
+
+  // =======================
+  // 5. AMBIL DATA DARI TABEL (UNTUK SIMPAN)
+  // =======================
+  function getRowsDataFromTable() {
+    const rows = tableBody.querySelectorAll("tr");
+    const tanggal = tanggalInput.value;
+    const data = [];
+
+    rows.forEach((row) => {
+      const namaInput = row.querySelector(".nama-input");
+      const santriIdInput = row.querySelector(".santri-id");
+      const kelasText = row.querySelector(".kelas-text");
+      const kelasSub = row.querySelector(".kelas-sub");
+      const paralelText = row.querySelector(".paralel-text");
+      const paralelSub = row.querySelector(".paralel-sub");
+      const ketInput = row.querySelector(".ket-input");
+      const radios = row.querySelectorAll(
+        ".status-pill input[type='radio']"
+      );
+
+      const nama = namaInput.value.trim();
+      if (!nama) return; // skip baris kosong
+
+      let status = "";
+      radios.forEach((r) => {
+        if (r.checked) status = r.value;
+      });
+
+      const kelas =
+        kelasText.textContent === "-" ? "" : kelasText.textContent;
+      const jenjang = kelasSub.textContent || "";
+      const paralel =
+        paralelText.textContent === "-" ? "" : paralelText.textContent;
+      const tahunAjaran = paralelSub.textContent || "";
+
+      const rowData = {
+        tanggal,
+        santriId: santriIdInput.value || null,
+        nama,
+        kelas,
+        jenjang,
+        paralel,
+        tahunAjaran,
+        status,
+        keterangan: ketInput.value.trim(),
+      };
+
+      data.push(rowData);
+    });
+
+    return data;
+  }
+
+  // =======================
+  // 6. LOAD & SAVE KE SUPABASE
+  // =======================
+
+  // Ambil data ketidakhadiran per tanggal dari tabel ketidakhadiran_santri
+  async function loadLogsByDate(dateStr) {
+    if (!dateStr) return [];
+
+    const { data, error } = await db
+      .from("ketidakhadiran_santri")
+      .select("id, tanggal, santri_id, status, keterangan")
+      .eq("tanggal", dateStr)
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.error("Gagal load ketidakhadiran:", error);
+      alert("Gagal memuat data ketidakhadiran.");
+      return [];
+    }
+
+    const logs = (data || []).map((row) => {
+      const santri = santriMaster.find((s) => s.id === row.santri_id);
+      return {
+        tanggal: row.tanggal,
+        santriId: row.santri_id,
+        nama: santri ? santri.nama : "(santri tidak ditemukan)",
+        kelas: santri ? santri.kelas : "",
+        jenjang: santri ? santri.jenjang : "",
+        paralel: santri ? santri.paralel : "",
+        tahunAjaran: santri ? santri.tahun_ajaran : "",
+        status: row.status,
+        keterangan: row.keterangan || "",
+      };
+    });
+
+    return logs;
+  }
+
+  // Simpan: hapus semua data tanggal tsb, lalu insert ulang
+  async function saveLogsByDate(dateStr, logs) {
+    if (!dateStr) return false;
+
+    // 1) hapus dulu semua record di tanggal tsb
+    const { error: delError } = await db
+      .from("ketidakhadiran_santri")
+      .delete()
+      .eq("tanggal", dateStr);
+
+    if (delError) {
+      console.error("Gagal hapus data lama:", delError);
+      alert("Gagal menghapus data lama untuk tanggal tersebut.");
+      return false;
+    }
+
+    // 2) siapkan payload insert baru
+    const payload = logs
+      .map((row) => ({
+        tanggal: dateStr,
+        santri_id: row.santriId ? Number(row.santriId) : null,
+        status: row.status || null,
+        keterangan: row.keterangan || null,
+      }))
+      // wajib punya santri_id & status
+      .filter((row) => row.santri_id && row.status);
+
+    if (payload.length === 0) {
+      // tidak ada data valid, boleh dianggap sukses (semua dihapus)
+      return true;
+    }
+
+    const { error: insError } = await db
+      .from("ketidakhadiran_santri")
+      .insert(payload);
+
+    if (insError) {
+      console.error("Gagal insert data baru:", insError);
+      alert("Gagal menyimpan data ketidakhadiran.");
+      return false;
+    }
+
+    return true;
+  }
+
+  // =======================
+  // 7. RENDER DATA KE TABEL (DENGAN FILTER KELAS/PARALEL)
+  // =======================
+  function renderLogsToTable(logs) {
+    clearTable();
+
+    const kelasFilter = filterKelasInput.value.trim().toLowerCase();
+    const paralelFilter = filterParalelInput.value.trim().toLowerCase();
+
+    const filtered = logs.filter((log) => {
+      const k = (log.kelas || "").toLowerCase();
+      const p = (log.paralel || "").toLowerCase();
+      if (kelasFilter && !k.includes(kelasFilter)) return false;
+      if (paralelFilter && !p.includes(paralelFilter)) return false;
+      return true;
+    });
+
+    (filtered.length ? filtered : logs).forEach((log) => {
+      addRow(log);
+    });
+
+    if (logs.length === 0) {
+      // minimal 1 baris kosong
+      addRow();
+    }
+  }
+
+  // =======================
+  // 8. EVENT HANDLER
+  // =======================
+  btnAddRow.addEventListener("click", () => {
+    addRow();
+  });
+
+  btnAddRowBottom.addEventListener("click", () => {
+    addRow();
+    tableBody.parentElement.scrollTop = tableBody.parentElement.scrollHeight;
+  });
+
+  btnSave.addEventListener("click", async () => {
+    const tanggal = tanggalInput.value;
+    if (!tanggal) {
+      alert("Silakan pilih tanggal terlebih dahulu.");
+      return;
+    }
+
+    const data = getRowsDataFromTable();
+    if (data.length === 0) {
+      alert("Belum ada data ketidakhadiran santri yang diisi.");
+      return;
+    }
+
+    // Pastikan semua pakai santri dari master (pakai autosuggest)
+    const rowsTanpaId = data.filter((d) => !d.santriId);
+    if (rowsTanpaId.length > 0) {
+      alert(
+        "Masih ada nama yang belum dipilih dari daftar santri (tidak punya ID). " +
+          "Mohon pilih nama dari suggestion saat mengetik."
+      );
+      return;
+    }
+
+    const ok = await saveLogsByDate(tanggal, data);
+    if (ok) {
       alert("Data ketidakhadiran berhasil disimpan untuk tanggal " + tanggal);
-    });
+    }
+  });
 
-    btnLoad.addEventListener("click", () => {
-      const tanggal = tanggalInput.value;
-      if (!tanggal) {
-        alert("Silakan pilih tanggal terlebih dahulu.");
-        return;
-      }
-      const logs = loadLogsByDate(tanggal);
-      renderLogsToTable(logs);
-    });
+  btnLoad.addEventListener("click", async () => {
+    const tanggal = tanggalInput.value;
+    if (!tanggal) {
+      alert("Silakan pilih tanggal terlebih dahulu.");
+      return;
+    }
+    const logs = await loadLogsByDate(tanggal);
+    renderLogsToTable(logs);
+  });
 
-    btnPrint.addEventListener("click", () => {
-      if (!tanggalInput.value) {
-        alert("Pilih tanggal dulu sebelum download PDF.");
-        return;
-      }
-      window.print();
-    });
+  btnPrint.addEventListener("click", () => {
+    if (!tanggalInput.value) {
+      alert("Pilih tanggal dulu sebelum download PDF.");
+      return;
+    }
+    window.print();
+  });
 
-    // Saat pertama kali load: tampilkan data hari ini (atau baris kosong)
-    window.addEventListener("load", () => {
-      const tanggal = tanggalInput.value;
-      const logs = loadLogsByDate(tanggal);
-      renderLogsToTable(logs);
-    });
-  </script>
+  // Saat pertama kali load:
+  // 1) load santri_master
+  // 2) load ketidakhadiran hari ini (kalau ada)
+  window.addEventListener("load", async () => {
+    await loadSantriMaster();
+    const tanggal = tanggalInput.value;
+    const logs = await loadLogsByDate(tanggal);
+    renderLogsToTable(logs);
+  });
+</script>
 </body>
 </html>
