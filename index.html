@@ -194,6 +194,41 @@
       border-collapse: collapse;
       min-width: 520px;
     }
+    
+    /* Khusus tabel di tab Input Data */
+    #tab-input table {
+      table-layout: fixed; /* bagi lebar kolom secara tegas */
+    }
+    
+    /* Kolom No */
+    #tab-input th:nth-child(1),
+    #tab-input td:nth-child(1) {
+      width: 40px;
+    }
+    
+    /* Kolom Nama Santri */
+    #tab-input th:nth-child(2),
+    #tab-input td:nth-child(2) {
+      width: 45%;
+    }
+    
+    /* Kolom Alasan Sakit */
+    #tab-input th:nth-child(3),
+    #tab-input td:nth-child(3) {
+      width: 55%;
+    }
+
+    /* Nama santri boleh multi-baris dan patah kata */
+    #tab-input td:nth-child(2) {
+      white-space: normal;
+      word-break: break-word;
+    }
+    
+    /* Alasan sakit juga boleh multi-baris */
+    #tab-input td:nth-child(3) {
+      white-space: normal;
+      word-break: break-word;
+    }
 
     thead {
       background: var(--blue-soft);
@@ -402,6 +437,12 @@
       }
       .monthly-chart-container {
         max-height: 420px;
+      }
+       /* Tabel input dibuat lebih rapat di HP */
+      #tab-input th,
+      #tab-input td {
+        padding: 0.45rem 0.35rem;
+        font-size: 0.76rem;
       }
     }
 
