@@ -202,19 +202,19 @@
       table-layout: fixed; /* bagi lebar kolom secara tegas */
     }
 
-    /* Kolom No */
+    /* Kolom No (Input) */
     #tab-input th:nth-child(1),
     #tab-input td:nth-child(1) {
       width: 40px;
     }
 
-    /* Kolom Nama Santri */
+    /* Kolom Nama Santri (Input) */
     #tab-input th:nth-child(2),
     #tab-input td:nth-child(2) {
       width: 45%;
     }
 
-    /* Kolom Alasan Sakit */
+    /* Kolom Alasan Sakit (Input) */
     #tab-input th:nth-child(3),
     #tab-input td:nth-child(3) {
       width: 55%;
@@ -226,14 +226,26 @@
       white-space: normal;
     }
 
-    /* Nama santri boleh multi-baris dan patah kata */
+    /* Nama santri di Input: multi-baris dan patah kata */
     #tab-input td:nth-child(2) {
       white-space: normal;
       word-break: break-word;
     }
 
-    /* Alasan sakit juga boleh multi-baris */
+    /* Alasan sakit di Input: multi-baris dan patah kata */
     #tab-input td:nth-child(3) {
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    /* Wrap teks di Rekap Harian juga */
+    #tab-rekap-harian th:nth-child(2),
+    #tab-rekap-harian th:nth-child(4) {
+      white-space: normal;
+    }
+
+    #tab-rekap-harian td:nth-child(2),
+    #tab-rekap-harian td:nth-child(4) {
       white-space: normal;
       word-break: break-word;
     }
@@ -409,7 +421,7 @@
     .chart-bar-fill {
       height: 100%;
       border-radius: 999px;
-      background: var(--blue);
+      background: #2563eb;
       transition: width 0.3s ease;
     }
 
@@ -591,7 +603,7 @@
           <input type="date" id="rekapTanggal" />
         </div>
         <button class="btn-outline" id="btnLoadRekap">
-          <span class="icon">🔍</span> Tampilkan Rekap Harian
+          <span class="icon">🔍</span> Tampilkan Rekap
         </button>
       </div>
 
@@ -636,7 +648,7 @@
           <input type="month" id="rekapBulan" />
         </div>
         <button class="btn-outline" id="btnLoadRekapBulanan">
-          <span class="icon">📊</span> Tampilkan Rekap Bulanan
+          <span class="icon">🔍</span> Tampilkan Rekap
         </button>
       </div>
 
@@ -660,8 +672,8 @@
     // =======================
     const { createClient } = supabase;
 
-    const SUPABASE_URL = "https://szbhghiryzbfivriksnu.supabase.co"; // ganti
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6YmhnaGlyeXpiZml2cmlrc251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzIwNTYsImV4cCI6MjA3OTkwODA1Nn0.0FJ_Fu5qv7n6mnsNd9rWRJ80yHr2T31ar4q8Rv4rWbo";           // ganti
+    const SUPABASE_URL = "https://szbhghiryzbfivriksnu.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6YmhnaGlyeXpiZml2cmlrc251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzIwNTYsImV4cCI6MjA3OTkwODA1Nn0.0FJ_Fu5qv7n6mnsNd9rWRJ80yHr2T31ar4q8Rv4rWbo";
 
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
