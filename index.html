@@ -156,7 +156,6 @@
       font-size: calc(0.83rem);
       color: var(--gray);
       max-width: 540px;
-      margin-top: 0.25rem;
     }
 
     .header-side {
@@ -868,7 +867,7 @@
           </div>
           <div class="stat-chip-row" style="margin-top:0.1rem;">
             <div class="stat-chip">
-              <span>✏️</span>
+              <span>✅</span>
               <span>Alasan sakit bisa diedit ulang.</span>
             </div>
           </div>
@@ -1004,7 +1003,7 @@
 
         <p class="legend" style="margin-top:0.6rem;">
           <span class="legend-dot"></span>
-          Kosong = tidak sakit.
+          Kosong = tidak sakit &bull; daftar alasan yang sering dipakai akan muncul sebagai saran.
         </p>
 
         <p class="footer-note">
@@ -1278,7 +1277,7 @@
 
       if (error) {
         console.error("Gagal load santri_master:", error);
-        showToast("❎ Gagal memuat data santri.", "error");
+        showToast("Gagal memuat data santri.", "error");
         return;
       }
       santriMaster = data || [];
@@ -1323,7 +1322,7 @@
 
       if (errSantri) {
         console.error("Gagal load santri:", errSantri);
-        showToast("❎ Gagal memuat data santri.", "error");
+        showToast("Gagal memuat santri untuk filter ini.", "error");
         return;
       }
 
@@ -1345,8 +1344,8 @@
         .in("santri_id", santriIds);
 
       if (errSakit) {
-        console.error(" load santri_sakit:", errSakit);
-        showToast("❎  memuat data sakit.", "error");
+        console.error("Gagal load santri_sakit:", errSakit);
+        showToast("Gagal memuat data sakit.", "error");
         return;
       }
 
@@ -1381,7 +1380,7 @@
         inputTableBody.appendChild(tr);
       });
 
-      showToast("✅ Daftar santri berhasil dimuat.", "info");
+      showToast("Daftar santri dimuat.", "info");
     }
 
     async function saveInputData() {
@@ -1428,7 +1427,7 @@
 
       if (delErr) {
         console.error("Gagal hapus data sakit lama:", delErr);
-        showToast("❎ Gagal menghapus data lama.", "error");
+        showToast("Gagal menghapus data lama.", "error");
         return;
       }
 
@@ -1439,12 +1438,12 @@
 
         if (insErr) {
           console.error("Gagal insert data sakit:", insErr);
-          showToast("❎ Gagal menyimpan data sakit.", "error");
+          showToast("Gagal menyimpan data sakit.", "error");
           return;
         }
       }
 
-      showToast("✅ Data sakit untuk kelas ini berhasil disimpan.", "success");
+      showToast("Data sakit untuk kelas ini berhasil disimpan.", "success");
       await loadDistinctAlasanSakit();
     }
 
@@ -1512,7 +1511,7 @@
 
       if (errSakit) {
         console.error("Gagal load rekap sakit:", errSakit);
-        showToast("❎ Gagal memuat rekap harian.", "error");
+        showToast("Gagal memuat rekap data sakit.", "error");
         return;
       }
 
@@ -1571,7 +1570,7 @@
         rekapTableBody.appendChild(tr);
       });
 
-      showToast("✅ Rekap harian berhasil dimuat.", "info");
+      showToast("Rekap harian dimuat.", "info");
     }
 
     async function saveRekapData() {
@@ -1610,7 +1609,7 @@
 
       if (delErr) {
         console.error("Gagal hapus data lama rekap:", delErr);
-        showToast("❎ Gagal menghapus data lama.", "error");
+        showToast("Gagal menghapus data lama.", "error");
         return;
       }
 
@@ -1621,7 +1620,7 @@
 
         if (insErr) {
           console.error("Gagal insert rekap baru:", insErr);
-          showToast("❎ Gagal menyimpan revisi.", "error");
+          showToast("Gagal menyimpan perubahan rekap.", "error");
           return;
         }
       }
@@ -1655,7 +1654,7 @@
 
       if (error) {
         console.error("Gagal load rekap bulanan:", error);
-        showToast("❎ Gagal memuat rekap bulanan.", "error");
+        showToast("Gagal memuat rekap bulanan.", "error");
         return;
       }
 
@@ -1753,7 +1752,7 @@
         monthlyChartContainer.appendChild(rowDiv);
       });
 
-      showToast("✅ Rekap bulanan berhasil dimuat.", "info");
+      showToast("Rekap bulanan dimuat.", "info");
     }
 
     // EVENTS
