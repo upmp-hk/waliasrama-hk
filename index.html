@@ -7,7 +7,6 @@
   <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-
     :root {
       --blue: #2563eb;
       --blue-soft: #dbeafe;
@@ -19,6 +18,11 @@
       --dark: #0f172a;
       --white: #ffffff;
       --radius-lg: 16px;
+    }
+
+    /* Boost font global +0.5 step */
+    html {
+      font-size: 105%;
     }
 
     * {
@@ -259,24 +263,15 @@
     }
 
     /* Wrap teks di Rekap Harian (Nama & Alasan) */
-    #tab-rekap-harian th:nth-child(3),
-    #tab-rekap-harian th:nth-child(5) {
+    #tab-rekap-harian th:nth-child(2),
+    #tab-rekap-harian th:nth-child(4) {
       white-space: normal;
     }
 
-    #tab-rekap-harian td:nth-child(3),
-    #tab-rekap-harian td:nth-child(5) {
+    #tab-rekap-harian td:nth-child(2),
+    #tab-rekap-harian td:nth-child(4) {
       white-space: normal;
       word-break: break-word;
-    }
-
-    /* Kolom NIS di rekap harian */
-    #tab-rekap-harian th:nth-child(2),
-    #tab-rekap-harian td:nth-child(2) {
-      white-space: nowrap;
-      width: 90px;
-      font-size: calc(0.8rem - 1px);
-      text-align: center;
     }
 
     thead {
@@ -649,7 +644,6 @@
             <thead>
               <tr>
                 <th class="col-no">No</th>
-                <th>NIS</th>
                 <th>Nama Santri</th>
                 <th>Kelas</th>
                 <th>Alasan Sakit</th>
@@ -662,7 +656,7 @@
         </div>
       </div>
 
-      <!-- legend dipisah sendiri, bukan di dalam .btn-row -->
+      <!-- legend di luar baris tombol -->
       <p class="legend" style="margin-top:0.6rem;">
         Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
       </p>
@@ -1030,7 +1024,7 @@
     // =======================
     function masukModeEditAlasan(displayEl) {
       const currentVal = displayEl.dataset.value || "";
-      const santriId = displayEl.dataset.santriId; // ← diperbaiki di sini
+      const santriId = displayEl.dataset.santriId;
 
       if (displayEl.dataset.editing === "1") return;
       displayEl.dataset.editing = "1";
@@ -1099,14 +1093,13 @@
 
       if (!sakitData || sakitData.length === 0) {
         rekapTableBody.innerHTML =
-          '<tr><td colspan="5" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
+          '<tr><td colspan="4" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
         return;
       }
 
       sakitData.forEach((row, index) => {
         const santri = santriMaster.find((s) => s.id === row.santri_id);
         const nama = santri ? santri.nama : "(santri tidak ditemukan)";
-        const nis = santri ? santri.nis : "-";
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
@@ -1116,9 +1109,6 @@
         const tdNo = document.createElement("td");
         tdNo.classList.add("col-no");
         tdNo.textContent = index + 1;
-
-        const tdNis = document.createElement("td");
-        tdNis.textContent = nis || "-";
 
         const tdNama = document.createElement("td");
         tdNama.textContent = nama;
@@ -1146,7 +1136,6 @@
         tdAlasan.appendChild(spanAlasan);
 
         tr.appendChild(tdNo);
-        tr.appendChild(tdNis);
         tr.appendChild(tdNama);
         tr.appendChild(tdKelas);
         tr.appendChild(tdAlasan);
