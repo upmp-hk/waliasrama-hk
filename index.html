@@ -102,6 +102,11 @@
       margin-bottom: 0.75rem;
     }
 
+    /* Baris filter yang isi-nya mau di-center (rekap harian & bulanan) */
+    .filter-row-center {
+      justify-content: center;
+    }
+
     .field {
       display: flex;
       flex-direction: column;
@@ -238,16 +243,26 @@
       word-break: break-word;
     }
 
-    /* Wrap teks di Rekap Harian juga */
-    #tab-rekap-harian th:nth-child(2),
-    #tab-rekap-harian th:nth-child(4) {
+    /* Wrap teks di Rekap Harian (Nama & Alasan) */
+    #tab-rekap-harian th:nth-child(3),
+    #tab-rekap-harian th:nth-child(5) {
       white-space: normal;
     }
 
-    #tab-rekap-harian td:nth-child(2),
-    #tab-rekap-harian td:nth-child(4) {
+    #tab-rekap-harian td:nth-child(3),
+    #tab-rekap-harian td:nth-child(5) {
       white-space: normal;
       word-break: break-word;
+    }
+
+    /* Kolom NIS di rekap harian: sempit, monospace */
+    #tab-rekap-harian th:nth-child(2),
+    #tab-rekap-harian td:nth-child(2) {
+      white-space: nowrap;
+      width: 90px;
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 0.8rem;
     }
 
     thead {
@@ -340,6 +355,11 @@
       margin-top: 0.7rem;
       gap: 0.5rem;
       flex-wrap: wrap;
+    }
+
+    /* Baris tombol khusus input: tombol Simpan rata kanan */
+    .btn-row-input {
+      justify-content: flex-end;
     }
 
     .btn-row-right {
@@ -514,12 +534,16 @@
 
     <!-- =============== TAB INPUT DATA =============== -->
     <section id="tab-input" class="tab-content">
+      <!-- Baris 1: hanya tanggal -->
       <div class="filter-row">
         <div class="field">
           <label for="inputTanggal">Tanggal</label>
           <input type="date" id="inputTanggal" />
         </div>
+      </div>
 
+      <!-- Baris 2: jenjang, kelas, jurusan, paralel + tombol di kanan -->
+      <div class="filter-row">
         <div class="field">
           <label for="inputJenjang">Jenjang</label>
           <select id="inputJenjang">
@@ -556,7 +580,7 @@
           </select>
         </div>
 
-        <button class="btn-outline" id="btnLoadInput">
+        <button class="btn-outline" id="btnLoadInput" style="margin-left:auto;">
           <span class="icon">📋</span> Muat Daftar Santri
         </button>
       </div>
@@ -578,15 +602,14 @@
         </div>
       </div>
 
-      <div class="btn-row">
-        <div class="legend">
-          Isi <strong>Alasan Sakit</strong> untuk santri yang sakit. Kosong = tidak sakit.
-        </div>
-        <div class="btn-row-right">
-          <button class="btn-secondary" id="btnSaveInput">
-            <span class="icon">💾</span> Simpan
-          </button>
-        </div>
+      <p class="legend" style="margin-top:0.6rem;">
+        Isi <strong>Alasan Sakit</strong> untuk santri yang sakit. Kosong = tidak sakit.
+      </p>
+
+      <div class="btn-row btn-row-input">
+        <button class="btn-secondary" id="btnSaveInput">
+          <span class="icon">💾</span> Simpan
+        </button>
       </div>
 
       <p class="footer-note">
@@ -597,7 +620,7 @@
 
     <!-- =============== TAB REKAP HARIAN =============== -->
     <section id="tab-rekap-harian" class="tab-content" style="display:none;">
-      <div class="filter-row">
+      <div class="filter-row filter-row-center">
         <div class="field">
           <label for="rekapTanggal">Tanggal Rekap</label>
           <input type="date" id="rekapTanggal" />
@@ -613,6 +636,7 @@
             <thead>
               <tr>
                 <th class="col-no">No</th>
+                <th>NIS</th>
                 <th>Nama Santri</th>
                 <th>Kelas</th>
                 <th>Alasan Sakit</th>
@@ -642,7 +666,7 @@
 
     <!-- =============== TAB REKAP BULANAN =============== -->
     <section id="tab-rekap-bulanan" class="tab-content" style="display:none;">
-      <div class="filter-row">
+      <div class="filter-row filter-row-center">
         <div class="field">
           <label for="rekapBulan">Bulan Rekap</label>
           <input type="month" id="rekapBulan" />
@@ -673,7 +697,8 @@
     const { createClient } = supabase;
 
     const SUPABASE_URL = "https://szbhghiryzbfivriksnu.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6YmhnaGlyeXpiZml2cmlrc251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzIwNTYsImV4cCI6MjA3OTkwODA1Nn0.0FJ_Fu5qv7n6mnsNd9rWRJ80yHr2T31ar4q8Rv4rWbo";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6YmhnaGlyeXpiZml2cmlrc251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzIwNTYsImV4cCI6MjA3OTkwODA1Nn0.0FJ_Fu5qv7n6mnsNd9rWRJ80yHr2T31ar4q8Rv4rWbo";
 
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -702,7 +727,8 @@
 
     const rekapBulan = document.getElementById("rekapBulan");
     const btnLoadRekapBulanan = document.getElementById("btnLoadRekapBulanan");
-    const monthlyChartContainer = document.getElementById("monthlyChartContainer");
+    const monthlyChartContainer =
+      document.getElementById("monthlyChartContainer");
 
     const alasanList = document.getElementById("alasanList");
 
@@ -751,7 +777,8 @@
       });
       tabInput.style.display = tab === "input" ? "block" : "none";
       tabRekapHarian.style.display = tab === "rekap-harian" ? "block" : "none";
-      tabRekapBulanan.style.display = tab === "rekap-bulanan" ? "block" : "none";
+      tabRekapBulanan.style.display =
+        tab === "rekap-bulanan" ? "block" : "none";
     }
 
     function fillAlasanDatalist() {
@@ -1038,13 +1065,14 @@
 
       if (!sakitData || sakitData.length === 0) {
         rekapTableBody.innerHTML =
-          '<tr><td colspan="4" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
+          '<tr><td colspan="5" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
         return;
       }
 
       sakitData.forEach((row, index) => {
         const santri = santriMaster.find((s) => s.id === row.santri_id);
         const nama = santri ? santri.nama : "(santri tidak ditemukan)";
+        const nis = santri ? santri.nis : "-";
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
@@ -1054,6 +1082,10 @@
         const tdNo = document.createElement("td");
         tdNo.classList.add("col-no");
         tdNo.textContent = index + 1;
+
+        const tdNis = document.createElement("td");
+        tdNis.classList.add("nis-cell");
+        tdNis.textContent = nis || "-";
 
         const tdNama = document.createElement("td");
         tdNama.textContent = nama;
@@ -1081,6 +1113,7 @@
         tdAlasan.appendChild(spanAlasan);
 
         tr.appendChild(tdNo);
+        tr.appendChild(tdNis);
         tr.appendChild(tdNama);
         tr.appendChild(tdKelas);
         tr.appendChild(tdAlasan);
