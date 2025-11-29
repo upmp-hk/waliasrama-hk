@@ -53,13 +53,13 @@
     }
 
     h1 {
-      font-size: calc(1.3rem + 3px);
+      font-size: calc(1.3rem - 1px);
       font-weight: 700;
       color: var(--dark);
     }
 
     .subtitle {
-      font-size: calc(0.85rem + 3px);
+      font-size: calc(0.85rem - 1px);
       color: var(--gray);
       margin-top: 0.25rem;
     }
@@ -77,7 +77,7 @@
       background: transparent;
       padding: 0.4rem 0.9rem;
       border-radius: 999px;
-      font-size: calc(0.85rem + 3px);
+      font-size: calc(0.85rem - 1px);
       cursor: pointer;
       color: var(--gray);
       flex: 1; /* simetris kiri - tengah - kanan */
@@ -125,7 +125,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.2rem;
-      font-size: calc(0.8rem + 3px);
+      font-size: calc(0.8rem - 1px);
       min-width: 110px;
     }
 
@@ -138,7 +138,7 @@
       border-radius: 999px;
       border: 1px solid #e5e7eb;
       padding: 0.4rem 0.7rem;
-      font-size: calc(0.85rem + 3px);
+      font-size: calc(0.85rem - 1px);
       background: #f9fafb;
       outline: none;
     }
@@ -154,7 +154,7 @@
       border: none;
       border-radius: 999px;
       padding: 0.45rem 1rem;
-      font-size: calc(0.82rem + 3px);
+      font-size: calc(0.82rem - 1px);
       font-weight: 500;
       cursor: pointer;
       display: inline-flex;
@@ -274,7 +274,7 @@
     #tab-rekap-harian td:nth-child(2) {
       white-space: nowrap;
       width: 90px;
-      font-size: calc(0.8rem + 3px);
+      font-size: calc(0.8rem - 1px);
       text-align: center;
     }
 
@@ -285,7 +285,7 @@
     th,
     td {
       padding: 0.8rem 0.7rem;
-      font-size: calc(0.85rem + 3px);
+      font-size: calc(0.85rem - 1px);
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
       vertical-align: middle;
@@ -315,7 +315,7 @@
       border-radius: 999px;
       border: 1px solid #e5e7eb;
       padding: 0.3rem 0.6rem;
-      font-size: calc(0.82rem + 3px);
+      font-size: calc(0.82rem - 1px);
       background: white;
       outline: none;
     }
@@ -331,7 +331,7 @@
       padding: 0.25rem 0.5rem;
       border-radius: 999px;
       transition: background 0.12s ease;
-      font-size: calc(0.82rem + 3px);
+      font-size: calc(0.82rem - 1px);
     }
 
     .alasan-display:hover {
@@ -349,7 +349,7 @@
       border-radius: 999px;
       background: #e5e7eb;
       padding: 0.15rem 0.5rem;
-      font-size: calc(0.75rem + 3px);
+      font-size: calc(0.75rem - 1px);
       font-weight: 500;
       white-space: nowrap;
     }
@@ -382,7 +382,7 @@
     }
 
     .legend {
-      font-size: calc(0.75rem + 3px);
+      font-size: calc(0.75rem - 1px);
       color: var(--gray);
     }
 
@@ -391,7 +391,7 @@
       align-items: center;
       border-radius: 999px;
       padding: 0.15rem 0.45rem;
-      font-size: calc(0.72rem + 3px);
+      font-size: calc(0.72rem - 1px);
       font-weight: 500;
       color: #1f2937;
       background: #e5e7eb;
@@ -400,12 +400,12 @@
 
     .footer-note {
       margin-top: 0.6rem;
-      font-size: calc(0.7rem + 3px);
+      font-size: calc(0.7rem - 1px);
       color: var(--gray);
     }
 
     .icon {
-      font-size: calc(0.9rem + 3px);
+      font-size: calc(0.9rem - 1px);
     }
 
     /* ================== BULANAN (CHART) ================== */
@@ -428,7 +428,7 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 0.4rem;
-      font-size: calc(0.8rem + 3px);
+      font-size: calc(0.8rem - 1px);
       margin-bottom: 0.2rem;
     }
 
@@ -438,7 +438,7 @@
     }
 
     .chart-row-meta {
-      font-size: calc(0.78rem + 3px);
+      font-size: calc(0.78rem - 1px);
       color: var(--gray);
       white-space: nowrap;
     }
@@ -459,7 +459,7 @@
     }
 
     .chart-row-reasons {
-      font-size: calc(0.76rem + 3px);
+      font-size: calc(0.76rem - 1px);
       color: var(--gray);
       margin-top: 0.18rem;
     }
@@ -474,13 +474,13 @@
       th,
       td {
         padding: 0.55rem 0.45rem;
-        font-size: calc(0.78rem + 3px);
+        font-size: calc(0.78rem - 1px);
       }
       h1 {
-        font-size: calc(1.1rem + 3px);
+        font-size: calc(1.1rem - 1px);
       }
       .subtitle {
-        font-size: calc(0.8rem + 3px);
+        font-size: calc(0.8rem - 1px);
       }
       .filter-row {
         gap: 0.6rem;
@@ -495,7 +495,7 @@
       #tab-input th,
       #tab-input td {
         padding: 0.45rem 0.35rem;
-        font-size: calc(0.76rem + 3px);
+        font-size: calc(0.76rem - 1px);
       }
     }
 
@@ -1026,7 +1026,7 @@
     // =======================
     function masukModeEditAlasan(displayEl) {
       const currentVal = displayEl.dataset.value || "";
-      const santriId = displayEl.dataset.santriId;
+      the santriId = displayEl.dataset.santriId;
 
       if (displayEl.dataset.editing === "1") return;
       displayEl.dataset.editing = "1";
