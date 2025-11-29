@@ -661,21 +661,24 @@
         </div>
       </div>
 
-      <div class="btn-row">
-        <div class="btn-row-left">
-          <div class="legend">
-            Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
-          </div>
-          <button class="btn-secondary" id="btnSaveRekap">
-            <span class="icon">💾</span> Simpan Perubahan
-          </button>
-        </div>
-        <div class="btn-row-right">
-          <button class="btn-outline" id="btnPrintRekap">
-            <span class="icon">📄</span> Download PDF
-          </button>
-        </div>
-      </div>
+ <div class="btn-row">
+  <!-- Kiri: Download PDF -->
+  <div class="btn-row-left">
+    <button class="btn-outline" id="btnPrintRekap">
+      <span class="icon">📄</span> Download PDF
+    </button>
+  </div>
+
+  <!-- Kanan: keterangan + Simpan Perubahan -->
+  <div class="btn-row-right">
+    <div class="legend">
+      Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
+    </div>
+    <button class="btn-secondary" id="btnSaveRekap">
+      <span class="icon">💾</span> Simpan Perubahan
+    </button>
+  </div>
+</div>
     </section>
 
     <!-- =============== TAB REKAP BULANAN =============== -->
