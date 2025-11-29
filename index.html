@@ -868,7 +868,7 @@
           </div>
           <div class="stat-chip-row" style="margin-top:0.1rem;">
             <div class="stat-chip">
-              <span>📝</span>
+              <span>✏️</span>
               <span>Alasan sakit bisa diedit ulang.</span>
             </div>
           </div>
@@ -1278,7 +1278,7 @@
 
       if (error) {
         console.error("Gagal load santri_master:", error);
-        showToast("❎ Gagal memuat data.", "error");
+        showToast("❎ Gagal memuat data santri.", "error");
         return;
       }
       santriMaster = data || [];
@@ -1323,7 +1323,7 @@
 
       if (errSantri) {
         console.error("Gagal load santri:", errSantri);
-        showToast("❎ Gagal memuat data.", "error");
+        showToast("❎ Gagal memuat data santri.", "error");
         return;
       }
 
@@ -1381,7 +1381,7 @@
         inputTableBody.appendChild(tr);
       });
 
-      showToast("✅ berhasil memuat data.", "info");
+      showToast("✅ Daftar santri berhasil dimuat.", "info");
     }
 
     async function saveInputData() {
@@ -1428,7 +1428,7 @@
 
       if (delErr) {
         console.error("Gagal hapus data sakit lama:", delErr);
-        showToast("❎ Gagal menghapus data.", "error");
+        showToast("❎ Gagal menghapus data lama.", "error");
         return;
       }
 
@@ -1439,12 +1439,12 @@
 
         if (insErr) {
           console.error("Gagal insert data sakit:", insErr);
-          showToast("❎ Gagal menyimpan data.", "error");
+          showToast("❎ Gagal menyimpan data sakit.", "error");
           return;
         }
       }
 
-      showToast("✅ berhasil menyimpan data., "success");
+      showToast("✅ Data sakit untuk kelas ini berhasil disimpan.", "success");
       await loadDistinctAlasanSakit();
     }
 
@@ -1512,7 +1512,7 @@
 
       if (errSakit) {
         console.error("Gagal load rekap sakit:", errSakit);
-        showToast("❎ Gagal memuat rekap.", "error");
+        showToast("❎ Gagal memuat rekap harian.", "error");
         return;
       }
 
@@ -1571,7 +1571,7 @@
         rekapTableBody.appendChild(tr);
       });
 
-      showToast("✅ berhasil memuat rekap data.", "info");
+      showToast("✅ Rekap harian berhasil dimuat.", "info");
     }
 
     async function saveRekapData() {
@@ -1610,7 +1610,7 @@
 
       if (delErr) {
         console.error("Gagal hapus data lama rekap:", delErr);
-        showToast("❎ Gagal menghapus data.", "error");
+        showToast("❎ Gagal menghapus data lama.", "error");
         return;
       }
 
@@ -1626,7 +1626,7 @@
         }
       }
 
-      showToast("✅ berhasil menyimpan revisi.", "success");
+      showToast("Perubahan rekap harian berhasil disimpan.", "success");
       await loadDistinctAlasanSakit();
       await loadRekapTable();
     }
@@ -1655,7 +1655,7 @@
 
       if (error) {
         console.error("Gagal load rekap bulanan:", error);
-        showToast("❎ Gagal memuat rekap.", "error");
+        showToast("❎ Gagal memuat rekap bulanan.", "error");
         return;
       }
 
@@ -1753,7 +1753,7 @@
         monthlyChartContainer.appendChild(rowDiv);
       });
 
-      showToast("✅ berhasil memuat rekap data.", "info");
+      showToast("✅ Rekap bulanan berhasil dimuat.", "info");
     }
 
     // EVENTS
