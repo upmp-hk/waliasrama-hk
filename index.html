@@ -102,9 +102,17 @@
       margin-bottom: 0.75rem;
     }
 
-    /* Baris filter yang isi-nya mau di-center (rekap harian & bulanan) */
+    /* Baris filter yang mau di-center (rekap harian & bulanan) */
     .filter-row-center {
       justify-content: center;
+    }
+
+    .filter-row-center-inner {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 420px;
     }
 
     .field {
@@ -202,9 +210,9 @@
 
     /* Khusus tabel di tab Input Data */
     #tab-input table {
-      min-width: 0;      /* override min-width global */
+      min-width: 0;
       width: 100%;
-      table-layout: fixed; /* bagi lebar kolom secara tegas */
+      table-layout: fixed;
     }
 
     /* Kolom No (Input) */
@@ -255,14 +263,13 @@
       word-break: break-word;
     }
 
-    /* Kolom NIS di rekap harian: sempit, monospace */
+    /* Kolom NIS di rekap harian: sempit, font normal */
     #tab-rekap-harian th:nth-child(2),
     #tab-rekap-harian td:nth-child(2) {
       white-space: nowrap;
       width: 90px;
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas,
-        "Liberation Mono", "Courier New", monospace;
       font-size: 0.8rem;
+      text-align: center;
     }
 
     thead {
@@ -295,13 +302,6 @@
     .col-aksi {
       width: 70px;
       text-align: center;
-    }
-
-    .nis-cell {
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
-        "Courier New", monospace;
-      font-size: 0.8rem;
-      white-space: nowrap;
     }
 
     .alasan-input {
@@ -621,13 +621,15 @@
     <!-- =============== TAB REKAP HARIAN =============== -->
     <section id="tab-rekap-harian" class="tab-content" style="display:none;">
       <div class="filter-row filter-row-center">
-        <div class="field">
-          <label for="rekapTanggal">Tanggal Rekap</label>
-          <input type="date" id="rekapTanggal" />
+        <div class="filter-row-center-inner">
+          <div class="field">
+            <label for="rekapTanggal">Tanggal Rekap</label>
+            <input type="date" id="rekapTanggal" />
+          </div>
+          <button class="btn-outline" id="btnLoadRekap">
+            <span class="icon">🔍</span> Tampilkan Rekap
+          </button>
         </div>
-        <button class="btn-outline" id="btnLoadRekap">
-          <span class="icon">🔍</span> Tampilkan Rekap
-        </button>
       </div>
 
       <div class="table-container">
@@ -667,13 +669,15 @@
     <!-- =============== TAB REKAP BULANAN =============== -->
     <section id="tab-rekap-bulanan" class="tab-content" style="display:none;">
       <div class="filter-row filter-row-center">
-        <div class="field">
-          <label for="rekapBulan">Bulan Rekap</label>
-          <input type="month" id="rekapBulan" />
+        <div class="filter-row-center-inner">
+          <div class="field">
+            <label for="rekapBulan">Bulan Rekap</label>
+            <input type="month" id="rekapBulan" />
+          </div>
+          <button class="btn-outline" id="btnLoadRekapBulanan">
+            <span class="icon">🔍</span> Tampilkan Rekap
+          </button>
         </div>
-        <button class="btn-outline" id="btnLoadRekapBulanan">
-          <span class="icon">🔍</span> Tampilkan Rekap
-        </button>
       </div>
 
       <div id="monthlyChartContainer" class="monthly-chart-container">
@@ -1084,7 +1088,6 @@
         tdNo.textContent = index + 1;
 
         const tdNis = document.createElement("td");
-        tdNis.classList.add("nis-cell");
         tdNis.textContent = nis || "-";
 
         const tdNama = document.createElement("td");
