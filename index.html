@@ -10,6 +10,7 @@
     :root {
       --blue: #2563eb;
       --blue-soft: #dbeafe;
+      --blue-soft2: #eff6ff;
       --green: #10b981;
       --green-soft: #dcfce7;
       --red: #ef4444;
@@ -17,10 +18,14 @@
       --gray: #6b7280;
       --dark: #0f172a;
       --white: #ffffff;
+
       --radius-lg: 16px;
+      --radius-xl: 22px;
+
+      --shadow-soft: 0 14px 35px rgba(15, 23, 42, 0.18);
+      --shadow-chip: 0 1px 4px rgba(15, 23, 42, 0.15);
     }
 
-    /* Boost font global sedikit */
     html {
       font-size: 105%;
     }
@@ -35,7 +40,10 @@
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #dbeafe, #dcfce7);
+      background:
+        radial-gradient(circle at top left, #bfdbfe 0, transparent 45%),
+        radial-gradient(circle at bottom right, #bbf7d0 0, transparent 50%),
+        linear-gradient(135deg, #e5f0ff, #e0f9ee);
       display: flex;
       justify-content: center;
       padding: 1rem;
@@ -44,77 +52,275 @@
 
     .app {
       width: 100%;
-      max-width: 1150px;
-      background: rgba(255, 255, 255, 0.96);
-      border-radius: 24px;
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      max-width: 1180px;
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 26px;
+      box-shadow: var(--shadow-soft);
       padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      backdrop-filter: blur(10px);
+      animation: app-fade-in 0.35s ease-out;
     }
 
     @media (min-width: 768px) {
       .app {
-        padding: 1.75rem 2rem;
+        padding: 1.6rem 2rem 1.9rem;
       }
     }
 
-    /* HEADER BOX */
-    .header-box {
-      border-radius: 18px;
-      border: 1px solid #e5e7eb;
-      background: linear-gradient(135deg, #eff6ff, #ecfdf5);
-      padding: 0.9rem 1.1rem;
-      margin-bottom: 0.9rem;
-      text-align: center; 
-    }
-    .header-box .subtitle {
-      max-width: 520px;
-      margin: 0 auto;
+    @keyframes app-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
+    /* ===== TOP META BAR ===== */
+    .top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.7rem;
+      font-size: 0.7rem;
+      color: var(--gray);
+    }
+
+    .top-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.08);
+      color: #1d4ed8;
+      font-weight: 500;
+      box-shadow: var(--shadow-chip);
+    }
+
+    .meta-sep {
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.8);
+    }
+
+    .top-meta-right {
+      opacity: 0.8;
+    }
+
+    /* ===== HEADER BOX ===== */
+    .header-box {
+      border-radius: 20px;
+      border: 1px solid rgba(209, 213, 219, 0.85);
+      background:
+        linear-gradient(135deg, #eff6ff, #ecfdf5);
+      padding: 0.95rem 1.15rem;
+      margin-bottom: 0.9rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-box::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 180px;
+      height: 180px;
+      border-radius: 999px;
+      background: radial-gradient(circle at center, rgba(37, 99, 235, 0.23), transparent 70%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      display: grid;
+      grid-template-columns: auto;
+      gap: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 768px) {
+      .header-inner {
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+        align-items: center;
+      }
+    }
+
+    .header-main {
+      text-align: left;
+    }
+
+    .header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .header-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.14);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
 
     h1 {
-      font-size: calc(1.3rem - 1px);
+      font-size: calc(1.25rem);
       font-weight: 700;
       color: var(--dark);
-      margin-bottom: 0.25rem;
+      letter-spacing: 0.01em;
     }
 
     .subtitle {
-      font-size: calc(0.85rem - 1px);
+      font-size: calc(0.83rem);
       color: var(--gray);
-      margin-top: 0;
+      max-width: 540px;
     }
 
-    .tabs {
+    .header-meta-stat {
       display: flex;
-      gap: 0.5rem;
+      justify-content: flex-start;
+      gap: 0.65rem;
+      flex-wrap: wrap;
       margin-top: 0.4rem;
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 0.25rem;
+      font-size: 0.74rem;
+    }
+
+    .tag-soft {
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.04);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .tag-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .header-side {
+      text-align: left;
+      font-size: 0.75rem;
+      color: var(--gray);
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .stat-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .stat-chip {
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: var(--shadow-chip);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .stat-chip strong {
+      font-size: 0.78rem;
+      color: #111827;
+    }
+
+    /* ===== TABS ===== */
+    .tabs {
+      display: inline-flex;
+      gap: 0.35rem;
+      margin-top: 0.55rem;
+      border-radius: 999px;
+      padding: 0.15rem;
+      background: rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(209, 213, 219, 0.9);
     }
 
     .tab-btn {
       border: none;
       background: transparent;
-      padding: 0.4rem 0.9rem;
+      padding: 0.45rem 0.9rem;
       border-radius: 999px;
-      font-size: calc(0.85rem - 1px);
+      font-size: calc(0.78rem);
       cursor: pointer;
       color: var(--gray);
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition:
+        background 0.14s ease,
+        color 0.14s ease,
+        box-shadow 0.14s ease,
+        transform 0.06s ease;
+      white-space: nowrap;
     }
 
     .tab-btn.active {
-      background: var(--blue-soft);
+      background: var(--white);
       color: #1d4ed8;
       font-weight: 600;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+      transform: translateY(-0.5px);
     }
 
     .tab-content {
       margin-top: 1rem;
+    }
+
+    /* ===== FILTER ROWS & PANELS ===== */
+    .panel {
+      border-radius: 18px;
+      border: 1px solid rgba(209, 213, 219, 0.85);
+      background: linear-gradient(145deg, #ffffff, #f9fafb);
+      padding: 0.75rem 0.9rem 0.8rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .panel-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .panel-caption {
+      font-size: 0.72rem;
+      color: var(--gray);
     }
 
     .filter-row {
@@ -122,7 +328,7 @@
       flex-wrap: wrap;
       gap: 0.75rem;
       align-items: flex-end;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.3rem;
     }
 
     .filter-row-center {
@@ -145,87 +351,132 @@
       display: flex;
       flex-direction: column;
       gap: 0.2rem;
-      font-size: calc(0.8rem - 1px);
+      font-size: 0.78rem;
       min-width: 110px;
     }
 
     .field label {
       color: var(--gray);
+      font-size: 0.76rem;
+      padding-top: 0.11rem;
+      padding-bottom: 0.1rem;
+      letter-spacing: 0.01em;
     }
 
     .field input,
     .field select {
       border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      padding: 0.4rem 0.7rem;
-      font-size: calc(0.85rem - 1px);
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      padding: 0.42rem 0.7rem;
+      font-size: 0.8rem;
       background: #f9fafb;
       outline: none;
+      transition:
+        border-color 0.12s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease,
+        transform 0.06s ease;
     }
 
     .field input:focus,
     .field select:focus {
       border-color: var(--blue);
       box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
-      background: #fff;
+      background: #ffffff;
+      transform: translateY(-0.5px);
     }
 
+    /* ===== BUTTONS ===== */
     button {
       border: none;
       border-radius: 999px;
-      padding: 0.45rem 1rem;
-      font-size: calc(0.82rem - 1px);
+      padding: 0.48rem 1.1rem;
+      font-size: 0.8rem;
       font-weight: 500;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      transition: transform 0.08s ease, box-shadow 0.08s ease,
-        background 0.15s ease;
+      transition:
+        transform 0.08s ease,
+        box-shadow 0.1s ease,
+        background 0.15s ease,
+        filter 0.15s ease;
       white-space: nowrap;
       flex-shrink: 0;
     }
 
     button:active {
-      transform: translateY(1px);
+      transform: translateY(1px) scale(0.99);
       box-shadow: none;
+      filter: brightness(0.98);
     }
 
     .btn-primary {
-      background: var(--blue);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #ffffff;
-      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.45);
     }
 
     .btn-secondary {
-      background: var(--green);
+      background: linear-gradient(135deg, #10b981, #059669);
       color: white;
-      box-shadow: 0 3px 8px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.45);
     }
 
     .btn-outline {
-      background: white;
+      background: #ffffff;
       color: var(--dark);
       border: 1px solid #e5e7eb;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
     }
 
     .btn-danger {
       background: var(--red);
       color: white;
+      box-shadow: 0 6px 16px rgba(248, 113, 113, 0.5);
     }
 
-    .table-container {
-      margin-top: 0.75rem;
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray);
+    }
+
+    .icon {
+      font-size: 0.92rem;
+    }
+
+    /* ===== TABLE ===== */
+    .table-card {
       border-radius: var(--radius-lg);
-      border: 1px solid #e5e7eb;
+      border: 1px solid rgba(209, 213, 219, 0.9);
       overflow: hidden;
       background: #f9fafb;
       min-height: 220px;
     }
 
+    .table-container {
+      margin-top: 0.65rem;
+    }
+
     .table-scroll {
       width: 100%;
       overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148, 163, 184, 0.8) transparent;
+    }
+
+    .table-scroll::-webkit-scrollbar {
+      height: 7px;
+    }
+
+    .table-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .table-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.9);
+      border-radius: 999px;
     }
 
     table {
@@ -234,7 +485,7 @@
       min-width: 520px;
     }
 
-    /* INPUT DATA: layout dan wrap */
+    /* INPUT DATA layout */
     #tab-input table {
       min-width: 0;
       width: 100%;
@@ -267,7 +518,7 @@
       word-break: break-word;
     }
 
-    /* REKAP HARIAN: layout mirip input, Nama 45%, wrap text */
+    /* REKAP HARIAN layout */
     #tab-rekap-harian table {
       table-layout: fixed;
     }
@@ -302,9 +553,8 @@
     th,
     td {
       padding: 0.8rem 0.7rem;
-      font-size: calc(0.85rem - 1px);
+      font-size: 0.8rem;
       border-bottom: 1px solid #e5e7eb;
-      text-align: left;
       vertical-align: middle;
     }
 
@@ -312,6 +562,12 @@
       font-weight: 600;
       color: #1f2933;
       white-space: nowrap;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+
+    td {
+      text-align: left;
     }
 
     tbody tr:hover {
@@ -320,6 +576,18 @@
 
     .col-no {
       width: 40px;
+      text-align: center !important;
+    }
+
+    .col-kelas,
+    .col-nis {
+      text-align: center !important;
+    }
+
+    /* Kolom 'Alasan Sakit' di-tab Input (kolom ke-3) dan Rekap Harian (kolom ke-4) */
+    #tab-input td:nth-child(3),
+    #tab-rekap-harian td:nth-child(4) {
+      text-align: center;
     }
 
     .alasan-input {
@@ -327,32 +595,43 @@
       border-radius: 999px;
       border: 1px solid #e5e7eb;
       padding: 0.3rem 0.6rem;
-      font-size: calc(0.82rem - 1px);
+      font-size: 0.8rem;
       background: white;
       outline: none;
+      text-align: center;
+      transition:
+        border-color 0.12s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease,
+        transform 0.06s ease;
     }
 
     .alasan-input:focus {
       border-color: var(--blue);
       box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+      transform: translateY(-0.5px);
     }
 
     .alasan-display {
       min-height: 1.4em;
       cursor: pointer;
-      padding: 0.25rem 0.5rem;
+      padding: 0.25rem 0.6rem;
       border-radius: 999px;
-      transition: background 0.12s ease;
-      font-size: calc(0.82rem - 1px);
+      transition: background 0.12s ease, transform 0.06s ease;
+      font-size: 0.8rem;
+      text-align: center;
+      background: rgba(249, 250, 251, 0.9);
     }
 
     .alasan-display:hover {
       background: #e5e7eb;
+      transform: translateY(-0.5px);
     }
 
     .alasan-display.empty {
       color: var(--gray);
       font-style: italic;
+      background: transparent;
     }
 
     .kelas-badge {
@@ -360,18 +639,19 @@
       align-items: center;
       border-radius: 999px;
       background: #e5e7eb;
-      padding: 0.15rem 0.5rem;
-      font-size: calc(0.75rem - 1px);
+      padding: 0.16rem 0.55rem;
+      font-size: 0.76rem;
       font-weight: 500;
       white-space: nowrap;
     }
 
+    /* ===== BUTTON ROWS / LEGEND ===== */
     .btn-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 0.7rem;
-      gap: 0.5rem;
+      gap: 0.7rem;
       flex-wrap: wrap;
     }
 
@@ -389,33 +669,54 @@
     }
 
     .legend {
-      font-size: calc(0.75rem - 1px);
+      font-size: 0.74rem;
       color: var(--gray);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .legend-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
     }
 
     .footer-note {
-      margin-top: 0.6rem;
-      font-size: calc(0.7rem - 1px);
+      margin-top: 0.55rem;
+      font-size: 0.7rem;
       color: var(--gray);
     }
 
-    .icon {
-      font-size: calc(0.9rem - 1px);
-    }
-
-    /* BULANAN (CHART) */
+    /* ===== BULANAN (CHART) ===== */
     .monthly-chart-container {
       margin-top: 0.75rem;
       border-radius: var(--radius-lg);
       border: 1px solid #e5e7eb;
       background: #f9fafb;
-      padding: 0.75rem;
+      padding: 0.8rem 0.85rem;
       max-height: 520px;
       overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148, 163, 184, 0.9) transparent;
+    }
+
+    .monthly-chart-container::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    .monthly-chart-container::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.95);
+      border-radius: 999px;
     }
 
     .chart-row {
-      margin-bottom: 0.65rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .chart-row:last-child {
+      margin-bottom: 0.2rem;
     }
 
     .chart-row-header {
@@ -423,8 +724,8 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 0.4rem;
-      font-size: calc(0.8rem - 1px);
-      margin-bottom: 0.2rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
     }
 
     .chart-row-name {
@@ -433,7 +734,7 @@
     }
 
     .chart-row-meta {
-      font-size: calc(0.78rem - 1px);
+      font-size: 0.78rem;
       color: var(--gray);
       white-space: nowrap;
     }
@@ -444,19 +745,20 @@
       border-radius: 999px;
       background: #e5e7eb;
       overflow: hidden;
+      position: relative;
     }
 
     .chart-bar-fill {
       height: 100%;
       border-radius: 999px;
-      background: #2563eb;
+      background: linear-gradient(90deg, #2563eb, #4f46e5);
       transition: width 0.3s ease;
     }
 
     .chart-row-reasons {
-      font-size: calc(0.76rem - 1px);
+      font-size: 0.76rem;
       color: var(--gray);
-      margin-top: 0.18rem;
+      margin-top: 0.25rem;
     }
 
     .chart-row-reasons strong {
@@ -464,7 +766,7 @@
       font-weight: 500;
     }
 
-    /* TOAST / NOTIF */
+    /* ===== TOAST / NOTIF ===== */
     .toast {
       position: fixed;
       left: 50%;
@@ -474,7 +776,7 @@
       color: #ffffff;
       padding: 0.45rem 1.1rem;
       border-radius: 999px;
-      font-size: calc(0.8rem - 1px);
+      font-size: 0.78rem;
       box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
       opacity: 0;
       pointer-events: none;
@@ -499,34 +801,47 @@
       background: #111827;
     }
 
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 640px) {
       th,
       td {
         padding: 0.55rem 0.45rem;
-        font-size: calc(0.78rem - 1px);
+        font-size: 0.76rem;
       }
+
       h1 {
-        font-size: calc(1.1rem - 1px);
+        font-size: 1.1rem;
       }
+
       .subtitle {
-        font-size: calc(0.8rem - 1px);
+        font-size: 0.78rem;
       }
+
       .filter-row {
         gap: 0.6rem;
       }
-      .table-container {
+
+      .table-card {
         min-height: 180px;
       }
+
       .monthly-chart-container {
         max-height: 420px;
       }
+
       #tab-input th,
       #tab-input td {
         padding: 0.45rem 0.35rem;
-        font-size: calc(0.76rem - 1px);
+        font-size: 0.74rem;
+      }
+
+      .top-meta {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
 
+    /* ===== PRINT ===== */
     @media print {
       body {
         padding: 0;
@@ -535,13 +850,15 @@
       .tabs,
       #tab-input,
       .footer-note,
-      .toast {
+      .toast,
+      .top-meta {
         display: none !important;
       }
       .app {
         box-shadow: none;
         border-radius: 0;
         max-width: 100%;
+        border: none;
       }
       button {
         display: none !important;
@@ -553,43 +870,71 @@
         background: transparent;
       }
     }
-    
-    /* === Semua judul kolom tabel di-center === */
-    th {
-      text-align: center !important;
-    }
-    td {
-      text-align: left;
-    }
-    .col-no,
-    .col-kelas,
-    .col-nis {
-      text-align: center !important;
-    }
-    /* Kolom 'Alasan Sakit' di-tab Input (kolom ke-3) dan Rekap Harian (kolom ke-4) */
-    #tab-input td:nth-child(3),
-    #tab-rekap-harian td:nth-child(4) {
-      text-align: center;
-    }
-    
-    /* Isi input & tampilan alasan di tengah juga */
-    .alasan-input,
-    .alasan-display {
-      text-align: center;
-    }
-
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- HEADER DALAM BOX -->
+    <!-- TOP META BAR -->
+    <div class="top-meta">
+      <div class="top-meta-left">
+        <span class="meta-pill">
+          <span>🩺</span>
+          <span>Mode Kesiswaan • Rekap Sakit</span>
+        </span>
+        <span class="meta-sep"></span>
+        <span>Santri aktif &mdash; data diambil dari <strong>santri_master</strong></span>
+      </div>
+      <div class="top-meta-right">
+        Versi web app &bull; mobile-first
+      </div>
+    </div>
+
+    <!-- HEADER -->
     <header class="header-box">
-      <h1>Rekap Santri Sakit Harian & Bulanan</h1>
-      <p class="subtitle">
-        Form input data santri sakit harian dan rekap bulanan dalam satu aplikasi.
-      </p>
+      <div class="header-inner">
+        <div class="header-main">
+          <div class="header-title-row">
+            <div class="header-icon">📊</div>
+            <div>
+              <h1>Rekap Santri Sakit Harian & Bulanan</h1>
+            </div>
+          </div>
+          <p class="subtitle">
+            Input laporan santri sakit harian, rekap per tanggal, dan analisis frekuensi bulanan dalam satu tampilan yang rapi.
+          </p>
+          <div class="header-meta-stat">
+            <span class="tag-soft">
+              <span class="tag-dot"></span>
+              <span>Diisi oleh Wali Asrama</span>
+            </span>
+            <span class="tag-soft">
+              <span>💾</span>
+              <span>Tersimpan di tabel <code>santri_sakit</code></span>
+            </span>
+          </div>
+        </div>
+        <div class="header-side">
+          <div class="stat-chip-row">
+            <div class="stat-chip">
+              <span>📅</span>
+              <strong>Rekap Harian</strong>
+            </div>
+            <div class="stat-chip">
+              <span>📈</span>
+              <strong>Tren Bulanan</strong>
+            </div>
+          </div>
+          <div class="stat-chip-row" style="margin-top:0.1rem;">
+            <div class="stat-chip">
+              <span>✅</span>
+              <span>Alasan sakit bisa diedit ulang &amp; kosong = tidak sakit</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
 
+    <!-- NAV TABS -->
     <nav class="tabs">
       <button class="tab-btn active" data-tab="input">Input Data</button>
       <button class="tab-btn" data-tab="rekap-harian">Rekap Harian</button>
@@ -598,178 +943,216 @@
 
     <!-- =============== TAB INPUT DATA =============== -->
     <section id="tab-input" class="tab-content">
-      <!-- Baris 1: hanya tanggal -->
-      <div class="filter-row">
-        <div class="field">
-          <label style="padding-top: 9px; padding-bottom: 5px;" for="inputTanggal">Tanggal</label>
-          <input type="date" id="inputTanggal" />
-        </div>
-      </div>
-
-      <!-- Baris 2: jenjang, kelas, jurusan, paralel -->
-      <div class="filter-row">
-        <div class="field">
-          <label style="padding-top: 9px; padding-bottom: 5px;" for="inputJenjang">Jenjang</label>
-          <select id="inputJenjang">
-            <option value="MTs" selected>MTs</option>
-            <option value="MA">MA</option>
-          </select>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Filter Kelas & Tanggal</div>
+          <div class="panel-caption">Pilih tanggal dan kombinasi kelas yang akan diinput laporannya.</div>
         </div>
 
-        <div class="field">
-          <label style="padding-top: 9px; padding-bottom: 5px;" for="inputKelas">Kelas</label>
-          <select id="inputKelas">
-            <option value="VII" selected>VII</option>
-            <option value="VIII">VIII</option>
-            <option value="IX">IX</option>
-            <option value="X">X</option>
-            <option value="XI">XI</option>
-            <option value="XII">XII</option>
-          </select>
+        <!-- Baris 1: hanya tanggal -->
+        <div class="filter-row">
+          <div class="field">
+            <label for="inputTanggal">Tanggal</label>
+            <input type="date" id="inputTanggal" />
+          </div>
         </div>
 
-        <div class="field">
-          <label style="padding-top: 9px; padding-bottom: 5px;" for="inputJurusan">Jurusan</label>
-          <select id="inputJurusan">
-            <option value="IPA" selected>IPA</option>
-            <option value="IPS">IPS</option>
-            <option value="PK">PK</option>
-          </select>
-        </div>
+        <!-- Baris 2: jenjang, kelas, jurusan, paralel -->
+        <div class="filter-row">
+          <div class="field">
+            <label for="inputJenjang">Jenjang</label>
+            <select id="inputJenjang">
+              <option value="MTs" selected>MTs</option>
+              <option value="MA">MA</option>
+            </select>
+          </div>
 
-        <div class="field">
-          <label style="padding-top: 9px; padding-bottom: 5px;" for="inputParalel">Paralel</label>
-          <select id="inputParalel">
-            <!-- 1-15 -->
-          </select>
-        </div>
-      </div>
+          <div class="field">
+            <label for="inputKelas">Kelas</label>
+            <select id="inputKelas">
+              <option value="VII" selected>VII</option>
+              <option value="VIII">VIII</option>
+              <option value="IX">IX</option>
+              <option value="X">X</option>
+              <option value="XI">XI</option>
+              <option value="XII">XII</option>
+            </select>
+          </div>
 
-      <div class="table-container">
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th class="col-no">No</th>
-                <th>Nama Santri</th>
-                <th>Alasan Sakit</th>
-              </tr>
-            </thead>
-            <tbody id="inputTableBody">
+          <div class="field">
+            <label for="inputJurusan">Jurusan</label>
+            <select id="inputJurusan">
+              <option value="IPA" selected>IPA</option>
+              <option value="IPS">IPS</option>
+              <option value="PK">PK</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="inputParalel">Paralel</label>
+            <select id="inputParalel">
               <!-- diisi via JS -->
-            </tbody>
-          </table>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:0.55rem;">
+          <div class="btn-row-left">
+            <button class="btn-primary" id="btnLoadInput">
+              <span class="icon">📋</span> Muat Data Santri
+            </button>
+            <span class="legend">
+              <span class="legend-dot"></span>
+              Data santri diambil dari filter jenjang, kelas, jurusan, dan paralel.
+            </span>
+          </div>
+          <div class="btn-row-right">
+            <button class="btn-secondary" id="btnSaveInput">
+              <span class="icon">💾</span> Simpan Laporan
+            </button>
+          </div>
         </div>
       </div>
 
-      <p class="legend" style="margin-top:0.6rem;">
-        Isi <strong>Alasan Sakit</strong> untuk santri yang sakit. Kosong = tidak sakit.
-      </p>
+      <div class="panel" style="margin-top:0.65rem;">
+        <div class="panel-header">
+          <div class="panel-title">Daftar Santri & Alasan Sakit</div>
+          <div class="panel-caption">Isi kolom <strong>Alasan Sakit</strong> hanya untuk santri yang sakit.</div>
+        </div>
 
-      <!-- Baris tombol: kiri Muat Data Santri, kanan Simpan -->
-      <div class="btn-row">
-        <div class="btn-row-left">
-          <button class="btn-primary" id="btnLoadInput">
-            <span class="icon">📋</span> Muat Data Santri
-          </button>
+        <div class="table-container">
+          <div class="table-card">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th class="col-no">No</th>
+                    <th>Nama Santri</th>
+                    <th>Alasan Sakit</th>
+                  </tr>
+                </thead>
+                <tbody id="inputTableBody">
+                  <!-- diisi via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="btn-row-right">
-          <button class="btn-secondary" id="btnSaveInput">
-            <span class="icon">💾</span> Simpan Laporan
-          </button>
-        </div>
+
+        <p class="legend" style="margin-top:0.6rem;">
+          <span class="legend-dot"></span>
+          Kosong = tidak sakit &bull; daftar alasan yang sering dipakai akan muncul sebagai saran.
+        </p>
+
+        <p class="footer-note">
+          Wali asrama dapat mengulangi proses untuk kelas lain (ubah filter kelas & paralel, lalu tekan
+          <strong>Muat Data Santri</strong>).
+        </p>
       </div>
-
-      <p class="footer-note">
-        Wali asrama dapat mengulangi proses untuk kelas lain (ubah filter kelas & paralel,
-        lalu tekan <strong>Muat Data Santri</strong>).
-      </p>
     </section>
 
     <!-- =============== TAB REKAP HARIAN =============== -->
     <section id="tab-rekap-harian" class="tab-content" style="display:none;">
-      <div class="filter-row filter-row-center">
-        <div class="filter-row-center-inner">
-          <div class="field">
-            <label style="padding-top: 9px; padding-bottom: 5px;" for="rekapTanggal">Tanggal Rekap</label>
-            <input type="date" id="rekapTanggal" />
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Rekap Harian</div>
+          <div class="panel-caption">Lihat dan edit rekap santri sakit per tanggal.</div>
+        </div>
+
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field">
+              <label for="rekapTanggal">Tanggal Rekap</label>
+              <input type="date" id="rekapTanggal" />
+            </div>
+            <button class="btn-primary" id="btnLoadRekap">
+              <span class="icon">🔍</span> Tampilkan Rekap
+            </button>
           </div>
-          <button class="btn-primary" id="btnLoadRekap">
-            <span class="icon">🔍</span> Tampilkan Rekap
-          </button>
         </div>
-      </div>
 
-      <div class="table-container">
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th class="col-no">No</th>
-                <th>Nama Santri</th>
-                <th>Kelas</th>
-                <th>Alasan Sakit</th>
-              </tr>
-            </thead>
-            <tbody id="rekapTableBody">
-              <!-- diisi via JS -->
-            </tbody>
-          </table>
+        <div class="table-container">
+          <div class="table-card">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th class="col-no">No</th>
+                    <th>Nama Santri</th>
+                    <th>Kelas</th>
+                    <th>Alasan Sakit</th>
+                  </tr>
+                </thead>
+                <tbody id="rekapTableBody">
+                  <!-- diisi via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <p class="legend" style="margin-top:0.6rem;">
-        Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
-      </p>
+        <p class="legend" style="margin-top:0.6rem;">
+          <span class="legend-dot"></span>
+          Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
+        </p>
 
-      <div class="btn-row">
-        <div class="btn-row-left">
-          <button class="btn-primary" id="btnPrintRekap">
-            <span class="icon">📄</span> Download PDF
-          </button>
-        </div>
-        <div class="btn-row-right">
-          <button class="btn-secondary" id="btnSaveRekap">
-            <span class="icon">💾</span> Simpan Perubahan
-          </button>
+        <div class="btn-row">
+          <div class="btn-row-left">
+            <button class="btn-outline" id="btnPrintRekap">
+              <span class="icon">📄</span> Download PDF (Harian)
+            </button>
+          </div>
+          <div class="btn-row-right">
+            <button class="btn-secondary" id="btnSaveRekap">
+              <span class="icon">💾</span> Simpan Perubahan
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- =============== TAB REKAP BULANAN =============== -->
     <section id="tab-rekap-bulanan" class="tab-content" style="display:none;">
-      <div class="filter-row filter-row-center">
-        <div class="filter-row-center-inner">
-          <div class="field">
-            <label style="padding-top: 9px; padding-bottom: 5px;" for="rekapBulan">Bulan Rekap</label>
-            <input type="month" id="rekapBulan" />
-          </div>
-          <button class="btn-primary" id="btnLoadRekapBulanan">
-            <span class="icon">🔍</span> Tampilkan Rekap
-          </button>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Rekap Bulanan</div>
+          <div class="panel-caption">Analisis frekuensi sakit santri dalam satu bulan.</div>
         </div>
-      </div>
 
-      <div id="monthlyChartContainer" class="monthly-chart-container">
-        <!-- isi via JS -->
-      </div>
-
-      <div class="btn-row" style="margin-top:0.7rem;">
-        <div class="btn-row-left">
-          <div class="legend">
-            Diagram menampilkan santri dengan frekuensi sakit terbanyak dalam satu bulan.
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field">
+              <label for="rekapBulan">Bulan Rekap</label>
+              <input type="month" id="rekapBulan" />
+            </div>
+            <button class="btn-primary" id="btnLoadRekapBulanan">
+              <span class="icon">🔍</span> Tampilkan Rekap
+            </button>
           </div>
         </div>
-        <div class="btn-row-right">
-          <button class="btn-primary" id="btnPrintRekapBulanan">
-            <span class="icon">📄</span> Download PDF
-          </button>
-        </div>
-      </div>
 
-      <p class="footer-note">
-        Persentase dihitung dari jumlah kasus sakit santri dibandingkan total kasus sakit di bulan tersebut.
-      </p>
+        <div id="monthlyChartContainer" class="monthly-chart-container">
+          <!-- isi via JS -->
+        </div>
+
+        <div class="btn-row" style="margin-top:0.7rem;">
+          <div class="btn-row-left">
+            <div class="legend">
+              <span class="legend-dot"></span>
+              Diagram menampilkan santri dengan frekuensi sakit terbanyak dalam satu bulan (proporsi terhadap total kasus).
+            </div>
+          </div>
+          <div class="btn-row-right">
+            <button class="btn-outline" id="btnPrintRekapBulanan">
+              <span class="icon">📄</span> Download PDF (Bulanan)
+            </button>
+          </div>
+        </div>
+
+        <p class="footer-note">
+          Persentase dihitung dari jumlah kasus sakit santri dibandingkan total kasus sakit di bulan tersebut.
+        </p>
+      </div>
     </section>
 
     <datalist id="alasanList"></datalist>
