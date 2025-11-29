@@ -1307,7 +1307,7 @@
       const paralel = parseInt(inputParalel.value, 10);
 
       if (!tanggal) {
-        showToast("Pilih tanggal terlebih dahulu.", "error");
+        showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
 
@@ -1387,7 +1387,7 @@
     async function saveInputData() {
       const tanggal = inputTanggal.value;
       if (!tanggal) {
-        showToast("Pilih tanggal terlebih dahulu.", "error");
+        showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
 
@@ -1500,7 +1500,7 @@
     async function loadRekapTable() {
       const tanggal = rekapTanggal.value;
       if (!tanggal) {
-        showToast("Pilih tanggal rekap terlebih dahulu.", "error");
+        showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
 
@@ -1577,7 +1577,7 @@
     async function saveRekapData() {
       const tanggal = rekapTanggal.value;
       if (!tanggal) {
-        showToast("Pilih tanggal rekap terlebih dahulu.", "error");
+        showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
 
@@ -1635,7 +1635,7 @@
     async function loadRekapBulanan() {
       const bulanStr = rekapBulan.value;
       if (!bulanStr) {
-        showToast("Pilih bulan rekap terlebih dahulu.", "error");
+        showToast("⚠️ pilih bulan rekap.", "error");
         return;
       }
 
@@ -1771,7 +1771,7 @@
 
     btnPrintRekap.addEventListener("click", () => {
       if (!rekapTanggal.value) {
-        showToast("Pilih tanggal dulu sebelum download PDF.", "error");
+        showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
       switchTab("rekap-harian");
@@ -1782,7 +1782,7 @@
 
     btnPrintRekapBulanan.addEventListener("click", () => {
       if (!rekapBulan.value) {
-        showToast("Pilih bulan dulu sebelum download PDF.", "error");
+        showToast("⚠️ pilih bulan rekap.", "error");
         return;
       }
       switchTab("rekap-bulanan");
