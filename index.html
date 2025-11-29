@@ -20,7 +20,7 @@
       --radius-lg: 16px;
     }
 
-    /* Boost font global */
+    /* Boost font global sedikit */
     html {
       font-size: 105%;
     }
@@ -177,7 +177,7 @@
 
     .btn-primary {
       background: var(--blue);
-      color: white;
+      color: #ffffff;
       box-shadow: 0 3px 8px rgba(37, 99, 235, 0.4);
     }
 
@@ -218,6 +218,7 @@
       min-width: 520px;
     }
 
+    /* INPUT DATA: layout dan wrap */
     #tab-input table {
       min-width: 0;
       width: 100%;
@@ -250,9 +251,29 @@
       word-break: break-word;
     }
 
+    /* REKAP HARIAN: layout mirip input, Nama 45%, wrap text */
+    #tab-rekap-harian table {
+      table-layout: fixed;
+    }
+
+    #tab-rekap-harian th:nth-child(1),
+    #tab-rekap-harian td:nth-child(1) {
+      width: 40px;
+    }
+
     #tab-rekap-harian th:nth-child(2),
+    #tab-rekap-harian td:nth-child(2) {
+      width: 45%;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    #tab-rekap-harian th:nth-child(3),
+    #tab-rekap-harian td:nth-child(3) {
+      width: 90px;
+    }
+
     #tab-rekap-harian th:nth-child(4),
-    #tab-rekap-harian td:nth-child(2),
     #tab-rekap-harian td:nth-child(4) {
       white-space: normal;
       word-break: break-word;
@@ -366,6 +387,7 @@
       font-size: calc(0.9rem - 1px);
     }
 
+    /* BULANAN (CHART) */
     .monthly-chart-container {
       margin-top: 0.75rem;
       border-radius: var(--radius-lg);
@@ -426,6 +448,41 @@
       font-weight: 500;
     }
 
+    /* TOAST / NOTIF */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.4rem;
+      transform: translateX(-50%) translateY(8px);
+      background: #111827;
+      color: #ffffff;
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      font-size: calc(0.8rem - 1px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast-success {
+      background: var(--green);
+    }
+
+    .toast-error {
+      background: var(--red);
+    }
+
+    .toast-info {
+      background: #111827;
+    }
+
     @media (max-width: 640px) {
       th,
       td {
@@ -461,7 +518,8 @@
       }
       .tabs,
       #tab-input,
-      .footer-note {
+      .footer-note,
+      .toast {
         display: none !important;
       }
       .app {
@@ -569,7 +627,7 @@
       <!-- Baris tombol: kiri Muat Data Santri, kanan Simpan -->
       <div class="btn-row">
         <div class="btn-row-left">
-          <button class="btn-outline" id="btnLoadInput">
+          <button class="btn-primary" id="btnLoadInput">
             <span class="icon">📋</span> Muat Data Santri
           </button>
         </div>
@@ -594,7 +652,7 @@
             <label for="rekapTanggal">Tanggal Rekap</label>
             <input type="date" id="rekapTanggal" />
           </div>
-          <button class="btn-outline" id="btnLoadRekap">
+          <button class="btn-primary" id="btnLoadRekap">
             <span class="icon">🔍</span> Tampilkan Rekap
           </button>
         </div>
@@ -624,7 +682,7 @@
 
       <div class="btn-row">
         <div class="btn-row-left">
-          <button class="btn-outline" id="btnPrintRekap">
+          <button class="btn-primary" id="btnPrintRekap">
             <span class="icon">📄</span> Download PDF
           </button>
         </div>
@@ -644,7 +702,7 @@
             <label for="rekapBulan">Bulan Rekap</label>
             <input type="month" id="rekapBulan" />
           </div>
-          <button class="btn-outline" id="btnLoadRekapBulanan">
+          <button class="btn-primary" id="btnLoadRekapBulanan">
             <span class="icon">🔍</span> Tampilkan Rekap
           </button>
         </div>
@@ -661,7 +719,7 @@
           </div>
         </div>
         <div class="btn-row-right">
-          <button class="btn-outline" id="btnPrintRekapBulanan">
+          <button class="btn-primary" id="btnPrintRekapBulanan">
             <span class="icon">📄</span> Download PDF
           </button>
         </div>
@@ -675,6 +733,9 @@
     <datalist id="alasanList"></datalist>
   </div>
 
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast"></div>
+
   <script>
     const { createClient } = supabase;
 
@@ -684,6 +745,7 @@
 
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // DOM
     const tabButtons = document.querySelectorAll(".tab-btn");
     const tabInput = document.getElementById("tab-input");
     const tabRekapHarian = document.getElementById("tab-rekap-harian");
@@ -711,10 +773,32 @@
       document.getElementById("monthlyChartContainer");
 
     const alasanList = document.getElementById("alasanList");
+    const toastEl = document.getElementById("toast");
 
+    // STATE
     let santriMaster = [];
     let alasanSakitDistinct = [];
 
+    // TOAST
+    function showToast(message, variant = "info") {
+      if (!toastEl) {
+        alert(message);
+        return;
+      }
+      toastEl.textContent = message;
+      toastEl.className = "toast";
+      if (variant === "success") toastEl.classList.add("toast-success");
+      else if (variant === "error") toastEl.classList.add("toast-error");
+      else toastEl.classList.add("toast-info");
+
+      toastEl.classList.add("show");
+      clearTimeout(showToast._timeoutId);
+      showToast._timeoutId = setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, 2500);
+    }
+
+    // UTIL
     function setTodayToInputs() {
       const today = new Date();
       const yyyy = today.getFullYear();
@@ -781,6 +865,7 @@
       return { start, end, daysInMonth, year, month };
     }
 
+    // LOAD MASTER
     async function loadSantriMaster() {
       const { data, error } = await db
         .from("santri_master")
@@ -792,7 +877,7 @@
 
       if (error) {
         console.error("Gagal load santri_master:", error);
-        alert("Gagal memuat data santri (santri_master).");
+        showToast("Gagal memuat data santri.", "error");
         return;
       }
       santriMaster = data || [];
@@ -812,6 +897,7 @@
       fillAlasanDatalist();
     }
 
+    // INPUT DATA
     async function loadInputTable() {
       const tanggal = inputTanggal.value;
       const jenjang = inputJenjang.value;
@@ -820,7 +906,7 @@
       const paralel = parseInt(inputParalel.value, 10);
 
       if (!tanggal) {
-        alert("Pilih tanggal terlebih dahulu.");
+        showToast("Pilih tanggal terlebih dahulu.", "error");
         return;
       }
 
@@ -836,7 +922,7 @@
 
       if (errSantri) {
         console.error("Gagal load santri:", errSantri);
-        alert("Gagal memuat santri untuk filter ini.");
+        showToast("Gagal memuat santri untuk filter ini.", "error");
         return;
       }
 
@@ -845,6 +931,7 @@
       if (!santri || santri.length === 0) {
         inputTableBody.innerHTML =
           '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
+        showToast("Tidak ada santri untuk filter ini.", "info");
         return;
       }
 
@@ -858,7 +945,7 @@
 
       if (errSakit) {
         console.error("Gagal load santri_sakit:", errSakit);
-        alert("Gagal memuat data sakit.");
+        showToast("Gagal memuat data sakit.", "error");
         return;
       }
 
@@ -892,18 +979,20 @@
 
         inputTableBody.appendChild(tr);
       });
+
+      showToast("Daftar santri dimuat.", "info");
     }
 
     async function saveInputData() {
       const tanggal = inputTanggal.value;
       if (!tanggal) {
-        alert("Pilih tanggal terlebih dahulu.");
+        showToast("Pilih tanggal terlebih dahulu.", "error");
         return;
       }
 
       const rows = inputTableBody.querySelectorAll("tr");
       if (!rows.length) {
-        alert("Belum ada daftar santri yang dimuat.");
+        showToast("Belum ada daftar santri yang dimuat.", "error");
         return;
       }
 
@@ -926,7 +1015,7 @@
       });
 
       if (!santriIds.length) {
-        alert("Tidak ada santri pada tabel.");
+        showToast("Tidak ada santri pada tabel.", "error");
         return;
       }
 
@@ -938,7 +1027,7 @@
 
       if (delErr) {
         console.error("Gagal hapus data sakit lama:", delErr);
-        alert("Gagal menghapus data lama.");
+        showToast("Gagal menghapus data lama.", "error");
         return;
       }
 
@@ -949,15 +1038,16 @@
 
         if (insErr) {
           console.error("Gagal insert data sakit:", insErr);
-          alert("Gagal menyimpan data sakit.");
+          showToast("Gagal menyimpan data sakit.", "error");
           return;
         }
       }
 
-      alert("Data sakit untuk kelas ini berhasil disimpan.");
+      showToast("Data sakit untuk kelas ini berhasil disimpan.", "success");
       await loadDistinctAlasanSakit();
     }
 
+    // REKAP HARIAN
     function masukModeEditAlasan(displayEl) {
       const currentVal = displayEl.dataset.value || "";
       const santriId = displayEl.dataset.santriId;
@@ -1009,7 +1099,7 @@
     async function loadRekapTable() {
       const tanggal = rekapTanggal.value;
       if (!tanggal) {
-        alert("Pilih tanggal rekap terlebih dahulu.");
+        showToast("Pilih tanggal rekap terlebih dahulu.", "error");
         return;
       }
 
@@ -1021,7 +1111,7 @@
 
       if (errSakit) {
         console.error("Gagal load rekap sakit:", errSakit);
-        alert("Gagal memuat rekap data sakit.");
+        showToast("Gagal memuat rekap data sakit.", "error");
         return;
       }
 
@@ -1030,6 +1120,7 @@
       if (!sakitData || sakitData.length === 0) {
         rekapTableBody.innerHTML =
           '<tr><td colspan="4" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
+        showToast("Belum ada data santri sakit pada tanggal ini.", "info");
         return;
       }
 
@@ -1078,12 +1169,14 @@
 
         rekapTableBody.appendChild(tr);
       });
+
+      showToast("Rekap harian dimuat.", "info");
     }
 
     async function saveRekapData() {
       const tanggal = rekapTanggal.value;
       if (!tanggal) {
-        alert("Pilih tanggal rekap terlebih dahulu.");
+        showToast("Pilih tanggal rekap terlebih dahulu.", "error");
         return;
       }
 
@@ -1116,7 +1209,7 @@
 
       if (delErr) {
         console.error("Gagal hapus data lama rekap:", delErr);
-        alert("Gagal menghapus data lama.");
+        showToast("Gagal menghapus data lama.", "error");
         return;
       }
 
@@ -1127,26 +1220,27 @@
 
         if (insErr) {
           console.error("Gagal insert rekap baru:", insErr);
-          alert("Gagal menyimpan perubahan rekap.");
+          showToast("Gagal menyimpan perubahan rekap.", "error");
           return;
         }
       }
 
-      alert("Perubahan rekap harian berhasil disimpan.");
+      showToast("Perubahan rekap harian berhasil disimpan.", "success");
       await loadDistinctAlasanSakit();
       await loadRekapTable();
     }
 
+    // REKAP BULANAN
     async function loadRekapBulanan() {
       const bulanStr = rekapBulan.value;
       if (!bulanStr) {
-        alert("Pilih bulan rekap terlebih dahulu.");
+        showToast("Pilih bulan rekap terlebih dahulu.", "error");
         return;
       }
 
       const range = getMonthRange(bulanStr);
       if (!range) {
-        alert("Format bulan tidak valid.");
+        showToast("Format bulan tidak valid.", "error");
         return;
       }
 
@@ -1160,7 +1254,7 @@
 
       if (error) {
         console.error("Gagal load rekap bulanan:", error);
-        alert("Gagal memuat rekap bulanan.");
+        showToast("Gagal memuat rekap bulanan.", "error");
         return;
       }
 
@@ -1169,6 +1263,7 @@
       if (!sakitData || sakitData.length === 0) {
         monthlyChartContainer.innerHTML =
           '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Belum ada data santri sakit pada bulan ini.</div>';
+        showToast("Belum ada data santri sakit pada bulan ini.", "info");
         return;
       }
 
@@ -1195,6 +1290,7 @@
       if (!entries.length) {
         monthlyChartContainer.innerHTML =
           '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Belum ada data santri sakit pada bulan ini.</div>';
+        showToast("Belum ada data santri sakit pada bulan ini.", "info");
         return;
       }
 
@@ -1255,8 +1351,11 @@
 
         monthlyChartContainer.appendChild(rowDiv);
       });
+
+      showToast("Rekap bulanan dimuat.", "info");
     }
 
+    // EVENTS
     tabButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         switchTab(btn.dataset.tab);
@@ -1271,7 +1370,7 @@
 
     btnPrintRekap.addEventListener("click", () => {
       if (!rekapTanggal.value) {
-        alert("Pilih tanggal dulu sebelum download PDF.");
+        showToast("Pilih tanggal dulu sebelum download PDF.", "error");
         return;
       }
       switchTab("rekap-harian");
@@ -1282,13 +1381,14 @@
 
     btnPrintRekapBulanan.addEventListener("click", () => {
       if (!rekapBulan.value) {
-        alert("Pilih bulan dulu sebelum download PDF.");
+        showToast("Pilih bulan dulu sebelum download PDF.", "error");
         return;
       }
       switchTab("rekap-bulanan");
       window.print();
     });
 
+    // INIT
     window.addEventListener("load", async () => {
       setTodayToInputs();
       setThisMonthToRekapBulan();
