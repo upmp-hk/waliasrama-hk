@@ -805,11 +805,6 @@
         padding: 0.45rem 0.35rem;
         font-size: 0.74rem;
       }
-
-      .top-meta {
-        flex-direction: column;
-        align-items: flex-start;
-      }
     }
 
     /* ===== PRINT ===== */
@@ -821,8 +816,7 @@
       .tabs,
       #tab-input,
       .footer-note,
-      .toast,
-      .top-meta {
+      .toast {
         display: none !important;
       }
       .app {
@@ -1018,7 +1012,7 @@
         </p>
 
         <!-- TOMBOL SIMPAN LAPORAN DI DALAM BOX -->
-        <div class="btn-row" style="margin-top:0.7rem;">
+        <div class="btn-row" style="margin-top:0.7rem; justify-content:flex-end;">
           <div class="btn-row-right">
             <button class="btn-secondary" id="btnSaveInput">
               <span class="icon">💾</span> Simpan Laporan
