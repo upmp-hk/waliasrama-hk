@@ -53,13 +53,13 @@
     }
 
     h1 {
-      font-size: calc(1.3rem - 2px);
+      font-size: calc(1.3rem + 3px);
       font-weight: 700;
       color: var(--dark);
     }
 
     .subtitle {
-      font-size: calc(0.85rem - 2px);
+      font-size: calc(0.85rem + 3px);
       color: var(--gray);
       margin-top: 0.25rem;
     }
@@ -70,7 +70,6 @@
       margin-top: 1rem;
       border-bottom: 1px solid #e5e7eb;
       padding-bottom: 0.25rem;
-      overflow-x: auto;
     }
 
     .tab-btn {
@@ -78,10 +77,13 @@
       background: transparent;
       padding: 0.4rem 0.9rem;
       border-radius: 999px;
-      font-size: calc(0.85rem - 2px);
+      font-size: calc(0.85rem + 3px);
       cursor: pointer;
       color: var(--gray);
-      flex-shrink: 0;
+      flex: 1; /* simetris kiri - tengah - kanan */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .tab-btn.active {
@@ -116,14 +118,14 @@
     }
 
     .filter-row-center-inner .field {
-      flex: 1; /* tanggal memanjang kiri → tengah */
+      flex: 1; /* tanggal/bulan memanjang kiri → tengah */
     }
 
     .field {
       display: flex;
       flex-direction: column;
       gap: 0.2rem;
-      font-size: calc(0.8rem - 2px);
+      font-size: calc(0.8rem + 3px);
       min-width: 110px;
     }
 
@@ -136,7 +138,7 @@
       border-radius: 999px;
       border: 1px solid #e5e7eb;
       padding: 0.4rem 0.7rem;
-      font-size: calc(0.85rem - 2px);
+      font-size: calc(0.85rem + 3px);
       background: #f9fafb;
       outline: none;
     }
@@ -152,7 +154,7 @@
       border: none;
       border-radius: 999px;
       padding: 0.45rem 1rem;
-      font-size: calc(0.82rem - 2px);
+      font-size: calc(0.82rem + 3px);
       font-weight: 500;
       cursor: pointer;
       display: inline-flex;
@@ -267,12 +269,12 @@
       word-break: break-word;
     }
 
-    /* Kolom NIS di rekap harian: sempit, font normal */
+    /* Kolom NIS di rekap harian */
     #tab-rekap-harian th:nth-child(2),
     #tab-rekap-harian td:nth-child(2) {
       white-space: nowrap;
       width: 90px;
-      font-size: calc(0.8rem - 2px);
+      font-size: calc(0.8rem + 3px);
       text-align: center;
     }
 
@@ -283,7 +285,7 @@
     th,
     td {
       padding: 0.8rem 0.7rem;
-      font-size: calc(0.85rem - 2px);
+      font-size: calc(0.85rem + 3px);
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
       vertical-align: middle;
@@ -313,7 +315,7 @@
       border-radius: 999px;
       border: 1px solid #e5e7eb;
       padding: 0.3rem 0.6rem;
-      font-size: calc(0.82rem - 2px);
+      font-size: calc(0.82rem + 3px);
       background: white;
       outline: none;
     }
@@ -329,7 +331,7 @@
       padding: 0.25rem 0.5rem;
       border-radius: 999px;
       transition: background 0.12s ease;
-      font-size: calc(0.82rem - 2px);
+      font-size: calc(0.82rem + 3px);
     }
 
     .alasan-display:hover {
@@ -347,7 +349,7 @@
       border-radius: 999px;
       background: #e5e7eb;
       padding: 0.15rem 0.5rem;
-      font-size: calc(0.75rem - 2px);
+      font-size: calc(0.75rem + 3px);
       font-weight: 500;
       white-space: nowrap;
     }
@@ -366,6 +368,13 @@
       justify-content: flex-end;
     }
 
+    .btn-row-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
     .btn-row-right {
       display: flex;
       gap: 0.4rem;
@@ -373,7 +382,7 @@
     }
 
     .legend {
-      font-size: calc(0.75rem - 2px);
+      font-size: calc(0.75rem + 3px);
       color: var(--gray);
     }
 
@@ -382,7 +391,7 @@
       align-items: center;
       border-radius: 999px;
       padding: 0.15rem 0.45rem;
-      font-size: calc(0.72rem - 2px);
+      font-size: calc(0.72rem + 3px);
       font-weight: 500;
       color: #1f2937;
       background: #e5e7eb;
@@ -391,12 +400,12 @@
 
     .footer-note {
       margin-top: 0.6rem;
-      font-size: calc(0.7rem - 2px);
+      font-size: calc(0.7rem + 3px);
       color: var(--gray);
     }
 
     .icon {
-      font-size: calc(0.9rem - 2px);
+      font-size: calc(0.9rem + 3px);
     }
 
     /* ================== BULANAN (CHART) ================== */
@@ -419,7 +428,7 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 0.4rem;
-      font-size: calc(0.8rem - 2px);
+      font-size: calc(0.8rem + 3px);
       margin-bottom: 0.2rem;
     }
 
@@ -429,7 +438,7 @@
     }
 
     .chart-row-meta {
-      font-size: calc(0.78rem - 2px);
+      font-size: calc(0.78rem + 3px);
       color: var(--gray);
       white-space: nowrap;
     }
@@ -450,7 +459,7 @@
     }
 
     .chart-row-reasons {
-      font-size: calc(0.76rem - 2px);
+      font-size: calc(0.76rem + 3px);
       color: var(--gray);
       margin-top: 0.18rem;
     }
@@ -465,13 +474,13 @@
       th,
       td {
         padding: 0.55rem 0.45rem;
-        font-size: calc(0.78rem - 2px);
+        font-size: calc(0.78rem + 3px);
       }
       h1 {
-        font-size: calc(1.1rem - 2px);
+        font-size: calc(1.1rem + 3px);
       }
       .subtitle {
-        font-size: calc(0.8rem - 2px);
+        font-size: calc(0.8rem + 3px);
       }
       .filter-row {
         gap: 0.6rem;
@@ -486,11 +495,11 @@
       #tab-input th,
       #tab-input td {
         padding: 0.45rem 0.35rem;
-        font-size: calc(0.76rem - 2px);
+        font-size: calc(0.76rem + 3px);
       }
     }
 
-    /* Print: hanya rekap harian yang tampil */
+    /* Print: tampilkan tab aktif (harian atau bulanan), jangan paksa salah satu */
     @media print {
       body {
         padding: 0;
@@ -498,7 +507,6 @@
       }
       .tabs,
       #tab-input,
-      #tab-rekap-bulanan,
       .footer-note {
         display: none !important;
       }
@@ -507,13 +515,11 @@
         border-radius: 0;
         max-width: 100%;
       }
-      #tab-rekap-harian {
-        display: block !important;
-      }
       button {
         display: none !important;
       }
       input[type="date"],
+      input[type="month"],
       select {
         border: none;
         background: transparent;
@@ -656,13 +662,15 @@
       </div>
 
       <div class="btn-row">
-        <div class="legend">
-          Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
-        </div>
-        <div class="btn-row-right">
+        <div class="btn-row-left">
+          <div class="legend">
+            Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
+          </div>
           <button class="btn-secondary" id="btnSaveRekap">
             <span class="icon">💾</span> Simpan Perubahan
           </button>
+        </div>
+        <div class="btn-row-right">
           <button class="btn-outline" id="btnPrintRekap">
             <span class="icon">📄</span> Download PDF
           </button>
@@ -686,6 +694,19 @@
 
       <div id="monthlyChartContainer" class="monthly-chart-container">
         <!-- isi via JS -->
+      </div>
+
+      <div class="btn-row" style="margin-top:0.7rem;">
+        <div class="btn-row-left">
+          <div class="legend">
+            Diagram menampilkan santri dengan frekuensi sakit terbanyak dalam satu bulan.
+          </div>
+        </div>
+        <div class="btn-row-right">
+          <button class="btn-outline" id="btnPrintRekapBulanan">
+            <span class="icon">📄</span> Download PDF
+          </button>
+        </div>
       </div>
 
       <p class="footer-note">
@@ -735,6 +756,7 @@
 
     const rekapBulan = document.getElementById("rekapBulan");
     const btnLoadRekapBulanan = document.getElementById("btnLoadRekapBulanan");
+    const btnPrintRekapBulanan = document.getElementById("btnPrintRekapBulanan");
     const monthlyChartContainer =
       document.getElementById("monthlyChartContainer");
 
@@ -1334,6 +1356,15 @@
     });
 
     btnLoadRekapBulanan.addEventListener("click", loadRekapBulanan);
+
+    btnPrintRekapBulanan.addEventListener("click", () => {
+      if (!rekapBulan.value) {
+        alert("Pilih bulan dulu sebelum download PDF.");
+        return;
+      }
+      switchTab("rekap-bulanan");
+      window.print();
+    });
 
     // =======================
     // 9. INIT
