@@ -1026,7 +1026,7 @@
     // =======================
     function masukModeEditAlasan(displayEl) {
       const currentVal = displayEl.dataset.value || "";
-      the santriId = displayEl.dataset.santriId;
+      const santriId = displayEl.dataset.santriId; // ← diperbaiki di sini
 
       if (displayEl.dataset.editing === "1") return;
       displayEl.dataset.editing = "1";
