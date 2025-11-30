@@ -2083,6 +2083,13 @@
           const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
           const percentRoundedInt = Math.round(percent);
 
+          // susun daftar nama santri untuk jenis sakit ini
+          const santriArr = Array.from(obj.santriCounts.entries()).sort(
+            (a, b) => b[1] - a[1]
+          );
+          // user minta contoh: "Bahlul, Kikir, dst." tanpa (3x)
+          const santriText = santriArr.map(([nama]) => nama).join(", ");
+
           const rowDiv = document.createElement("div");
           rowDiv.classList.add("chart-row");
 
@@ -2119,7 +2126,7 @@
           const reasonsDiv = document.createElement("div");
           reasonsDiv.classList.add("chart-row-reasons");
           reasonsDiv.innerHTML =
-            `<strong>Keterangan:</strong> Total ${obj.count} kasus untuk jenis sakit ini.`;
+            `<strong>Rincian:</strong> ${santriText || "Nama santri tidak tersedia."}`;
 
           rowDiv.appendChild(headerDiv);
           rowDiv.appendChild(barTrack);
@@ -2236,11 +2243,16 @@
           };
         });
   
-        // Data tabel jenis sakit: pakai agregat reasonEntries
+        // Data tabel jenis sakit: Rincian = nama-nama santri dengan penyakit yang sama
         const reasonRows = reasonEntries.map(([reasonLabel, obj]) => {
+          const santriArr = Array.from(obj.santriCounts.entries()).sort(
+            (a, b) => b[1] - a[1]
+          );
+          const santriText = santriArr.map(([nama]) => nama).join(", ");
+  
           return {
             label: reasonLabel, // kolom "Jenis Sakit"
-            detail: `Total ${obj.count} kasus untuk jenis sakit ini.`,
+            detail: santriText || `Total ${obj.count} kasus untuk jenis sakit ini.`,
             count: obj.count,
           };
         });
