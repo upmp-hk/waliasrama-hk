@@ -44,16 +44,15 @@
         radial-gradient(circle at top left, #bfdbfe 0, transparent 45%),
         radial-gradient(circle at bottom right, #bbf7d0 0, transparent 50%),
         linear-gradient(135deg, #e5f0ff, #e0f9ee);
-      display: flex;
-      justify-content: center;
       padding: 1rem;
-      padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+      padding-bottom: 4.5rem; /* ruang buat bottom nav supaya konten nggak ketutup */
       color: var(--dark);
     }
 
     .app {
       width: 100%;
       max-width: 1180px;
+      margin: 0 auto; /* ganti fungsi flex center body */
       background: rgba(255, 255, 255, 0.97);
       border-radius: 26px;
       box-shadow: var(--shadow-soft);
@@ -192,16 +191,16 @@
 
     /* ===== TABS (BOTTOM NAV) ===== */
     .tabs {
-      position: fixed;                 /* ✅ nempel ke viewport, bukan ikut scroll konten */
+      position: fixed;
       left: 50%;
       bottom: 0.75rem;
       transform: translateX(-50%);
       z-index: 999;
-    
+
       display: flex;
-      width: calc(100% - 2rem);        /* ada jarak kiri-kanan sedikit */
+      width: calc(100% - 2rem);
       max-width: 480px;
-      margin: 0;                       /* jangan pakai margin auto/atas */
+      margin: 0;
       gap: 0.35rem;
       border-radius: 999px;
       padding: 0.15rem;
@@ -216,7 +215,7 @@
       border-radius: 999px;
       font-size: calc(0.78rem);
       cursor: pointer;
-      color: #e5e7eb; /* biar kontras di background gelap */
+      color: #e5e7eb;
       flex: 1;
       display: flex;
       align-items: center;
@@ -434,7 +433,6 @@
       margin: 0.65rem 0 0.1rem;
     }
 
-
     /* ===== TABLE ===== */
     .table-card {
       border-radius: var(--radius-lg);
@@ -528,7 +526,6 @@
     #tab-rekap-harian td:nth-child(3) {
       width: 90px;
       text-align: center;
-
     }
 
     #tab-rekap-harian th:nth-child(4),
@@ -716,14 +713,14 @@
       color: #111827;
       margin-bottom: 0.15rem;
       margin-top: 0.1rem;
-      text-align: center;        
+      text-align: center;
     }
 
     .chart-section-subtitle {
       font-size: 0.76rem;
       color: var(--gray);
       margin-bottom: 0.4rem;
-      text-align: center;       
+      text-align: center;
     }
 
     .chart-row {
@@ -788,13 +785,13 @@
       color: #111827;
       margin-top: 0.22rem;
     }
-  
+
     /* TABEL PRINT – hanya muncul saat download PDF rekap bulanan */
     .monthly-table-print {
       display: none;
       margin-top: 0.75rem;
     }
-    
+
     .monthly-table-print-title {
       font-weight: 600;
       font-size: 0.86rem;
@@ -835,15 +832,15 @@
     }
 
     .toast-info {
-      background: #111827; /* hitam – info default */
+      background: #111827;
     }
 
     .toast-warning {
-      background: #f59e0b; /* kuning ala amber-500 */
+      background: #f59e0b;
     }
 
     .toast-neutral {
-      background: #4b5563; /* abu-abu ala gray-600 */
+      background: #4b5563;
     }
 
     @media (max-width: 640px) {
@@ -852,34 +849,33 @@
         padding: 0.55rem 0.45rem;
         font-size: 0.76rem;
       }
-    
+
       h1 {
         font-size: 1.1rem;
       }
-    
+
       .subtitle {
         font-size: 0.78rem;
       }
-    
+
       .filter-row {
         gap: 0.6rem;
       }
-    
+
       .table-card {
         min-height: 180px;
       }
-    
+
       .monthly-chart-container {
         max-height: 420px;
       }
-    
+
       #tab-input th,
       #tab-input td {
         padding: 0.45rem 0.35rem;
         font-size: 0.74rem;
       }
-    
-      /* ✅ Bottom navigation ala marketplace */
+
       .tabs {
         position: fixed;
         left: 50%;
@@ -890,30 +886,11 @@
         width: calc(100% - 2rem);
         margin: 0;
       }
-    
-      /* Biar konten nggak ketutup nav bawah */
+
       body {
         padding-bottom: 4.5rem;
       }
     }
-    
-    /* ===== BOTTOM NAV STICKY ala marketplace (override) ===== */
-    body {
-      padding-bottom: 4.5rem; /* ruang buat bottom nav supaya konten nggak ketutup */
-    }
-    
-    .tabs {
-      position: fixed !important;      /* paksa nempel ke viewport */
-      left: 50%;
-      bottom: 0.75rem;
-      transform: translateX(-50%);
-      z-index: 999;
-    
-      width: calc(100% - 2rem);
-      max-width: 480px;
-      margin: 0;                       /* jangan auto / atas */
-    }
-
 
     /* ===== PRINT ===== */
     @media print {
@@ -942,34 +919,29 @@
         border: none;
         background: transparent;
       }
-      
+
       .install-app-row {
         display: none !important;
       }
-    
-      /* Biar semua isian rekap bulanan kebaca */
+
       .monthly-chart-container {
         max-height: none !important;
         overflow: visible !important;
       }
-    
-      /* Khusus rekap bulanan:
-         - diagram disembunyikan
-         - tabel rekap ditampilkan */
+
       .chart-section-card {
         display: none !important;
       }
-    
+
       .monthly-table-print {
         display: block !important;
       }
-      
-      /* Kolom ke-2 (Kelas / Nama Santri) jangan dibungkus ke 2 baris */
+
       .monthly-table-print table th:nth-child(2),
       .monthly-table-print table td:nth-child(2) {
         white-space: nowrap;
       }
-      
+
       .chart-bar-track {
         display: none !important;
       }
@@ -977,37 +949,264 @@
         display: block;
       }
     }
-
   </style>
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#2563eb" />
-
 </head>
 <body>
   <div class="app">
     <!-- HEADER -->
-    ...
+    <div class="header-box">
+      <div class="header-inner">
+        <div class="header-main">
+          <div class="header-title-row">
+            <div class="header-icon">🩺</div>
+            <h1>Rekap Santri Sakit Harian & Bulanan</h1>
+          </div>
+          <p class="subtitle">
+            Input laporan santri sakit harian, rekap per tanggal, dan analisis frekuensi bulanan dalam satu aplikasi.
+          </p>
+        </div>
+        <div class="header-side">
+          <div class="stat-chip-row">
+            <div class="stat-chip">
+              <span>📆</span><strong>Harian</strong><span>rekap per tanggal</span>
+            </div>
+            <div class="stat-chip">
+              <span>📊</span><strong>Bulanan</strong><span>kelas & santri terbanyak</span>
+            </div>
+            <div class="stat-chip">
+              <span>🧪</span><strong>Analisis</strong><span>jenis sakit terbanyak</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- INSTALL APP BUTTON -->
-    ...
-    <!-- HAPUS nav dari sini -->
-    
+    <div id="installPromptContainer" class="install-app-row">
+      <button id="btnInstallApp" class="btn-outline">
+        <span class="icon">📲</span> Instal aplikasi
+      </button>
+    </div>
+
     <!-- =============== TAB INPUT DATA =============== -->
     <section id="tab-input" class="tab-content">
-      ...
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Input laporan sakit harian</div>
+          <div class="panel-caption">
+            Pilih tanggal dan kelas, lalu isi alasan sakit hanya untuk santri yang sakit.
+          </div>
+        </div>
+
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field">
+              <label for="inputTanggal">Tanggal</label>
+              <input type="date" id="inputTanggal" />
+            </div>
+
+            <div class="field">
+              <label>Jenjang</label>
+              <div class="chip-group" data-target="inputJenjang">
+                <button type="button" class="chip-option active" data-value="MTs">MTs</button>
+                <button type="button" class="chip-option" data-value="MA">MA</button>
+              </div>
+              <input type="hidden" id="inputJenjang" value="MTs" />
+            </div>
+
+            <div class="field">
+              <label for="inputKelas">Kelas</label>
+              <select id="inputKelas">
+                <option value="VII">VII</option>
+                <option value="VIII">VIII</option>
+                <option value="IX">IX</option>
+                <option value="X">X</option>
+                <option value="XI">XI</option>
+                <option value="XII">XII</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="inputJurusan">Jurusan</label>
+              <select id="inputJurusan">
+                <option value="">-</option>
+                <option value="IPA">IPA</option>
+                <option value="IPS">IPS</option>
+                <option value="AGAMA">AGAMA</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="inputParalel">Paralel</label>
+              <select id="inputParalel">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <div class="btn-row-left">
+            <button type="button" id="btnLoadInput" class="btn-outline">
+              <span class="icon">🔄</span> Muat data santri
+            </button>
+          </div>
+          <div class="btn-row-right">
+            <button type="button" id="btnSaveInput" class="btn-primary">
+              <span class="icon">💾</span> Simpan laporan
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-card">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama Santri</th>
+                    <th>Alasan Sakit</th>
+                  </tr>
+                </thead>
+                <tbody id="inputTableBody">
+                  <!-- Diisi via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <p class="footer-note">
+          Isi kolom <strong>Alasan Sakit</strong> hanya untuk santri yang sakit pada tanggal terpilih.
+        </p>
+      </div>
     </section>
 
+    <!-- =============== TAB REKAP HARIAN =============== -->
     <section id="tab-rekap-harian" class="tab-content" style="display:none;">
-      ...
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Rekap santri sakit harian</div>
+          <div class="panel-caption">
+            Tampilkan dan revisi rekap santri sakit per tanggal, lalu simpan perubahan jika ada koreksi alasan.
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="field">
+            <label for="rekapTanggal">Tanggal rekap</label>
+            <input type="date" id="rekapTanggal" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button type="button" id="btnLoadRekap" class="btn-primary">
+              <span class="icon">📄</span> Tampilkan rekap
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-card">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama Santri</th>
+                    <th>Kelas</th>
+                    <th>Alasan Sakit</th>
+                  </tr>
+                </thead>
+                <tbody id="rekapTableBody">
+                  <!-- Diisi via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <div class="btn-row-left">
+            <button type="button" id="btnPrintRekap" class="btn-outline">
+              <span class="icon">🖨️</span> Download PDF
+            </button>
+          </div>
+          <div class="btn-row-right">
+            <button type="button" id="btnSaveRekap" class="btn-secondary">
+              <span class="icon">💾</span> Simpan perubahan
+            </button>
+          </div>
+        </div>
+
+        <p class="footer-note">
+          Klik alasan sakit untuk mengedit. Perubahan akan tersimpan sebagai rekap resmi pada tanggal terpilih.
+        </p>
+      </div>
     </section>
 
+    <!-- =============== TAB REKAP BULANAN =============== -->
     <section id="tab-rekap-bulanan" class="tab-content" style="display:none;">
-      ...
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Rekap bulanan & analisis frekuensi</div>
+          <div class="panel-caption">
+            Analisis kelas, santri, dan jenis sakit dengan frekuensi tertinggi dalam satu bulan.
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="field">
+            <label for="rekapBulan">Bulan rekap</label>
+            <input type="month" id="rekapBulan" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button type="button" id="btnLoadRekapBulanan" class="btn-primary">
+              <span class="icon">📊</span> Tampilkan rekap bulanan
+            </button>
+          </div>
+        </div>
+
+        <div id="monthlyChartContainer" class="monthly-chart-container">
+          <!-- Diagram & tabel rekap bulanan diisi via JS -->
+        </div>
+
+        <div class="btn-row">
+          <div class="btn-row-left">
+            <button type="button" id="btnPrintRekapBulanan" class="btn-outline">
+              <span class="icon">🖨️</span> Download PDF rekap bulanan
+            </button>
+          </div>
+          <div class="btn-row-right"></div>
+        </div>
+
+        <p class="footer-note">
+          Diagram di layar hanya untuk visual. Saat download PDF, data disajikan dalam bentuk tabel rekap lengkap.
+        </p>
+      </div>
     </section>
 
     <datalist id="alasanList"></datalist>
   </div>
 
-  <!-- NAV TABS (BOTTOM) DIPINDAH KE SINI -->
+  <!-- NAV TABS (BOTTOM) -->
   <nav class="tabs">
     <button class="tab-btn active" data-tab="input">Input Data</button>
     <button class="tab-btn" data-tab="rekap-harian">Rekap Harian</button>
@@ -1018,24 +1217,20 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // JS tetap sama, karena masih querySelectorAll(".tab-btn") dll
-  </script>
-</body>
-  <script>
     const { createClient } = supabase;
-  
+
     const SUPABASE_URL = "https://szbhghiryzbfivriksnu.supabase.co";
     const SUPABASE_ANON_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6YmhnaGlyeXpiZml2cmlrc251Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzIwNTYsImV4cCI6MjA3OTkwODA1Nn0.0FJ_Fu5qv7n6mnsNd9rWRJ80yHr2T31ar4q8Rv4rWbo";
-  
+
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  
+
     // DOM
     const tabButtons = document.querySelectorAll(".tab-btn");
     const tabInput = document.getElementById("tab-input");
     const tabRekapHarian = document.getElementById("tab-rekap-harian");
     const tabRekapBulanan = document.getElementById("tab-rekap-bulanan");
-  
+
     const inputTanggal = document.getElementById("inputTanggal");
     const inputJenjang = document.getElementById("inputJenjang");
     const inputKelas = document.getElementById("inputKelas");
@@ -1044,49 +1239,46 @@
     const btnLoadInput = document.getElementById("btnLoadInput");
     const btnSaveInput = document.getElementById("btnSaveInput");
     const inputTableBody = document.getElementById("inputTableBody");
-  
+
     const rekapTanggal = document.getElementById("rekapTanggal");
     const btnLoadRekap = document.getElementById("btnLoadRekap");
     const btnSaveRekap = document.getElementById("btnSaveRekap");
     const btnPrintRekap = document.getElementById("btnPrintRekap");
     const rekapTableBody = document.getElementById("rekapTableBody");
-  
+
     const rekapBulan = document.getElementById("rekapBulan");
     const btnLoadRekapBulanan = document.getElementById("btnLoadRekapBulanan");
     const btnPrintRekapBulanan = document.getElementById("btnPrintRekapBulanan");
     const monthlyChartContainer =
       document.getElementById("monthlyChartContainer");
-  
+
     const alasanList = document.getElementById("alasanList");
     const toastEl = document.getElementById("toast");
-    
+
     // PWA INSTALL
     const installPromptContainer = document.getElementById("installPromptContainer");
     const btnInstallApp = document.getElementById("btnInstallApp");
     let deferredPwaPrompt = null;
 
-  
     // STATE
     let santriMaster = [];
     let alasanSakitDistinct = [];
-    // FLAG: toast hanya aktif setelah initial load selesai
     let toastEnabled = false;
-  
+
     // TOAST
     function showToast(message, variant = "info") {
       if (!toastEnabled) {
         return;
       }
-  
+
       if (!toastEl) {
         alert(message);
         return;
       }
-  
-      // Mode 'auto': tentukan warna berdasarkan isi pesan
+
       if (variant === "auto") {
         const lower = message.toLowerCase();
-  
+
         if (message.includes("✅") || lower.includes("berhasil") || lower.includes("sukses")) {
           variant = "success";
         } else if (message.includes("❎") || lower.includes("gagal") || lower.includes("error")) {
@@ -1096,13 +1288,13 @@
         } else if (lower.includes("info") || lower.includes("catatan")) {
           variant = "neutral";
         } else {
-          variant = "info"; // fallback hitam
+          variant = "info";
         }
       }
-  
+
       toastEl.textContent = message;
       toastEl.className = "toast";
-  
+
       switch (variant) {
         case "success":
           toastEl.classList.add("toast-success");
@@ -1121,25 +1313,25 @@
           toastEl.classList.add("toast-info");
           break;
       }
-  
+
       toastEl.classList.add("show");
       clearTimeout(showToast._timeoutId);
       showToast._timeoutId = setTimeout(() => {
         toastEl.classList.remove("show");
       }, 2500);
     }
-  
+
     function showToastAuto(message) {
       showToast(message, "auto");
     }
-  
+
     // CHIP GROUP HANDLER
     function initChipGroups() {
       document.querySelectorAll(".chip-group").forEach((group) => {
         const targetId = group.dataset.target;
         const hiddenInput = document.getElementById(targetId);
         if (!hiddenInput) return;
-  
+
         const buttons = group.querySelectorAll(".chip-option");
         buttons.forEach((btn) => {
           btn.addEventListener("click", () => {
@@ -1150,7 +1342,7 @@
         });
       });
     }
-  
+
     // UTIL
     function setTodayToInputs() {
       const today = new Date();
@@ -1161,17 +1353,17 @@
       inputTanggal.value = val;
       rekapTanggal.value = val;
     }
-  
+
     function setThisMonthToRekapBulan() {
       const today = new Date();
       const yyyy = today.getFullYear();
       const mm = String(today.getMonth() + 1).padStart(2, "0");
       rekapBulan.value = `${yyyy}-${mm}`;
     }
-  
+
     function switchTab(tab) {
       localStorage.setItem("sakit_active_tab", tab);
-  
+
       tabButtons.forEach((btn) => {
         btn.classList.toggle("active", btn.dataset.tab === tab);
       });
@@ -1180,7 +1372,7 @@
       tabRekapBulanan.style.display =
         tab === "rekap-bulanan" ? "block" : "none";
     }
-  
+
     function fillAlasanDatalist() {
       alasanList.innerHTML = "";
       const seen = new Set();
@@ -1194,22 +1386,22 @@
         alasanList.appendChild(opt);
       });
     }
-  
+
     function getMonthRange(monthStr) {
       const [yearStr, monthStr2] = monthStr.split("-");
       const year = Number(yearStr);
       const month = Number(monthStr2);
       if (!year || !month) return null;
-    
+
       const daysInMonth = new Date(year, month, 0).getDate();
-    
+
       const mm = String(month).padStart(2, "0");
       const start = `${year}-${mm}-01`;
       const end = `${year}-${mm}-${String(daysInMonth).padStart(2, "0")}`;
-    
+
       return { start, end, daysInMonth, year, month };
     }
-  
+
     // LOAD MASTER
     async function loadSantriMaster() {
       const { data, error } = await db
@@ -1219,7 +1411,7 @@
         )
         .eq("aktif", true)
         .order("nama", { ascending: true });
-  
+
       if (error) {
         console.error("Gagal load santri_master:", error);
         showToast("❎ gagal memuat data.", "error");
@@ -1227,13 +1419,13 @@
       }
       santriMaster = data || [];
     }
-  
+
     async function loadDistinctAlasanSakit() {
       const { data, error } = await db
         .from("santri_sakit")
         .select("alasan_sakit")
         .not("alasan_sakit", "is", null);
-  
+
       if (error) {
         console.error("Gagal load alasan_sakit:", error);
         return;
@@ -1241,7 +1433,7 @@
       alasanSakitDistinct = (data || []).map((d) => d.alasan_sakit);
       fillAlasanDatalist();
     }
-  
+
     // INPUT DATA
     async function loadInputTable() {
       const tanggal = inputTanggal.value;
@@ -1249,12 +1441,12 @@
       const kelas = inputKelas.value;
       const jurusan = inputJurusan.value;
       const paralel = parseInt(inputParalel.value, 10);
-  
+
       if (!tanggal) {
         showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
-  
+
       const { data: santri, error: errSantri } = await db
         .from("santri_master")
         .select("id, nis, nama, jenjang, kelas, jurusan, paralel")
@@ -1264,51 +1456,51 @@
         .eq("paralel", paralel)
         .eq("aktif", true)
         .order("nama", { ascending: true });
-  
+
       if (errSantri) {
         console.error("Gagal load santri:", errSantri);
         showToast("❎ gagal memuat data.", "error");
         return;
       }
-  
+
       inputTableBody.innerHTML = "";
-  
+
       if (!santri || santri.length === 0) {
         inputTableBody.innerHTML =
           '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
         showToast("⚠️ tidak ada data.", "warning");
         return;
       }
-  
+
       const santriIds = santri.map((s) => s.id);
-  
+
       const { data: sakitData, error: errSakit } = await db
         .from("santri_sakit")
         .select("santri_id, alasan_sakit")
         .eq("tanggal", tanggal)
         .in("santri_id", santriIds);
-  
+
       if (errSakit) {
         console.error(" load santri_sakit:", errSakit);
         showToast("❎ gagal memuat data.", "error");
         return;
       }
-  
+
       const mapSakit = new Map();
       (sakitData || []).forEach((row) => {
         mapSakit.set(row.santri_id, row.alasan_sakit || "");
       });
-  
+
       santri.forEach((s, index) => {
         const tr = document.createElement("tr");
-  
+
         const tdNo = document.createElement("td");
         tdNo.classList.add("col-no");
         tdNo.textContent = index + 1;
-  
+
         const tdNama = document.createElement("td");
         tdNama.textContent = s.nama;
-  
+
         const tdAlasan = document.createElement("td");
         const inp = document.createElement("input");
         inp.type = "text";
@@ -1317,33 +1509,33 @@
         inp.value = mapSakit.get(s.id) || "";
         inp.dataset.santriId = s.id;
         tdAlasan.appendChild(inp);
-  
+
         tr.appendChild(tdNo);
         tr.appendChild(tdNama);
         tr.appendChild(tdAlasan);
-  
+
         inputTableBody.appendChild(tr);
       });
-  
+
       showToast("✅ berhasil memuat data.", "info");
     }
-  
+
     async function saveInputData() {
       const tanggal = inputTanggal.value;
       if (!tanggal) {
         showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
-  
+
       const rows = inputTableBody.querySelectorAll("tr");
       if (!rows.length) {
         showToast("⚠️ tidak ada data.", "error");
         return;
       }
-  
+
       const santriIds = [];
       const payload = [];
-  
+
       rows.forEach((row) => {
         const inp = row.querySelector(".alasan-input");
         if (!inp) return;
@@ -1358,73 +1550,73 @@
           });
         }
       });
-  
+
       if (!santriIds.length) {
         showToastAuto("⚠️ pilih tanggal rekap.");
         return;
       }
-  
+
       const { error: delErr } = await db
         .from("santri_sakit")
         .delete()
         .eq("tanggal", tanggal)
         .in("santri_id", santriIds);
-  
+
       if (delErr) {
         console.error("Gagal hapus data sakit lama:", delErr);
         showToastAuto("❎ gagal memuat rekap.");
         return;
       }
-  
+
       if (payload.length) {
         const { error: insErr } = await db
           .from("santri_sakit")
           .insert(payload);
-  
+
         if (insErr) {
           console.error("Gagal insert data sakit:", insErr);
           showToast("❎ gagal menyimpan data.", "error");
           return;
         }
       }
-  
+
       showToastAuto("✅ berhasil menyimpan data");
       await loadDistinctAlasanSakit();
     }
-  
+
     // REKAP HARIAN
     function masukModeEditAlasan(displayEl) {
       const currentVal = displayEl.dataset.value || "";
       const santriId = displayEl.dataset.santriId;
-  
+
       if (displayEl.dataset.editing === "1") return;
       displayEl.dataset.editing = "1";
-  
+
       const input = document.createElement("input");
       input.type = "text";
       input.classList.add("alasan-input");
       input.setAttribute("list", "alasanList");
       input.value = currentVal;
       input.dataset.santriId = santriId;
-  
+
       function selesaiEdit(save) {
         const newVal = save ? input.value.trim() : currentVal;
         const span = document.createElement("div");
         span.classList.add("alasan-display");
         span.dataset.santriId = santriId;
         span.dataset.value = newVal;
-  
+
         if (!newVal) {
           span.textContent = "(kosong)";
           span.classList.add("empty");
         } else {
           span.textContent = newVal;
         }
-  
+
         span.addEventListener("click", () => masukModeEditAlasan(span));
         input.replaceWith(span);
       }
-  
+
       input.addEventListener("blur", () => selesaiEdit(true));
       input.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
@@ -1435,35 +1627,35 @@
           selesaiEdit(false);
         }
       });
-  
+
       displayEl.replaceWith(input);
       input.focus();
       input.select();
     }
-  
+
     async function loadRekapTable(options = {}) {
       const { silent = false } = options;
-  
+
       const tanggal = rekapTanggal.value;
       if (!tanggal) {
         showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
-  
+
       const { data: sakitData, error: errSakit } = await db
         .from("santri_sakit")
         .select("id, tanggal, santri_id, alasan_sakit")
         .eq("tanggal", tanggal)
         .order("id", { ascending: true });
-  
+
       if (errSakit) {
         console.error("Gagal load rekap sakit:", errSakit);
         showToast("❎ gagal memuat rekap.", "error");
         return;
       }
-  
+
       rekapTableBody.innerHTML = "";
-  
+
       if (!sakitData || sakitData.length === 0) {
         rekapTableBody.innerHTML =
           '<tr><td colspan="4" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
@@ -1472,29 +1664,29 @@
         }
         return;
       }
-  
+
       sakitData.forEach((row, index) => {
         const santri = santriMaster.find((s) => s.id === row.santri_id);
         const nama = santri ? santri.nama : "(santri tidak ditemukan)";
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
-  
+
         const tr = document.createElement("tr");
-  
+
         const tdNo = document.createElement("td");
         tdNo.classList.add("col-no");
         tdNo.textContent = index + 1;
-  
+
         const tdNama = document.createElement("td");
         tdNama.textContent = nama;
-  
+
         const tdKelas = document.createElement("td");
         const spanKelas = document.createElement("span");
         spanKelas.classList.add("kelas-badge");
         spanKelas.textContent = kelasLabel;
         tdKelas.appendChild(spanKelas);
-  
+
         const tdAlasan = document.createElement("td");
         const spanAlasan = document.createElement("div");
         spanAlasan.classList.add("alasan-display");
@@ -1510,34 +1702,34 @@
           masukModeEditAlasan(spanAlasan)
         );
         tdAlasan.appendChild(spanAlasan);
-  
+
         tr.appendChild(tdNo);
         tr.appendChild(tdNama);
         tr.appendChild(tdKelas);
         tr.appendChild(tdAlasan);
-  
+
         rekapTableBody.appendChild(tr);
       });
-  
+
       if (!silent) {
         showToast("✅ berhasil memuat rekap.", "info");
       }
     }
-  
+
     async function saveRekapData() {
       const tanggal = rekapTanggal.value;
       if (!tanggal) {
         showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
-  
+
       if (document.activeElement && document.activeElement.tagName === "INPUT") {
         document.activeElement.blur();
       }
-  
+
       const rows = rekapTableBody.querySelectorAll("tr");
       const payload = [];
-  
+
       rows.forEach((row) => {
         const display = row.querySelector(".alasan-display");
         if (!display) return;
@@ -1552,35 +1744,35 @@
           });
         }
       });
-  
+
       const { error: delErr } = await db
         .from("santri_sakit")
         .delete()
         .eq("tanggal", tanggal);
-  
+
       if (delErr) {
         console.error("Gagal hapus data lama rekap:", delErr);
         showToast("❎ gagal menghapus data.", "error");
         return;
       }
-  
+
       if (payload.length) {
         const { error: insErr } = await db
           .from("santri_sakit")
           .insert(payload);
-  
+
         if (insErr) {
           console.error("Gagal insert rekap baru:", insErr);
           showToast("❎ gagal menyimpan revisi.", "error");
           return;
         }
       }
-  
+
       showToast("✅ berhasil menyimpan revisi.", "info");
       await loadDistinctAlasanSakit();
       await loadRekapTable({ silent: true });
     }
-  
+
     // REKAP BULANAN
     async function loadRekapBulanan() {
       const bulanStr = rekapBulan.value;
@@ -1588,36 +1780,36 @@
         showToast("⚠️ pilih bulan rekap.", "error");
         return;
       }
-  
+
       const range = getMonthRange(bulanStr);
       if (!range) {
         showToast("Format bulan tidak valid.", "error");
         return;
       }
-  
+
       const { start, end } = getMonthRange(bulanStr);
-      
+
       const { data: sakitData, error } = await db
         .from("santri_sakit")
         .select("santri_id, alasan_sakit, tanggal")
         .gte("tanggal", start)
         .lte("tanggal", end);
-  
+
       if (error) {
         console.error("Gagal load rekap bulanan:", error);
         showToast("❎ gagal memuat rekap.", "error");
         return;
       }
-  
+
       monthlyChartContainer.innerHTML = "";
-  
+
       if (!sakitData || sakitData.length === 0) {
         monthlyChartContainer.innerHTML =
           '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Belum ada data santri sakit pada bulan ini.</div>';
         showToast("Belum ada data santri sakit pada bulan ini.", "info");
         return;
       }
-  
+
       // Agregat per santri
       const bySantri = new Map();
       sakitData.forEach((row) => {
@@ -1633,11 +1825,11 @@
         const obj = bySantri.get(sid);
         obj.count += 1;
         obj.dates.add(row.tanggal);
-  
+
         const reason = (row.alasan_sakit || "").trim() || "tanpa keterangan";
         obj.reasons.set(reason, (obj.reasons.get(reason) || 0) + 1);
       });
-  
+
       const entries = Array.from(bySantri.entries());
       if (!entries.length) {
         monthlyChartContainer.innerHTML =
@@ -1645,97 +1837,92 @@
         showToast("Belum ada data santri sakit pada bulan ini.", "info");
         return;
       }
-  
-      // Total kasus (dipakai untuk persen chart layar)
+
       const totalCases = entries.reduce((sum, [, obj]) => sum + obj.count, 0);
-  
-      // === 1) AGREGAT PER KELAS (untuk diagram & tabel) ===
+
+      // AGREGAT PER KELAS
       const byKelas = new Map();
       entries.forEach(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "(kelas tidak ditemukan)";
-  
+
         if (!byKelas.has(kelasLabel)) {
           byKelas.set(kelasLabel, {
             count: 0,
             reasons: new Map(),
-            santriCounts: new Map(), // nama santri -> jumlah kasus dalam kelas ini
+            santriCounts: new Map(),
           });
         }
         const k = byKelas.get(kelasLabel);
         k.count += obj.count;
-  
-        // kumpulkan alasan per kelas (untuk kalau suatu saat mau dipakai lagi)
+
         obj.reasons.forEach((n, reason) => {
           k.reasons.set(reason, (k.reasons.get(reason) || 0) + n);
         });
-  
-        // kumpulkan nama santri & frekuensi di kelas ini
+
         if (santri) {
           const nama = santri.nama;
           k.santriCounts.set(nama, (k.santriCounts.get(nama) || 0) + obj.count);
         }
       });
-  
+
       const kelasEntries = Array.from(byKelas.entries()).sort(
         (a, b) => b[1].count - a[1].count
       );
-  
-      // ====== BOX DIAGRAM KELAS ======
+
       if (kelasEntries.length) {
         const kelasSection = document.createElement("div");
         kelasSection.classList.add("chart-section-card");
-  
+
         const kelasTitle = document.createElement("div");
         kelasTitle.classList.add("chart-section-title");
         kelasTitle.textContent = "Kelas dengan frekuensi sakit terbanyak";
-  
+
         const kelasSubtitle = document.createElement("div");
         kelasSubtitle.classList.add("chart-section-subtitle");
         kelasSubtitle.textContent =
           "Ringkasan total kasus dan daftar santri sakit per kelas dalam bulan ini.";
-  
+
         kelasSection.appendChild(kelasTitle);
         kelasSection.appendChild(kelasSubtitle);
-  
+
         kelasEntries.forEach(([kelasLabel, obj]) => {
           const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
           const percentRoundedInt = Math.round(percent);
-  
-          // daftar santri di kelas ini
+
           const santriArr = Array.from(obj.santriCounts.entries()).sort(
             (a, b) => b[1] - a[1]
           );
           const santriText = santriArr
             .map(([nama, n]) => `${nama} (${n}x)`)
             .join(", ");
-  
+
           const rowDiv = document.createElement("div");
           rowDiv.classList.add("chart-row");
-  
+
           const headerDiv = document.createElement("div");
           headerDiv.classList.add("chart-row-header");
-  
+
           const leftSpan = document.createElement("div");
           leftSpan.classList.add("chart-row-name");
           leftSpan.textContent = kelasLabel;
-  
+
           const rightSpan = document.createElement("div");
           rightSpan.classList.add("chart-row-meta");
           rightSpan.textContent = `${obj.count}x (${percentRoundedInt}%)`;
-  
+
           headerDiv.appendChild(leftSpan);
           headerDiv.appendChild(rightSpan);
-  
+
           const barTrack = document.createElement("div");
           barTrack.classList.add("chart-bar-track");
           const barFill = document.createElement("div");
           barFill.classList.add("chart-bar-fill");
           barFill.style.width = `${percent}%`;
           barTrack.appendChild(barFill);
-  
+
           const printBar = document.createElement("div");
           printBar.classList.add("chart-row-printbar");
           const barUnits = 20;
@@ -1744,83 +1931,83 @@
           const barString =
             "[" + "#".repeat(filledUnits) + " ".repeat(emptyUnits) + "]";
           printBar.textContent = `${barString} ${percent.toFixed(1)}%`;
-  
+
           const reasonsDiv = document.createElement("div");
           reasonsDiv.classList.add("chart-row-reasons");
           reasonsDiv.innerHTML =
             `<strong>Rincian:</strong> ` +
             (santriText || `Total ${obj.count} kasus sakit di kelas ini.`);
-  
+
           rowDiv.appendChild(headerDiv);
           rowDiv.appendChild(barTrack);
           rowDiv.appendChild(printBar);
           rowDiv.appendChild(reasonsDiv);
-  
+
           kelasSection.appendChild(rowDiv);
         });
-  
+
         monthlyChartContainer.appendChild(kelasSection);
       }
-  
-      // ====== BOX DIAGRAM SANTRI ======
+
+      // DIAGRAM SANTRI
       entries.sort((a, b) => b[1].count - a[1].count);
-  
+
       const santriSection = document.createElement("div");
       santriSection.classList.add("chart-section-card");
-  
+
       const santriTitle = document.createElement("div");
       santriTitle.classList.add("chart-section-title");
       santriTitle.textContent = "Santri dengan frekuensi sakit terbanyak";
-  
+
       const santriSubtitle = document.createElement("div");
       santriSubtitle.classList.add("chart-section-subtitle");
       santriSubtitle.textContent =
         "Detail per santri dengan rincian alasan sakit yang paling sering.";
-  
+
       santriSection.appendChild(santriTitle);
       santriSection.appendChild(santriSubtitle);
-  
+
       entries.forEach(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
         const nama = santri ? santri.nama : "(santri tidak ditemukan)";
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
-  
+
         const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
         const percentRoundedInt = Math.round(percent);
-  
+
         const reasonsArr = Array.from(obj.reasons.entries()).sort(
           (a, b) => b[1] - a[1]
         );
         const reasonsText = reasonsArr
           .map(([reason, n]) => `${reason} (${n}x)`)
           .join(", ");
-  
+
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("chart-row");
-  
+
         const headerDiv = document.createElement("div");
         headerDiv.classList.add("chart-row-header");
-  
+
         const leftSpan = document.createElement("div");
         leftSpan.classList.add("chart-row-name");
         leftSpan.textContent = `${nama} (${kelasLabel})`;
-  
+
         const rightSpan = document.createElement("div");
         rightSpan.classList.add("chart-row-meta");
         rightSpan.textContent = `${obj.count}x (${percentRoundedInt}%)`;
-  
+
         headerDiv.appendChild(leftSpan);
         headerDiv.appendChild(rightSpan);
-  
+
         const barTrack = document.createElement("div");
         barTrack.classList.add("chart-bar-track");
         const barFill = document.createElement("div");
         barFill.classList.add("chart-bar-fill");
         barFill.style.width = `${percent}%`;
         barTrack.appendChild(barFill);
-  
+
         const printBar = document.createElement("div");
         printBar.classList.add("chart-row-printbar");
         const barUnits = 20;
@@ -1829,23 +2016,23 @@
         const barString =
           "[" + "#".repeat(filledUnits) + " ".repeat(emptyUnits) + "]";
         printBar.textContent = `${barString} ${percent.toFixed(1)}%`;
-  
+
         const reasonsDiv = document.createElement("div");
         reasonsDiv.classList.add("chart-row-reasons");
         reasonsDiv.innerHTML =
           `<strong>Rincian:</strong> ${reasonsText}`;
-  
+
         rowDiv.appendChild(headerDiv);
         rowDiv.appendChild(barTrack);
         rowDiv.appendChild(printBar);
         rowDiv.appendChild(reasonsDiv);
-  
+
         santriSection.appendChild(rowDiv);
       });
-  
+
       monthlyChartContainer.appendChild(santriSection);
 
-      // ====== BOX DIAGRAM JENIS SAKIT ======
+      // DIAGRAM JENIS SAKIT
       const byReason = new Map();
       sakitData.forEach((row) => {
         const raw = (row.alasan_sakit || "").trim();
@@ -1853,7 +2040,7 @@
         if (!byReason.has(label)) {
           byReason.set(label, {
             count: 0,
-            santriCounts: new Map(), // nama santri -> jumlah kasus untuk jenis sakit ini
+            santriCounts: new Map(),
           });
         }
         const obj = byReason.get(label);
@@ -1943,26 +2130,26 @@
 
         monthlyChartContainer.appendChild(reasonSection);
       }
-  
-      // ====== TABEL PRINT (UNTUK DOWNLOAD PDF) ======
+
+      // TABEL PRINT
       const tableWrapper = document.createElement("div");
       tableWrapper.classList.add("monthly-table-print");
-  
+
       function buildTableSection(titleText, rowsData, labelHeader) {
         const sectionDiv = document.createElement("div");
         sectionDiv.style.marginBottom = "0.9rem";
-  
+
         const titleEl = document.createElement("div");
         titleEl.classList.add("monthly-table-print-title");
         titleEl.textContent = titleText;
-  
+
         const tableEl = document.createElement("table");
         tableEl.style.width = "100%";
         tableEl.style.borderCollapse = "collapse";
-  
+
         const thead = document.createElement("thead");
         const trHead = document.createElement("tr");
-  
+
         const headers = ["No", labelHeader, "Rincian", "Frekuensi"];
         headers.forEach((h) => {
           const th = document.createElement("th");
@@ -1971,70 +2158,70 @@
         });
         thead.appendChild(trHead);
         tableEl.appendChild(thead);
-  
+
         const tbody = document.createElement("tbody");
         rowsData.forEach((row, idx) => {
           const tr = document.createElement("tr");
-  
+
           const tdNo = document.createElement("td");
           tdNo.textContent = idx + 1;
           tdNo.style.textAlign = "center";
-  
+
           const tdLabel = document.createElement("td");
           tdLabel.textContent = row.label;
-  
+
           const tdDetail = document.createElement("td");
           tdDetail.textContent = row.detail;
-  
+
           const tdFreq = document.createElement("td");
           tdFreq.textContent = row.count;
           tdFreq.style.textAlign = "center";
-  
+
           tr.appendChild(tdNo);
           tr.appendChild(tdLabel);
           tr.appendChild(tdDetail);
           tr.appendChild(tdFreq);
-  
+
           tbody.appendChild(tr);
         });
-  
+
         tableEl.appendChild(tbody);
-  
+
         sectionDiv.appendChild(titleEl);
         sectionDiv.appendChild(tableEl);
         return sectionDiv;
       }
-  
+
       const kelasRows = kelasEntries.map(([kelasLabel, obj]) => {
         const santriArr = Array.from(obj.santriCounts.entries()).sort(
           (a, b) => b[1] - a[1]
         );
-      
+
         const santriText = santriArr
           .map(([nama, n]) => `${nama} (${n}x)`)
           .join(", ");
-      
+
         return {
           label: kelasLabel,
           detail: santriText || `Total ${obj.count} kasus sakit di kelas ini.`,
           count: obj.count,
         };
       });
-  
+
       const santriRows = entries.map(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
         const nama = santri ? santri.nama : "(santri tidak ditemukan)";
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
-  
+
         const reasonsArr = Array.from(obj.reasons.entries()).sort(
           (a, b) => b[1] - a[1]
         );
         const reasonsText = reasonsArr
           .map(([reason, n]) => `${reason} (${n}x)`)
           .join(", ");
-  
+
         return {
           label: `${nama} (${kelasLabel})`,
           detail: reasonsText,
@@ -2047,14 +2234,14 @@
           (a, b) => b[1] - a[1]
         );
         const santriText = santriArr.map(([nama]) => nama).join(", ");
-  
+
         return {
           label: reasonLabel,
           detail: santriText || `Total ${obj.count} kasus untuk jenis sakit ini.`,
           count: obj.count,
         };
       });
-  
+
       tableWrapper.appendChild(
         buildTableSection(
           "Kelas dengan frekuensi sakit terbanyak",
@@ -2076,9 +2263,9 @@
           "Jenis Sakit"
         )
       );
-  
+
       monthlyChartContainer.appendChild(tableWrapper);
-  
+
       showToast("✅ berhasil memuat rekap.", "info");
     }
 
@@ -2128,13 +2315,13 @@
         switchTab(btn.dataset.tab);
       });
     });
-  
+
     btnLoadInput.addEventListener("click", loadInputTable);
     btnSaveInput.addEventListener("click", saveInputData);
-  
+
     btnLoadRekap.addEventListener("click", () => loadRekapTable());
     btnSaveRekap.addEventListener("click", saveRekapData);
-  
+
     btnPrintRekap.addEventListener("click", () => {
       if (!rekapTanggal.value) {
         showToast("⚠️ pilih tanggal rekap.", "error");
@@ -2143,9 +2330,9 @@
       switchTab("rekap-harian");
       window.print();
     });
-  
+
     btnLoadRekapBulanan.addEventListener("click", loadRekapBulanan);
-  
+
     btnPrintRekapBulanan.addEventListener("click", () => {
       if (!rekapBulan.value) {
         showToast("⚠️ pilih bulan rekap.", "error");
@@ -2154,7 +2341,7 @@
       switchTab("rekap-bulanan");
       window.print();
     });
-  
+
     // INIT
     window.addEventListener("load", async () => {
       setTodayToInputs();
@@ -2165,10 +2352,10 @@
       await loadInputTable();
       await loadRekapTable({ silent: true });
       await loadRekapBulanan();
-  
+
       const savedTab = localStorage.getItem("sakit_active_tab");
       const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
-  
+
       if (savedTab && allowedTabs.includes(savedTab)) {
         switchTab(savedTab);
       } else {
