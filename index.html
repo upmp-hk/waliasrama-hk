@@ -2121,129 +2121,145 @@
         monthlyChartContainer.appendChild(reasonSection);
       }
   
-      // ====== TABEL PRINT (UNTUK DOWNLOAD PDF) ======
-      const tableWrapper = document.createElement("div");
-      tableWrapper.classList.add("monthly-table-print");
-  
-      function buildTableSection(titleText, rowsData, labelHeader) {
-        const sectionDiv = document.createElement("div");
-        sectionDiv.style.marginBottom = "0.9rem";
-  
-        const titleEl = document.createElement("div");
-        titleEl.classList.add("monthly-table-print-title");
-        titleEl.textContent = titleText;
-  
-        const tableEl = document.createElement("table");
-        tableEl.style.width = "100%";
-        tableEl.style.borderCollapse = "collapse";
-  
-        const thead = document.createElement("thead");
-        const trHead = document.createElement("tr");
-  
-        // TANPA persentase
-        const headers = ["No", labelHeader, "Rincian", "Frekuensi"];
-        headers.forEach((h) => {
-          const th = document.createElement("th");
-          th.textContent = h;
-          trHead.appendChild(th);
+        // ====== TABEL PRINT (UNTUK DOWNLOAD PDF) ======
+        const tableWrapper = document.createElement("div");
+        tableWrapper.classList.add("monthly-table-print");
+    
+        function buildTableSection(titleText, rowsData, labelHeader) {
+          const sectionDiv = document.createElement("div");
+          sectionDiv.style.marginBottom = "0.9rem";
+    
+          const titleEl = document.createElement("div");
+          titleEl.classList.add("monthly-table-print-title");
+          titleEl.textContent = titleText;
+    
+          const tableEl = document.createElement("table");
+          tableEl.style.width = "100%";
+          tableEl.style.borderCollapse = "collapse";
+    
+          const thead = document.createElement("thead");
+          const trHead = document.createElement("tr");
+    
+          // TANPA persentase
+          const headers = ["No", labelHeader, "Rincian", "Frekuensi"];
+          headers.forEach((h) => {
+            const th = document.createElement("th");
+            th.textContent = h;
+            trHead.appendChild(th);
+          });
+          thead.appendChild(trHead);
+          tableEl.appendChild(thead);
+    
+          const tbody = document.createElement("tbody");
+          rowsData.forEach((row, idx) => {
+            const tr = document.createElement("tr");
+    
+            const tdNo = document.createElement("td");
+            tdNo.textContent = idx + 1;
+            tdNo.style.textAlign = "center";
+    
+            const tdLabel = document.createElement("td");
+            tdLabel.textContent = row.label;
+    
+            const tdDetail = document.createElement("td");
+            tdDetail.textContent = row.detail;
+    
+            const tdFreq = document.createElement("td");
+            tdFreq.textContent = row.count;
+            tdFreq.style.textAlign = "center";
+    
+            tr.appendChild(tdNo);
+            tr.appendChild(tdLabel);
+            tr.appendChild(tdDetail);
+            tr.appendChild(tdFreq);
+    
+            tbody.appendChild(tr);
+          });
+    
+          tableEl.appendChild(tbody);
+    
+          sectionDiv.appendChild(titleEl);
+          sectionDiv.appendChild(tableEl);
+          return sectionDiv;
+        }
+    
+        // Data tabel kelas:
+        // - SATU KELAS = SATU BARIS
+        // - "Rincian" = nama-nama santri digabung: "Sule (3x), Bambang (2x), ..."
+        // - "Frekuensi" = total kasus sakit di kelas tsb
+        const kelasRows = kelasEntries.map(([kelasLabel, obj]) => {
+          const santriArr = Array.from(obj.santriCounts.entries()).sort(
+            (a, b) => b[1] - a[1]
+          );
+        
+          const santriText = santriArr
+            .map(([nama, n]) => `${nama} (${n}x)`)
+            .join(", ");
+        
+          return {
+            label: kelasLabel,                                      // kolom "Kelas"
+            detail: santriText || `Total ${obj.count} kasus sakit di kelas ini.`,
+            count: obj.count,                                       // kolom "Frekuensi"
+          };
         });
-        thead.appendChild(trHead);
-        tableEl.appendChild(thead);
-  
-        const tbody = document.createElement("tbody");
-        rowsData.forEach((row, idx) => {
-          const tr = document.createElement("tr");
-  
-          const tdNo = document.createElement("td");
-          tdNo.textContent = idx + 1;
-          tdNo.style.textAlign = "center";
-  
-          const tdLabel = document.createElement("td");
-          tdLabel.textContent = row.label;
-  
-          const tdDetail = document.createElement("td");
-          tdDetail.textContent = row.detail;
-  
-          const tdFreq = document.createElement("td");
-          tdFreq.textContent = row.count;
-          tdFreq.style.textAlign = "center";
-  
-          tr.appendChild(tdNo);
-          tr.appendChild(tdLabel);
-          tr.appendChild(tdDetail);
-          tr.appendChild(tdFreq);
-  
-          tbody.appendChild(tr);
+    
+        // Data tabel santri: detail = alasan sakit
+        const santriRows = entries.map(([santriId, obj]) => {
+          const santri = santriMaster.find((s) => s.id === santriId);
+          const nama = santri ? santri.nama : "(santri tidak ditemukan)";
+          const kelasLabel = santri
+            ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
+            : "-";
+    
+          const reasonsArr = Array.from(obj.reasons.entries()).sort(
+            (a, b) => b[1] - a[1]
+          );
+          const reasonsText = reasonsArr
+            .map(([reason, n]) => `${reason} (${n}x)`)
+            .join(", ");
+    
+          return {
+            label: `${nama} (${kelasLabel})`,
+            detail: reasonsText,
+            count: obj.count,
+          };
         });
   
-        tableEl.appendChild(tbody);
-  
-        sectionDiv.appendChild(titleEl);
-        sectionDiv.appendChild(tableEl);
-        return sectionDiv;
+        // Data tabel jenis sakit: pakai agregat reasonEntries
+        const reasonRows = reasonEntries.map(([reasonLabel, obj]) => {
+          return {
+            label: reasonLabel, // kolom "Jenis Sakit"
+            detail: `Total ${obj.count} kasus untuk jenis sakit ini.`,
+            count: obj.count,
+          };
+        });
+    
+        tableWrapper.appendChild(
+          buildTableSection(
+            "Kelas dengan frekuensi sakit terbanyak",
+            kelasRows,
+            "Kelas"
+          )
+        );
+        tableWrapper.appendChild(
+          buildTableSection(
+            "Santri dengan frekuensi sakit terbanyak",
+            santriRows,
+            "Nama Santri"
+          )
+        );
+        tableWrapper.appendChild(
+          buildTableSection(
+            "Jenis sakit yang paling sering diderita santri",
+            reasonRows,
+            "Jenis Sakit"
+          )
+        );
+    
+        monthlyChartContainer.appendChild(tableWrapper);
+    
+        showToast("✅ berhasil memuat rekap.", "info");
       }
-  
-      // Data tabel kelas:
-      // - SATU KELAS = SATU BARIS
-      // - "Rincian" = nama-nama santri digabung: "Sule (3x), Bambang (2x), ..."
-      // - "Frekuensi" = total kasus sakit di kelas tsb
-      const kelasRows = kelasEntries.map(([kelasLabel, obj]) => {
-        const santriArr = Array.from(obj.santriCounts.entries()).sort(
-          (a, b) => b[1] - a[1]
-        );
-      
-        const santriText = santriArr
-          .map(([nama, n]) => `${nama} (${n}x)`)
-          .join(", ");
-      
-        return {
-          label: kelasLabel,                                      // kolom "Kelas"
-          detail: santriText || `Total ${obj.count} kasus sakit di kelas ini.`,
-          count: obj.count,                                       // kolom "Frekuensi"
-        };
-      });
-  
-      // Data tabel santri: detail = alasan sakit
-      const santriRows = entries.map(([santriId, obj]) => {
-        const santri = santriMaster.find((s) => s.id === santriId);
-        const nama = santri ? santri.nama : "(santri tidak ditemukan)";
-        const kelasLabel = santri
-          ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
-          : "-";
-  
-        const reasonsArr = Array.from(obj.reasons.entries()).sort(
-          (a, b) => b[1] - a[1]
-        );
-        const reasonsText = reasonsArr
-          .map(([reason, n]) => `${reason} (${n}x)`)
-          .join(", ");
-  
-        return {
-          label: `${nama} (${kelasLabel})`,
-          detail: reasonsText,
-          count: obj.count,
-        };
-      });
-  
-      tableWrapper.appendChild(
-        buildTableSection(
-          "Kelas dengan frekuensi sakit terbanyak",
-          kelasRows,
-          "Kelas"
-        )
-      );
-      tableWrapper.appendChild(
-        buildTableSection(
-          "Santri dengan frekuensi sakit terbanyak",
-          santriRows,
-          "Nama Santri"
-        )
-      );
-  
-      monthlyChartContainer.appendChild(tableWrapper);
-  
-      showToast("✅ berhasil memuat rekap.", "info");
-    }
   
     // EVENTS
     tabButtons.forEach((btn) => {
