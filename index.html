@@ -191,9 +191,11 @@
 
     /* ===== TABS ===== */
     .tabs {
-      display: inline-flex;
+      display: flex;
+      width: 100%;
+      max-width: 480px;
+      margin: 0.55rem auto 0;
       gap: 0.35rem;
-      margin-top: 0.55rem;
       border-radius: 999px;
       padding: 0.15rem;
       background: rgba(15, 23, 42, 0.03);
@@ -668,9 +670,10 @@
     .monthly-chart-container {
       margin-top: 0.75rem;
       border-radius: var(--radius-lg);
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 0.8rem 0.85rem;
+      /* sekarang cuma jadi wrapper scroll, box-nya di dalam */
+      border: none;
+      background: transparent;
+      padding: 0;
       max-height: 520px;
       overflow-y: auto;
       scrollbar-width: thin;
@@ -684,6 +687,14 @@
     .monthly-chart-container::-webkit-scrollbar-thumb {
       background: rgba(148, 163, 184, 0.95);
       border-radius: 999px;
+    }
+
+    .chart-section-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 0.8rem 0.85rem;
+      margin-bottom: 0.75rem;
     }
 
     .chart-section-title {
@@ -1592,88 +1603,88 @@
       input.select();
     }
   
-      async function loadRekapTable(options = {}) {
-        const { silent = false } = options;
-      
-        const tanggal = rekapTanggal.value;
-        if (!tanggal) {
-          showToast("⚠️ pilih tanggal rekap.", "error");
-          return;
-        }
-      
-        const { data: sakitData, error: errSakit } = await db
-          .from("santri_sakit")
-          .select("id, tanggal, santri_id, alasan_sakit")
-          .eq("tanggal", tanggal)
-          .order("id", { ascending: true });
-      
-        if (errSakit) {
-          console.error("Gagal load rekap sakit:", errSakit);
-          showToast("❎ gagal memuat rekap.", "error");
-          return;
-        }
-      
-        rekapTableBody.innerHTML = "";
-      
-        if (!sakitData || sakitData.length === 0) {
-          rekapTableBody.innerHTML =
-            '<tr><td colspan="4" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
-          if (!silent) {
-            showToast("Belum ada data santri sakit pada tanggal ini.", "info");
-          }
-          return;
-        }
-      
-        sakitData.forEach((row, index) => {
-          const santri = santriMaster.find((s) => s.id === row.santri_id);
-          const nama = santri ? santri.nama : "(santri tidak ditemukan)";
-          const kelasLabel = santri
-            ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
-            : "-";
-      
-          const tr = document.createElement("tr");
-      
-          const tdNo = document.createElement("td");
-          tdNo.classList.add("col-no");
-          tdNo.textContent = index + 1;
-      
-          const tdNama = document.createElement("td");
-          tdNama.textContent = nama;
-      
-          const tdKelas = document.createElement("td");
-          const spanKelas = document.createElement("span");
-          spanKelas.classList.add("kelas-badge");
-          spanKelas.textContent = kelasLabel;
-          tdKelas.appendChild(spanKelas);
-      
-          const tdAlasan = document.createElement("td");
-          const spanAlasan = document.createElement("div");
-          spanAlasan.classList.add("alasan-display");
-          spanAlasan.dataset.santriId = row.santri_id;
-          spanAlasan.dataset.value = row.alasan_sakit || "";
-          if (!row.alasan_sakit) {
-            spanAlasan.textContent = "(kosong)";
-            spanAlasan.classList.add("empty");
-          } else {
-            spanAlasan.textContent = row.alasan_sakit;
-          }
-          spanAlasan.addEventListener("click", () =>
-            masukModeEditAlasan(spanAlasan)
-          );
-          tdAlasan.appendChild(spanAlasan);
-      
-          tr.appendChild(tdNo);
-          tr.appendChild(tdNama);
-          tr.appendChild(tdKelas);
-          tr.appendChild(tdAlasan);
-      
-          rekapTableBody.appendChild(tr);
-        });
-      
-        if (!silent) {
-          showToast("✅ berhasil memuat rekap.", "info");
-        }
+    async function loadRekapTable(options = {}) {
+      const { silent = false } = options;
+    
+      const tanggal = rekapTanggal.value;
+      if (!tanggal) {
+        showToast("⚠️ pilih tanggal rekap.", "error");
+        return;
       }
+    
+      const { data: sakitData, error: errSakit } = await db
+        .from("santri_sakit")
+        .select("id, tanggal, santri_id, alasan_sakit")
+        .eq("tanggal", tanggal)
+        .order("id", { ascending: true });
+    
+      if (errSakit) {
+        console.error("Gagal load rekap sakit:", errSakit);
+        showToast("❎ gagal memuat rekap.", "error");
+        return;
+      }
+    
+      rekapTableBody.innerHTML = "";
+    
+      if (!sakitData || sakitData.length === 0) {
+        rekapTableBody.innerHTML =
+          '<tr><td colspan="4" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
+        if (!silent) {
+          showToast("Belum ada data santri sakit pada tanggal ini.", "info");
+        }
+        return;
+      }
+    
+      sakitData.forEach((row, index) => {
+        const santri = santriMaster.find((s) => s.id === row.santri_id);
+        const nama = santri ? santri.nama : "(santri tidak ditemukan)";
+        const kelasLabel = santri
+          ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
+          : "-";
+    
+        const tr = document.createElement("tr");
+    
+        const tdNo = document.createElement("td");
+        tdNo.classList.add("col-no");
+        tdNo.textContent = index + 1;
+    
+        const tdNama = document.createElement("td");
+        tdNama.textContent = nama;
+    
+        const tdKelas = document.createElement("td");
+        const spanKelas = document.createElement("span");
+        spanKelas.classList.add("kelas-badge");
+        spanKelas.textContent = kelasLabel;
+        tdKelas.appendChild(spanKelas);
+    
+        const tdAlasan = document.createElement("td");
+        const spanAlasan = document.createElement("div");
+        spanAlasan.classList.add("alasan-display");
+        spanAlasan.dataset.santriId = row.santri_id;
+        spanAlasan.dataset.value = row.alasan_sakit || "";
+        if (!row.alasan_sakit) {
+          spanAlasan.textContent = "(kosong)";
+          spanAlasan.classList.add("empty");
+        } else {
+          spanAlasan.textContent = row.alasan_sakit;
+        }
+        spanAlasan.addEventListener("click", () =>
+          masukModeEditAlasan(spanAlasan)
+        );
+        tdAlasan.appendChild(spanAlasan);
+    
+        tr.appendChild(tdNo);
+        tr.appendChild(tdNama);
+        tr.appendChild(tdKelas);
+        tr.appendChild(tdAlasan);
+    
+        rekapTableBody.appendChild(tr);
+      });
+    
+      if (!silent) {
+        showToast("✅ berhasil memuat rekap.", "info");
+      }
+    }
 
   
     async function saveRekapData() {
@@ -1728,12 +1739,12 @@
         }
       }
   
-        // pakai 'info' supaya background hitam (class .toast-info)
-        showToast("✅ berhasil menyimpan revisi.", "info");
-        await loadDistinctAlasanSakit();
-        // reload tabel TANPA toast "berhasil memuat rekap"
-        await loadRekapTable({ silent: true });
-      }
+      // pakai 'info' supaya background hitam (class .toast-info)
+      showToast("✅ berhasil menyimpan revisi.", "info");
+      await loadDistinctAlasanSakit();
+      // reload tabel TANPA toast "berhasil memuat rekap"
+      await loadRekapTable({ silent: true });
+    }
   
     // REKAP BULANAN
     async function loadRekapBulanan() {
@@ -1823,6 +1834,9 @@
       );
   
       if (kelasEntries.length) {
+        const kelasSection = document.createElement("div");
+        kelasSection.classList.add("chart-section-card");
+  
         const kelasTitle = document.createElement("div");
         kelasTitle.classList.add("chart-section-title");
         kelasTitle.textContent = "Kelas dengan frekuensi sakit terbanyak";
@@ -1832,8 +1846,8 @@
         kelasSubtitle.textContent =
           "Ringkasan total kasus sakit per kombinasi kelas dalam bulan ini.";
   
-        monthlyChartContainer.appendChild(kelasTitle);
-        monthlyChartContainer.appendChild(kelasSubtitle);
+        kelasSection.appendChild(kelasTitle);
+        kelasSection.appendChild(kelasSubtitle);
   
         kelasEntries.forEach(([kelasLabel, obj]) => {
           const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
@@ -1882,17 +1896,17 @@
           rowDiv.appendChild(printBar);
           rowDiv.appendChild(reasonsDiv);
   
-          monthlyChartContainer.appendChild(rowDiv);
+          kelasSection.appendChild(rowDiv);
         });
+  
+        monthlyChartContainer.appendChild(kelasSection);
       }
   
-      // Spacer sebelum masuk ke diagram santri
-      const spacer = document.createElement("div");
-      spacer.style.height = "0.75rem";
-      monthlyChartContainer.appendChild(spacer);
-  
-      // === 2) DIAGRAM PER SANTRI (seperti sebelumnya), berada DI BAWAH kelas ===
+      // === 2) DIAGRAM PER SANTRI (di box terpisah) ===
       entries.sort((a, b) => b[1].count - a[1].count);
+  
+      const santriSection = document.createElement("div");
+      santriSection.classList.add("chart-section-card");
   
       const santriTitle = document.createElement("div");
       santriTitle.classList.add("chart-section-title");
@@ -1903,8 +1917,8 @@
       santriSubtitle.textContent =
         "Detail per santri beserta kelas dan alasan sakit yang paling sering.";
   
-      monthlyChartContainer.appendChild(santriTitle);
-      monthlyChartContainer.appendChild(santriSubtitle);
+      santriSection.appendChild(santriTitle);
+      santriSection.appendChild(santriSubtitle);
   
       entries.forEach(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
@@ -1968,8 +1982,10 @@
         rowDiv.appendChild(printBar);   // untuk print
         rowDiv.appendChild(reasonsDiv);
   
-        monthlyChartContainer.appendChild(rowDiv);
+        santriSection.appendChild(rowDiv);
       });
+  
+      monthlyChartContainer.appendChild(santriSection);
   
       showToast("✅ berhasil memuat rekap.", "info");
     }
