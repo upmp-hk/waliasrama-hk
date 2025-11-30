@@ -1171,19 +1171,27 @@
     // STATE
     let santriMaster = [];
     let alasanSakitDistinct = [];
-  
+    // FLAG: toast hanya aktif setelah initial load selesai
+    let toastEnabled = false;
+    
     // TOAST
     function showToast(message, variant = "info") {
+      // Saat initial load, toast dimatikan supaya tidak muncul "sampah"
+      if (!toastEnabled) {
+        return;
+      }
+
       if (!toastEl) {
         alert(message);
         return;
       }
+
       toastEl.textContent = message;
       toastEl.className = "toast";
       if (variant === "success") toastEl.classList.add("toast-success");
       else if (variant === "error") toastEl.classList.add("toast-error");
       else toastEl.classList.add("toast-info");
-  
+
       toastEl.classList.add("show");
       clearTimeout(showToast._timeoutId);
       showToast._timeoutId = setTimeout(() => {
@@ -1818,6 +1826,7 @@
       } else {
         switchTab("input");
       }
+      toastEnabled = true;
     });
   </script>
 </body>
