@@ -740,6 +740,15 @@
       font-weight: 500;
     }
 
+    .chart-row-printbar {
+      display: none;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.72rem;
+      color: #111827;
+      margin-top: 0.22rem;
+    }
+
+
     /* ===== TOAST ===== */
     .toast {
       position: fixed;
@@ -818,7 +827,7 @@
       }
     }
 
-    /* ===== PRINT ===== */
+      /* ===== PRINT ===== */
       @media print {
       body {
         padding: 0;
@@ -845,9 +854,19 @@
         border: none;
         background: transparent;
       }
+
+      /* Biar semua baris diagram tercetak, tidak kepotong scroll */
       .monthly-chart-container {
         max-height: none !important;
         overflow: visible !important;
+      }
+
+      /* Di print, sembunyikan bar visual, tampilkan bar teks */
+      .chart-bar-track {
+        display: none !important;
+      }
+      .chart-row-printbar {
+        display: block;
       }
     }
   </style>
