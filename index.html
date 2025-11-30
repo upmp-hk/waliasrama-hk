@@ -2096,31 +2096,23 @@
       }
   
       // Data tabel kelas:
-      // - SATU KELAS bisa punya BANYAK BARIS (per santri)
-      // - Kolom "Rincian" = "Nama Santri (nx)"
-      // - Kolom "Frekuensi" = total kasus di kelas tsb
-      const kelasRows = [];
-      kelasEntries.forEach(([kelasLabel, obj]) => {
+      // - SATU KELAS = SATU BARIS
+      // - "Rincian" = nama-nama santri digabung: "Sule (3x), Bambang (2x), ..."
+      // - "Frekuensi" = total kasus sakit di kelas tsb
+      const kelasRows = kelasEntries.map(([kelasLabel, obj]) => {
         const santriArr = Array.from(obj.santriCounts.entries()).sort(
           (a, b) => b[1] - a[1]
         );
-  
-        if (santriArr.length) {
-          santriArr.forEach(([nama, n]) => {
-            kelasRows.push({
-              label: kelasLabel,                // kolom "Kelas"
-              detail: `${nama} (${n}x)`,        // kolom "Rincian"
-              count: obj.count,                 // kolom "Frekuensi" = total kelas
-            });
-          });
-        } else {
-          // fallback kalau tidak ada data santri per kelas
-          kelasRows.push({
-            label: kelasLabel,
-            detail: `Total ${obj.count} kasus sakit di kelas ini.`,
-            count: obj.count,
-          });
-        }
+      
+        const santriText = santriArr
+          .map(([nama, n]) => `${nama} (${n}x)`)
+          .join(", ");
+      
+        return {
+          label: kelasLabel,                                      // kolom "Kelas"
+          detail: santriText || `Total ${obj.count} kasus sakit di kelas ini.`,
+          count: obj.count,                                       // kolom "Frekuensi"
+        };
       });
   
       // Data tabel santri: detail = alasan sakit
