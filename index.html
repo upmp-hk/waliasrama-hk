@@ -989,7 +989,7 @@
             </div>
           </div>
 
-          <!-- Paralel 1-15 (2 baris) -->
+          <!-- Paralel 1-15 -->
           <div class="field">
             <label for="inputParalel">Paralel</label>
             <input type="hidden" id="inputParalel" value="1" />
@@ -1136,7 +1136,9 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Filter Rekap Bulanan</div>
-          <div class="panel-caption">Pilih bulan dan jenjang untuk melihat tren santri sakit dan kelas dengan frekuensi sakit terbanyak.</div>
+          <div class="panel-caption">
+            Pilih bulan dan jenjang untuk melihat tren santri sakit dan kelas dengan frekuensi sakit terbanyak.
+          </div>
         </div>
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
@@ -1171,10 +1173,9 @@
         </div>
 
         <div id="monthlyChartContainer" class="monthly-chart-container">
-          <!-- Dua diagram (santri & kelas) diisi via JS -->
+          <!-- Diisi lewat JS: atas santri, bawah kelas -->
         </div>
 
-        <!-- TOMBOL DOWNLOAD PDF DI BAWAH KEDUA DIAGRAM -->
         <div class="btn-row" style="margin-top:0.85rem;">
           <div class="btn-row-left">
             <button type="button" class="btn-primary" id="btnDownloadRekapBulananPdf">
@@ -1189,7 +1190,7 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // ====== SUPABASE INIT (sesuaikan dengan project-mu) ======
+    // ====== SUPABASE INIT (GANTI DENGAN PUNYAMU) ======
     const SUPABASE_URL = "https://YOUR-PROJECT-ID.supabase.co";
     const SUPABASE_ANON_KEY = "YOUR-ANON-KEY";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1222,7 +1223,7 @@
       });
     });
 
-    // ====== CHIP GROUP (SET VALUE HIDDEN INPUT) ======
+    // ====== CHIP GROUP HANDLER ======
     document.querySelectorAll(".chip-group").forEach((group) => {
       const targetId = group.getAttribute("data-target");
       const hiddenInput = document.getElementById(targetId);
@@ -1236,7 +1237,7 @@
       });
     });
 
-    // ====== HELPER: BENTUKKAN LABEL KELAS (kelas + jurusan + paralel) ======
+    // ====== HELPER: LABEL KELAS ======
     function buildKelasLabel(kelas, jurusan, paralel) {
       if (jurusan === "-" || jurusan === "" || jurusan === null) {
         return `${kelas} ${paralel}`;
@@ -1244,7 +1245,7 @@
       return `${kelas} ${jurusan} ${paralel}`;
     }
 
-    // ====== INPUT TAB: MUAT DATA SANTRI DARI SUPABASE ======
+    // ====== INPUT TAB: MUAT DATA SANTRI ======
     const tbodyInput = document.getElementById("tbodyInput");
     const btnMuatSantri = document.getElementById("btnMuatSantri");
     const btnSimpanLaporan = document.getElementById("btnSimpanLaporan");
@@ -1262,7 +1263,6 @@
 
       const labelKelas = buildKelasLabel(kelas, jurusan, paralel);
 
-      // Contoh ambil dari view/tabel santri_per_kelas
       const { data, error } = await supabase
         .from("santri_per_kelas")
         .select("nis, nama_santri")
@@ -1306,7 +1306,7 @@
 
     btnMuatSantri.addEventListener("click", loadSantriUntukInput);
 
-    // ====== SIMPAN LAPORAN HARIAN (INSERT KE TABEL) ======
+    // ====== SIMPAN LAPORAN HARIAN (INSERT) ======
     async function simpanLaporanHarian() {
       const tanggal = document.getElementById("inputTanggal").value;
       if (!tanggal) {
@@ -1345,7 +1345,7 @@
 
     btnSimpanLaporan.addEventListener("click", simpanLaporanHarian);
 
-    // ====== REKAP HARIAN: LOAD & EDIT ======
+    // ====== REKAP HARIAN ======
     const tbodyRekapHarian = document.getElementById("tbodyRekapHarian");
     const btnLoadRekapHarian = document.getElementById("btnLoadRekapHarian");
     const btnSimpanPerubahanHarian = document.getElementById("btnSimpanPerubahanHarian");
@@ -1425,38 +1425,39 @@
 
     btnSimpanPerubahanHarian.addEventListener("click", simpanPerubahanRekapHarian);
 
-    // ====== REKAP BULANAN: DIAGRAM SANTRI & KELAS ======
+    // ====== REKAP BULANAN: SANTRI & KELAS ======
     const btnLoadRekapBulanan = document.getElementById("btnLoadRekapBulanan");
     const monthlyChartContainer = document.getElementById("monthlyChartContainer");
 
     function buildMonthlySummaries(rows) {
-      // per santri
       const perSantriMap = new Map();
-      // per kelas
       const perKelasMap = new Map();
 
       rows.forEach((row) => {
-        const kls = row.kelas || "-";
-        // per santri (key: nama||kelas)
-        const keySantri = `${row.nama_santri || "Tanpa Nama"}||${kls}`;
+        const kelas = row.kelas || "-";
+        const nama = row.nama_santri || "Tanpa Nama";
+
+        // per santri
+        const keySantri = `${nama}||${kelas}`;
         if (!perSantriMap.has(keySantri)) {
           perSantriMap.set(keySantri, {
-            nama: row.nama_santri || "Tanpa Nama",
-            kelas: kls,
+            nama,
+            kelas,
             total: 0,
             alasanMap: new Map(),
           });
         }
         const sEntry = perSantriMap.get(keySantri);
         sEntry.total += 1;
+
         const alasan = (row.alasan || "tidak diisi").trim();
         sEntry.alasanMap.set(alasan, (sEntry.alasanMap.get(alasan) || 0) + 1);
 
         // per kelas
-        if (!perKelasMap.has(kls)) {
-          perKelasMap.set(kls, { kelas: kls, total: 0 });
+        if (!perKelasMap.has(kelas)) {
+          perKelasMap.set(kelas, { kelas, total: 0 });
         }
-        const kEntry = perKelasMap.get(kls);
+        const kEntry = perKelasMap.get(kelas);
         kEntry.total += 1;
       });
 
@@ -1475,7 +1476,8 @@
       monthlyChartContainer.innerHTML = "";
 
       if (!rows || rows.length === 0) {
-        monthlyChartContainer.innerHTML = `<div style="font-size:0.8rem; color:var(--gray); padding:0.4rem 0;">Belum ada data santri sakit pada bulan ini.</div>`;
+        monthlyChartContainer.innerHTML =
+          `<div style="font-size:0.8rem; color:var(--gray); padding:0.4rem 0;">Belum ada data santri sakit pada bulan ini.</div>`;
         return;
       }
 
@@ -1483,7 +1485,7 @@
       const maxSantri = perSantri.length > 0 ? perSantri[0].total : 1;
       const maxKelas = perKelas.length > 0 ? perKelas[0].total : 1;
 
-      // ==== SECTION 1: SANTRI ====
+      // SECTION 1: SANTRI
       const sectionSantri = document.createElement("div");
       sectionSantri.className = "chart-section";
       sectionSantri.innerHTML = `
@@ -1521,7 +1523,7 @@
       });
       monthlyChartContainer.appendChild(sectionSantri);
 
-      // ==== SECTION 2: KELAS ====
+      // SECTION 2: KELAS
       const sectionKelas = document.createElement("div");
       sectionKelas.className = "chart-section";
       sectionKelas.innerHTML = `
@@ -1552,12 +1554,12 @@
     async function loadRekapBulanan() {
       const bulanValue = document.getElementById("bulanRekap").value;
       const jenjang = document.getElementById("bulanJenjang").value;
+
       if (!bulanValue) {
         showToast("Bulan rekap belum dipilih.", "warning");
         return;
       }
 
-      // bulanValue format: YYYY-MM
       const [year, month] = bulanValue.split("-");
       const startDate = `${year}-${month}-01`;
       const endDate = `${year}-${month}-31`;
@@ -1586,4 +1588,33 @@
       showToast("Rekap bulanan dimuat.", "success");
     }
 
-    btnLoadRekap
+    btnLoadRekapBulanan.addEventListener("click", loadRekapBulanan);
+
+    // ====== DOWNLOAD PDF BUTTONS ======
+    document.getElementById("btnDownloadRekapHarianPdf").addEventListener("click", () => {
+      window.print();
+    });
+    document.getElementById("btnDownloadRekapBulananPdf").addEventListener("click", () => {
+      window.print();
+    });
+
+    // ====== DEFAULT TANGGAL/BULAN ======
+    (function initDefaults() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const dd = String(today.getDate()).padStart(2, "0");
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+      const monthStr = `${yyyy}-${mm}`;
+
+      const inputTanggal = document.getElementById("inputTanggal");
+      const rekapTanggal = document.getElementById("rekapTanggal");
+      const bulanRekap = document.getElementById("bulanRekap");
+
+      if (inputTanggal) inputTanggal.value = todayStr;
+      if (rekapTanggal) rekapTanggal.value = todayStr;
+      if (bulanRekap) bulanRekap.value = monthStr;
+    })();
+  </script>
+</body>
+</html>
