@@ -47,6 +47,7 @@
       display: flex;
       justify-content: center;
       padding: 1rem;
+      padding-bottom: 4.5rem;  /* ✅ ruang buat bottom nav */
       color: var(--dark);
     }
 
@@ -191,22 +192,21 @@
 
     /* ===== TABS (BOTTOM NAV) ===== */
     .tabs {
-      position: fixed;
+      position: fixed;                 /* ✅ nempel ke viewport, bukan ikut scroll konten */
       left: 50%;
-      transform: translateX(-50%);
       bottom: 0.75rem;
-      z-index: 1000;
-
+      transform: translateX(-50%);
+      z-index: 999;
+    
       display: flex;
-      width: 100%;
+      width: calc(100% - 2rem);        /* ada jarak kiri-kanan sedikit */
       max-width: 480px;
-      margin: 0;
+      margin: 0;                       /* jangan pakai margin auto/atas */
       gap: 0.35rem;
       border-radius: 999px;
       padding: 0.15rem;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(209, 213, 219, 0.9);
     }
 
     .tab-btn {
