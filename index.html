@@ -1828,17 +1828,28 @@
         barFill.classList.add("chart-bar-fill");
         barFill.style.width = `${percent}%`;
         barTrack.appendChild(barFill);
-  
+
+        // Bar versi teks (untuk mode print)
+        const printBar = document.createElement("div");
+        printBar.classList.add("chart-row-printbar");
+        const barUnits = 20; // panjang bar 20 karakter
+        const filledUnits = Math.round((percent / 100) * barUnits);
+        const emptyUnits = barUnits - filledUnits;
+        const barString =
+          "[" + "#".repeat(filledUnits) + " ".repeat(emptyUnits) + "]";
+        printBar.textContent = `${barString} ${percentRounded.toFixed(1)}%`;
+
         const reasonsDiv = document.createElement("div");
         reasonsDiv.classList.add("chart-row-reasons");
         reasonsDiv.innerHTML =
           `<strong>Kelas:</strong> ${kelasLabel} &nbsp; • &nbsp; ` +
           `<strong>Alasan:</strong> ${reasonsText}`;
-  
+
         rowDiv.appendChild(headerDiv);
-        rowDiv.appendChild(barTrack);
+        rowDiv.appendChild(barTrack);   // untuk layar
+        rowDiv.appendChild(printBar);   // untuk print
         rowDiv.appendChild(reasonsDiv);
-  
+
         monthlyChartContainer.appendChild(rowDiv);
       });
   
