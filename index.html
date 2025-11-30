@@ -770,7 +770,15 @@
     }
 
     .toast-info {
-      background: #111827;
+      background: #111827; /* hitam – info default */
+    }
+
+    .toast-warning {
+      background: #f59e0b; /* kuning ala amber-500 */
+    }
+
+    .toast-neutral {
+      background: #4b5563; /* abu-abu ala gray-600 */
     }
 
     /* ===== RESPONSIVE ===== */
@@ -1186,11 +1194,44 @@
         return;
       }
 
+      // Mode 'auto': tentukan warna berdasarkan isi pesan
+      if (variant === "auto") {
+        const lower = message.toLowerCase();
+
+        if (message.includes("✅") || lower.includes("berhasil") || lower.includes("sukses")) {
+          variant = "success";
+        } else if (message.includes("❎") || lower.includes("gagal") || lower.includes("error")) {
+          variant = "error";
+        } else if (message.includes("⚠️") || lower.includes("harap") || lower.includes("periksa")) {
+          variant = "warning";
+        } else if (lower.includes("info") || lower.includes("catatan")) {
+          variant = "neutral";
+        } else {
+          variant = "info"; // fallback hitam
+        }
+      }
+
       toastEl.textContent = message;
       toastEl.className = "toast";
-      if (variant === "success") toastEl.classList.add("toast-success");
-      else if (variant === "error") toastEl.classList.add("toast-error");
-      else toastEl.classList.add("toast-info");
+
+      switch (variant) {
+        case "success":
+          toastEl.classList.add("toast-success");
+          break;
+        case "error":
+          toastEl.classList.add("toast-error");
+          break;
+        case "warning":
+          toastEl.classList.add("toast-warning");
+          break;
+        case "neutral":
+          toastEl.classList.add("toast-neutral");
+          break;
+        case "info":
+        default:
+          toastEl.classList.add("toast-info");
+          break;
+      }
 
       toastEl.classList.add("show");
       clearTimeout(showToast._timeoutId);
@@ -1198,6 +1239,12 @@
         toastEl.classList.remove("show");
       }, 2500);
     }
+
+    // Helper opsional kalau mau panggil langsung auto
+    function showToastAuto(message) {
+      showToast(message, "auto");
+    }
+
   
     // CHIP GROUP HANDLER
     function initChipGroups() {
@@ -1340,7 +1387,7 @@
       if (!santri || santri.length === 0) {
         inputTableBody.innerHTML =
           '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
-        showToast("❎ gagal memuat data.", "info");
+        showToast("⚠️ tidak ada santri untuk filter ini.", "warning");
         return;
       }
   
@@ -1424,7 +1471,7 @@
       });
   
       if (!santriIds.length) {
-        showToast("Tidak ada santri pada tabel.", "error");
+        showToastAuto("⚠️ pilih tanggal rekap.");
         return;
       }
   
@@ -1436,7 +1483,7 @@
   
       if (delErr) {
         console.error("Gagal hapus data sakit lama:", delErr);
-        showToast("❎ gagal menghapus data.", "error");
+        showToastAuto("❎ gagal memuat rekap.");
         return;
       }
   
@@ -1452,7 +1499,7 @@
         }
       }
   
-      showToast("✅ berhasil menyimpan data", "success");
+      showToastAuto("✅ berhasil menyimpan data");
       await loadDistinctAlasanSakit();
     }
   
