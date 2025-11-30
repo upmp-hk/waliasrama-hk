@@ -1834,7 +1834,7 @@
         return;
       }
   
-      // Total kasus (dipakai untuk persen)
+      // Total kasus (dipakai untuk persen chart)
       const totalCases = entries.reduce((sum, [, obj]) => sum + obj.count, 0);
   
       // === 1) AGREGAT PER KELAS (untuk diagram & tabel) ===
@@ -1846,15 +1846,25 @@
           : "(kelas tidak ditemukan)";
   
         if (!byKelas.has(kelasLabel)) {
-          byKelas.set(kelasLabel, { count: 0, reasons: new Map() });
+          byKelas.set(kelasLabel, {
+            count: 0,
+            reasons: new Map(),
+            santriCounts: new Map(), // nama santri -> jumlah sakit di kelas ini
+          });
         }
         const k = byKelas.get(kelasLabel);
         k.count += obj.count;
   
-        // kumpulkan alasan per kelas
+        // kumpulkan alasan per kelas (untuk diagram)
         obj.reasons.forEach((n, reason) => {
           k.reasons.set(reason, (k.reasons.get(reason) || 0) + n);
         });
+  
+        // kumpulkan nama santri & frekuensi di kelas ini (untuk TABEL PDF)
+        if (santri) {
+          const nama = santri.nama;
+          k.santriCounts.set(nama, (k.santriCounts.get(nama) || 0) + obj.count);
+        }
       });
   
       const kelasEntries = Array.from(byKelas.entries()).sort(
@@ -2043,7 +2053,7 @@
         const thead = document.createElement("thead");
         const trHead = document.createElement("tr");
   
-        const headers = ["No", labelHeader, "Rincian", "Frekuensi", "Persentase"];
+        const headers = ["No", labelHeader, "Rincian", "Frekuensi"];
         headers.forEach((h) => {
           const th = document.createElement("th");
           th.textContent = h;
@@ -2070,15 +2080,10 @@
           tdFreq.textContent = row.count;
           tdFreq.style.textAlign = "center";
   
-          const tdPercent = document.createElement("td");
-          tdPercent.textContent = row.percent.toFixed(1) + "%";
-          tdPercent.style.textAlign = "center";
-  
           tr.appendChild(tdNo);
           tr.appendChild(tdLabel);
           tr.appendChild(tdDetail);
           tr.appendChild(tdFreq);
-          tr.appendChild(tdPercent);
   
           tbody.appendChild(tr);
         });
@@ -2092,22 +2097,19 @@
   
       // Data tabel kelas
       const kelasRows = kelasEntries.map(([kelasLabel, obj]) => {
-        const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
-        const percentRounded = Math.round(percent * 10) / 10;
-  
-        const reasonsArr = Array.from(obj.reasons.entries()).sort(
+        const santriArr = Array.from(obj.santriCounts.entries()).sort(
           (a, b) => b[1] - a[1]
         );
-        const reasonsText = reasonsArr
-          .map(([reason, n]) => `${reason} (${n}x)`)
+        const santriText = santriArr
+          .map(([nama, n]) => `${nama} (${n}x)`)
           .join(", ");
   
         return {
-          label: kelasLabel,                     // kolom "Kelas"
-          detail: reasonsText ||
-            `Total ${obj.count} kasus sakit di kelas ini.`, // kolom "Rincian"
+          label: kelasLabel, // kolom "Kelas"
+          detail:
+            santriText ||
+            `Total ${obj.count} kasus sakit di kelas ini.`,
           count: obj.count,
-          percent: percentRounded,
         };
       });
   
@@ -2118,9 +2120,6 @@
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
-  
-        const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
-        const percentRounded = Math.round(percent * 10) / 10;
   
         const reasonsArr = Array.from(obj.reasons.entries()).sort(
           (a, b) => b[1] - a[1]
@@ -2133,7 +2132,6 @@
           label: `${nama} (${kelasLabel})`, // kolom "Nama Santri"
           detail: reasonsText,              // rincian alasan sakit
           count: obj.count,
-          percent: percentRounded,
         };
       });
   
@@ -2212,5 +2210,6 @@
       toastEnabled = true;
     });
   </script>
+
 </body>
 </html>
