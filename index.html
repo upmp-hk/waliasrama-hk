@@ -1834,7 +1834,7 @@
         return;
       }
   
-      // Total kasus (dipakai untuk persen chart)
+      // Total kasus (dipakai untuk persen chart layar)
       const totalCases = entries.reduce((sum, [, obj]) => sum + obj.count, 0);
   
       // === 1) AGREGAT PER KELAS (untuk diagram & tabel) ===
@@ -1849,18 +1849,18 @@
           byKelas.set(kelasLabel, {
             count: 0,
             reasons: new Map(),
-            santriCounts: new Map(), // nama santri -> jumlah sakit di kelas ini
+            santriCounts: new Map(), // nama santri -> jumlah kasus dalam kelas ini
           });
         }
         const k = byKelas.get(kelasLabel);
         k.count += obj.count;
   
-        // kumpulkan alasan per kelas (untuk diagram)
+        // kumpulkan alasan per kelas (untuk kalau suatu saat mau dipakai lagi)
         obj.reasons.forEach((n, reason) => {
           k.reasons.set(reason, (k.reasons.get(reason) || 0) + n);
         });
   
-        // kumpulkan nama santri & frekuensi di kelas ini (untuk TABEL PDF)
+        // kumpulkan nama santri & frekuensi di kelas ini
         if (santri) {
           const nama = santri.nama;
           k.santriCounts.set(nama, (k.santriCounts.get(nama) || 0) + obj.count);
@@ -1883,20 +1883,21 @@
         const kelasSubtitle = document.createElement("div");
         kelasSubtitle.classList.add("chart-section-subtitle");
         kelasSubtitle.textContent =
-          "Ringkasan total kasus dan variasi alasan sakit per kelas dalam bulan ini.";
+          "Ringkasan total kasus dan daftar santri sakit per kelas dalam bulan ini.";
   
         kelasSection.appendChild(kelasTitle);
         kelasSection.appendChild(kelasSubtitle);
   
         kelasEntries.forEach(([kelasLabel, obj]) => {
           const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
-          const percentRounded = Math.round(percent * 10) / 10;
+          const percentRoundedInt = Math.round(percent);
   
-          const reasonsArr = Array.from(obj.reasons.entries()).sort(
+          // daftar santri di kelas ini
+          const santriArr = Array.from(obj.santriCounts.entries()).sort(
             (a, b) => b[1] - a[1]
           );
-          const reasonsText = reasonsArr
-            .map(([reason, n]) => `${reason} (${n}x)`)
+          const santriText = santriArr
+            .map(([nama, n]) => `${nama} (${n}x)`)
             .join(", ");
   
           const rowDiv = document.createElement("div");
@@ -1911,7 +1912,7 @@
   
           const rightSpan = document.createElement("div");
           rightSpan.classList.add("chart-row-meta");
-          rightSpan.textContent = `${obj.count}x • ${percentRounded.toFixed(1)}%`;
+          rightSpan.textContent = `${obj.count}x (${percentRoundedInt}%)`;
   
           headerDiv.appendChild(leftSpan);
           headerDiv.appendChild(rightSpan);
@@ -1930,14 +1931,13 @@
           const emptyUnits = barUnits - filledUnits;
           const barString =
             "[" + "#".repeat(filledUnits) + " ".repeat(emptyUnits) + "]";
-          printBar.textContent = `${barString} ${percentRounded.toFixed(1)}%`;
+          printBar.textContent = `${barString} ${percent.toFixed(1)}%`;
   
           const reasonsDiv = document.createElement("div");
           reasonsDiv.classList.add("chart-row-reasons");
           reasonsDiv.innerHTML =
-            reasonsText
-              ? `<strong>Alasan:</strong> ${reasonsText}`
-              : `<strong>Ringkasan:</strong> Total ${obj.count} kasus sakit di kelas ini.`;
+            `<strong>Rincian:</strong> ` +
+            (santriText || `Total ${obj.count} kasus sakit di kelas ini.`);
   
           rowDiv.appendChild(headerDiv);
           rowDiv.appendChild(barTrack);
@@ -1963,7 +1963,7 @@
       const santriSubtitle = document.createElement("div");
       santriSubtitle.classList.add("chart-section-subtitle");
       santriSubtitle.textContent =
-        "Detail per santri beserta kelas dan rincian alasan sakit yang paling sering.";
+        "Detail per santri dengan rincian alasan sakit yang paling sering.";
   
       santriSection.appendChild(santriTitle);
       santriSection.appendChild(santriSubtitle);
@@ -1976,7 +1976,7 @@
           : "-";
   
         const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
-        const percentRounded = Math.round(percent * 10) / 10;
+        const percentRoundedInt = Math.round(percent);
   
         const reasonsArr = Array.from(obj.reasons.entries()).sort(
           (a, b) => b[1] - a[1]
@@ -1993,11 +1993,11 @@
   
         const leftSpan = document.createElement("div");
         leftSpan.classList.add("chart-row-name");
-        leftSpan.textContent = nama;
+        leftSpan.textContent = `${nama} (${kelasLabel})`;
   
         const rightSpan = document.createElement("div");
         rightSpan.classList.add("chart-row-meta");
-        rightSpan.textContent = `${obj.count}x • ${percentRounded.toFixed(1)}%`;
+        rightSpan.textContent = `${obj.count}x (${percentRoundedInt}%)`;
   
         headerDiv.appendChild(leftSpan);
         headerDiv.appendChild(rightSpan);
@@ -2016,13 +2016,12 @@
         const emptyUnits = barUnits - filledUnits;
         const barString =
           "[" + "#".repeat(filledUnits) + " ".repeat(emptyUnits) + "]";
-        printBar.textContent = `${barString} ${percentRounded.toFixed(1)}%`;
+        printBar.textContent = `${barString} ${percent.toFixed(1)}%`;
   
         const reasonsDiv = document.createElement("div");
         reasonsDiv.classList.add("chart-row-reasons");
         reasonsDiv.innerHTML =
-          `<strong>Kelas:</strong> ${kelasLabel} &nbsp; • &nbsp; ` +
-          `<strong>Alasan:</strong> ${reasonsText}`;
+          `<strong>Rincian:</strong> ${reasonsText}`;
   
         rowDiv.appendChild(headerDiv);
         rowDiv.appendChild(barTrack);
@@ -2053,6 +2052,7 @@
         const thead = document.createElement("thead");
         const trHead = document.createElement("tr");
   
+        // TANPA persentase
         const headers = ["No", labelHeader, "Rincian", "Frekuensi"];
         headers.forEach((h) => {
           const th = document.createElement("th");
@@ -2095,25 +2095,35 @@
         return sectionDiv;
       }
   
-      // Data tabel kelas
-      const kelasRows = kelasEntries.map(([kelasLabel, obj]) => {
+      // Data tabel kelas:
+      // - SATU KELAS bisa punya BANYAK BARIS (per santri)
+      // - Kolom "Rincian" = "Nama Santri (nx)"
+      // - Kolom "Frekuensi" = total kasus di kelas tsb
+      const kelasRows = [];
+      kelasEntries.forEach(([kelasLabel, obj]) => {
         const santriArr = Array.from(obj.santriCounts.entries()).sort(
           (a, b) => b[1] - a[1]
         );
-        const santriText = santriArr
-          .map(([nama, n]) => `${nama} (${n}x)`)
-          .join(", ");
   
-        return {
-          label: kelasLabel, // kolom "Kelas"
-          detail:
-            santriText ||
-            `Total ${obj.count} kasus sakit di kelas ini.`,
-          count: obj.count,
-        };
+        if (santriArr.length) {
+          santriArr.forEach(([nama, n]) => {
+            kelasRows.push({
+              label: kelasLabel,                // kolom "Kelas"
+              detail: `${nama} (${n}x)`,        // kolom "Rincian"
+              count: obj.count,                 // kolom "Frekuensi" = total kelas
+            });
+          });
+        } else {
+          // fallback kalau tidak ada data santri per kelas
+          kelasRows.push({
+            label: kelasLabel,
+            detail: `Total ${obj.count} kasus sakit di kelas ini.`,
+            count: obj.count,
+          });
+        }
       });
   
-      // Data tabel santri
+      // Data tabel santri: detail = alasan sakit
       const santriRows = entries.map(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
         const nama = santri ? santri.nama : "(santri tidak ditemukan)";
@@ -2129,8 +2139,8 @@
           .join(", ");
   
         return {
-          label: `${nama} (${kelasLabel})`, // kolom "Nama Santri"
-          detail: reasonsText,              // rincian alasan sakit
+          label: `${nama} (${kelasLabel})`,
+          detail: reasonsText,
           count: obj.count,
         };
       });
@@ -2210,6 +2220,5 @@
       toastEnabled = true;
     });
   </script>
-
 </body>
 </html>
