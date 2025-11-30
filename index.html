@@ -896,6 +896,24 @@
         padding-bottom: 4.5rem;
       }
     }
+    
+    /* ===== BOTTOM NAV STICKY ala marketplace (override) ===== */
+    body {
+      padding-bottom: 4.5rem; /* ruang buat bottom nav supaya konten nggak ketutup */
+    }
+    
+    .tabs {
+      position: fixed !important;      /* paksa nempel ke viewport */
+      left: 50%;
+      bottom: 0.75rem;
+      transform: translateX(-50%);
+      z-index: 999;
+    
+      width: calc(100% - 2rem);
+      max-width: 480px;
+      margin: 0;                       /* jangan auto / atas */
+    }
+
 
     /* ===== PRINT ===== */
     @media print {
