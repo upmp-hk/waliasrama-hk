@@ -914,6 +914,13 @@
       .monthly-table-print {
         display: block !important;
       }
+      
+      /* Kolom ke-2 (Kelas / Nama Santri) jangan dibungkus ke 2 baris */
+      .monthly-table-print table th:nth-child(2),
+      .monthly-table-print table td:nth-child(2) {
+        white-space: nowrap;
+      }
+    }
     
       /* (opsional, tidak kepake kalau chart disembunyikan) */
       .chart-bar-track {
