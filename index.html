@@ -1421,11 +1421,14 @@
       const year = Number(yearStr);
       const month = Number(monthStr2);
       if (!year || !month) return null;
-      const first = new Date(year, month - 1, 1);
-      const last = new Date(year, month, 0);
-      const start = first.toISOString().slice(0, 10);
-      const end = last.toISOString().slice(0, 10);
-      const daysInMonth = last.getDate();
+    
+      // jumlah hari dalam bulan (pakai Date tapi tidak di-ISO-kan)
+      const daysInMonth = new Date(year, month, 0).getDate();
+    
+      const mm = String(month).padStart(2, "0");
+      const start = `${year}-${mm}-01`;
+      const end = `${year}-${mm}-${String(daysInMonth).padStart(2, "0")}`;
+    
       return { start, end, daysInMonth, year, month };
     }
   
@@ -1814,8 +1817,8 @@
         return;
       }
   
-      const { start, end } = range;
-  
+      const { start, end } = getMonthRange(bulanStr);
+      
       const { data: sakitData, error } = await db
         .from("santri_sakit")
         .select("santri_id, alasan_sakit, tanggal")
