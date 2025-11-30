@@ -1633,11 +1633,12 @@
         }
       }
   
-      showToast("✅ berhasil menyimpan revisi.", "success");
-      await loadDistinctAlasanSakit();
-      // reload tabel TANPA toast "berhasil memuat rekap"
-      await loadRekapTable({ silent: true });
-    }
+        // pakai 'info' supaya background hitam (class .toast-info)
+        showToast("✅ berhasil menyimpan revisi.", "info");
+        await loadDistinctAlasanSakit();
+        // reload tabel TANPA toast "berhasil memuat rekap"
+        await loadRekapTable({ silent: true });
+      }
   
     // REKAP BULANAN
     async function loadRekapBulanan() {
@@ -1806,7 +1807,7 @@
       await loadSantriMaster();
       await loadDistinctAlasanSakit();
       await loadInputTable();
-      await loadRekapTable();      // ini tetap dengan toast
+      await loadRekapTable({ silent: true });
       await loadRekapBulanan();
   
       const savedTab = localStorage.getItem("sakit_active_tab");
