@@ -819,7 +819,7 @@
     }
 
     /* ===== PRINT ===== */
-    @media print {
+        @media print {
       body {
         padding: 0;
         background: white;
@@ -844,6 +844,12 @@
       select {
         border: none;
         background: transparent;
+      }
+
+      /* Tambahan penting untuk diagram bulanan */
+      .monthly-chart-container {
+        max-height: none !important;
+        overflow: visible !important;
       }
     }
   </style>
