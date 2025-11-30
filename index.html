@@ -2043,9 +2043,20 @@
         const raw = (row.alasan_sakit || "").trim();
         const label = raw || "tanpa keterangan";
         if (!byReason.has(label)) {
-          byReason.set(label, { count: 0 });
+          byReason.set(label, {
+            count: 0,
+            santriCounts: new Map(), // nama santri -> jumlah kasus untuk jenis sakit ini
+          });
         }
-        byReason.get(label).count += 1;
+        const obj = byReason.get(label);
+        obj.count += 1;
+
+        // tambahkan nama santri ke agregat jenis sakit
+        const santri = santriMaster.find((s) => s.id === row.santri_id);
+        if (santri) {
+          const nama = santri.nama;
+          obj.santriCounts.set(nama, (obj.santriCounts.get(nama) || 0) + 1);
+        }
       });
 
       const reasonEntries = Array.from(byReason.entries()).sort(
