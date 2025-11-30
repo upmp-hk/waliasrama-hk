@@ -1779,7 +1779,7 @@
       if (!sakitData || sakitData.length === 0) {
         monthlyChartContainer.innerHTML =
           '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Belum ada data santri sakit pada bulan ini.</div>';
-        showToast("Belum ada data santri sakit pada bulan ini.", "info");
+        showToast("⚠️ tidak ada data.", "info");
         return;
       }
   
@@ -1807,7 +1807,7 @@
       if (!entries.length) {
         monthlyChartContainer.innerHTML =
           '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Belum ada data santri sakit pada bulan ini.</div>';
-        showToast("Belum ada data santri sakit pada bulan ini.", "info");
+        showToast("⚠️ tidak ada data.", "info");
         return;
       }
   
