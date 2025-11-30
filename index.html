@@ -1499,7 +1499,7 @@
   
       const rows = inputTableBody.querySelectorAll("tr");
       if (!rows.length) {
-        showToast("Belum ada daftar santri yang dimuat.", "error");
+        showToast("⚠️ tidak ada data.", "error");
         return;
       }
   
@@ -1630,7 +1630,7 @@
         rekapTableBody.innerHTML =
           '<tr><td colspan="4" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
         if (!silent) {
-          showToast("Belum ada data santri sakit pada tanggal ini.", "info");
+          showToast("⚠️ tidak ada data.", "info");
         }
         return;
       }
