@@ -421,6 +421,13 @@
       font-size: 0.92rem;
     }
 
+    .install-app-row {
+      display: none;
+      justify-content: center;
+      margin: 0.65rem 0 0.1rem;
+    }
+
+
     /* ===== TABLE ===== */
     .table-card {
       border-radius: var(--radius-lg);
@@ -895,6 +902,10 @@
         border: none;
         background: transparent;
       }
+      
+      .install-app-row {
+        display: none !important;
+      }
     
       /* Biar semua isian rekap bulanan kebaca */
       .monthly-chart-container {
@@ -967,6 +978,13 @@
         </div>
       </div>
     </header>
+
+    <!-- INSTALL APP BUTTON -->
+    <div id="installPromptContainer" class="install-app-row">
+      <button id="btnInstallApp" class="btn-outline">
+        <span class="icon">📲</span> Instal Aplikasi
+      </button>
+    </div>
 
     <!-- NAV TABS -->
     <nav class="tabs">
@@ -1259,6 +1277,12 @@
   
     const alasanList = document.getElementById("alasanList");
     const toastEl = document.getElementById("toast");
+    
+    // PWA INSTALL
+    const installPromptContainer = document.getElementById("installPromptContainer");
+    const btnInstallApp = document.getElementById("btnInstallApp");
+    let deferredPwaPrompt = null;
+
   
     // STATE
     let santriMaster = [];
@@ -2283,7 +2307,48 @@
     
         showToast("✅ berhasil memuat rekap.", "info");
       }
-  
+
+        // PWA INSTALL HANDLERS
+    window.addEventListener("beforeinstallprompt", (e) => {
+      // cegah prompt default, simpan event
+      e.preventDefault();
+      deferredPwaPrompt = e;
+      if (installPromptContainer) {
+        installPromptContainer.style.display = "flex";
+      }
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredPwaPrompt = null;
+      if (installPromptContainer) {
+        installPromptContainer.style.display = "none";
+      }
+      showToastAuto("✅ aplikasi berhasil diinstal.");
+    });
+
+    if (btnInstallApp) {
+      btnInstallApp.addEventListener("click", async () => {
+        if (!deferredPwaPrompt) {
+          showToastAuto("ℹ️ Instalasi belum tersedia di perangkat ini.");
+          return;
+        }
+
+        deferredPwaPrompt.prompt();
+        const { outcome } = await deferredPwaPrompt.userChoice;
+
+        if (outcome === "accepted") {
+          showToastAuto("✅ permintaan instalasi dikonfirmasi.");
+        } else {
+          showToastAuto("ℹ️ instalasi dibatalkan.");
+        }
+
+        deferredPwaPrompt = null;
+        if (installPromptContainer) {
+          installPromptContainer.style.display = "none";
+        }
+      });
+    }
+
     // EVENTS
     tabButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
