@@ -2673,23 +2673,6 @@
         navigator.serviceWorker.register("./sw.js").catch(console.error);
       });
     }
-
-    supabase.from("view_rekap_bulanan_kelas")
-      .select("*")
-      .eq("bulan","2025-12")
-      .order("frekuensi",{ascending:false});
-
-    supabase.from("view_rekap_bulanan_santri")
-      .select("*")
-      .eq("bulan","2025-12")
-      .order("frekuensi",{ascending:false});
-
-    supabase.from("view_rekap_bulanan_jenis_sakit")
-      .select("*")
-      .eq("bulan","2025-12")
-      .order("frekuensi",{ascending:false});
-
-
   </script>
 </body>
 </html>
