@@ -204,18 +204,18 @@
       gap: 0.35rem;
       border-radius: 999px;
       padding: 0.15rem;
-      background: rgba(15, 23, 42, 0.12); /* sedikit lebih solid */
+      background: rgba(15, 23, 42, 0.03);
       border: 1px solid rgba(209, 213, 219, 0.9);
     }
 
     .tab-btn {
       border: none;
-      background: rgba(255, 255, 255, 0.9); /* dibuat solid */
+      background: transparent;
       padding: 0.45rem 0.9rem;
       border-radius: 999px;
       font-size: calc(0.78rem);
       cursor: pointer;
-      color: #4b5563;
+      color: #e5e7eb;
       flex: 1;
       display: flex;
       align-items: center;
@@ -226,7 +226,6 @@
         box-shadow 0.14s ease,
         transform 0.06s ease;
       white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
     }
 
     .tab-btn.active {
@@ -286,7 +285,6 @@
       gap: 0.75rem;
       width: 100%;
       max-width: 720px;
-      margin: 0 auto;
     }
 
     .filter-row-center-inner .field {
@@ -642,10 +640,6 @@
       margin-top: 0.7rem;
       gap: 0.7rem;
       flex-wrap: wrap;
-    }
-
-    .btn-row-center {
-      justify-content: center;
     }
 
     .btn-row-left {
@@ -1024,55 +1018,52 @@
 
             <div class="field">
               <label for="inputKelas">Kelas</label>
-              <div class="chip-group" data-target="inputKelas">
-                <button type="button" class="chip-option active" data-value="VII">VII</button>
-                <button type="button" class="chip-option" data-value="VIII">VIII</button>
-                <button type="button" class="chip-option" data-value="IX">IX</button>
-                <button type="button" class="chip-option" data-value="X">X</button>
-                <button type="button" class="chip-option" data-value="XI">XI</button>
-                <button type="button" class="chip-option" data-value="XII">XII</button>
-              </div>
-              <input type="hidden" id="inputKelas" value="VII" />
+              <select id="inputKelas">
+                <option value="VII">VII</option>
+                <option value="VIII">VIII</option>
+                <option value="IX">IX</option>
+                <option value="X">X</option>
+                <option value="XI">XI</option>
+                <option value="XII">XII</option>
+              </select>
             </div>
 
             <div class="field">
               <label for="inputJurusan">Jurusan</label>
-              <div class="chip-group" data-target="inputJurusan">
-                <button type="button" class="chip-option active" data-value="">-</button>
-                <button type="button" class="chip-option" data-value="IPA">IPA</button>
-                <button type="button" class="chip-option" data-value="IPS">IPS</button>
-                <button type="button" class="chip-option" data-value="AGAMA">AGAMA</button>
-              </div>
-              <input type="hidden" id="inputJurusan" value="" />
+              <select id="inputJurusan">
+                <option value="">-</option>
+                <option value="IPA">IPA</option>
+                <option value="IPS">IPS</option>
+                <option value="AGAMA">AGAMA</option>
+              </select>
             </div>
 
             <div class="field">
               <label for="inputParalel">Paralel</label>
-              <div class="chip-group" data-target="inputParalel">
-                <button type="button" class="chip-option active" data-value="1">1</button>
-                <button type="button" class="chip-option" data-value="2">2</button>
-                <button type="button" class="chip-option" data-value="3">3</button>
-                <button type="button" class="chip-option" data-value="4">4</button>
-                <button type="button" class="chip-option" data-value="5">5</button>
-                <button type="button" class="chip-option" data-value="6">6</button>
-                <button type="button" class="chip-option" data-value="7">7</button>
-                <button type="button" class="chip-option" data-value="8">8</button>
-                <button type="button" class="chip-option" data-value="9">9</button>
-                <button type="button" class="chip-option" data-value="10">10</button>
-                <button type="button" class="chip-option" data-value="11">11</button>
-                <button type="button" class="chip-option" data-value="12">12</button>
-                <button type="button" class="chip-option" data-value="13">13</button>
-                <button type="button" class="chip-option" data-value="14">14</button>
-                <button type="button" class="chip-option" data-value="15">15</button>
-              </div>
-              <input type="hidden" id="inputParalel" value="1" />
+              <select id="inputParalel">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+              </select>
             </div>
           </div>
         </div>
 
         <div class="btn-row">
           <div class="btn-row-left">
-            <button type="button" id="btnLoadInput" class="btn-secondary">
+            <button type="button" id="btnLoadInput" class="btn-outline">
               <span class="icon">🔄</span> Muat data santri
             </button>
           </div>
@@ -1118,18 +1109,16 @@
           </div>
         </div>
 
-        <div class="filter-row filter-row-center">
-          <div class="filter-row-center-inner">
-            <div class="field">
-              <label for="rekapTanggal">Tanggal rekap</label>
-              <input type="date" id="rekapTanggal" />
-            </div>
-            <div class="field">
-              <label>&nbsp;</label>
-              <button type="button" id="btnLoadRekap" class="btn-primary">
-                <span class="icon">📄</span> Tampilkan rekap
-              </button>
-            </div>
+        <div class="filter-row">
+          <div class="field">
+            <label for="rekapTanggal">Tanggal rekap</label>
+            <input type="date" id="rekapTanggal" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button type="button" id="btnLoadRekap" class="btn-primary">
+              <span class="icon">📄</span> Tampilkan rekap
+            </button>
           </div>
         </div>
 
@@ -1153,16 +1142,17 @@
           </div>
         </div>
 
-        <div class="btn-row btn-row-center">
+        <div class="btn-row">
           <div class="btn-row-left">
             <button type="button" id="btnPrintRekap" class="btn-outline">
               <span class="icon">🖨️</span> Download PDF
             </button>
+          </div>
+          <div class="btn-row-right">
             <button type="button" id="btnSaveRekap" class="btn-secondary">
               <span class="icon">💾</span> Simpan perubahan
             </button>
           </div>
-          <div class="btn-row-right"></div>
         </div>
 
         <p class="footer-note">
@@ -1691,7 +1681,7 @@
         const tdNama = document.createElement("td");
         tdNama.textContent = nama;
 
-        const tdKelas = document.createElement("td`);
+        const tdKelas = document.createElement("td");
         const spanKelas = document.createElement("span");
         spanKelas.classList.add("kelas-badge");
         spanKelas.textContent = kelasLabel;
