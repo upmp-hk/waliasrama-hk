@@ -1678,7 +1678,7 @@
     // LOAD MASTER
     async function loadSantriMaster() {
       const { data, error } = await db
-        .from("santri_master")
+        .from("santri_master_view")
         .select(
           "id, nis, nama, tahun_ajaran, semester, jenjang, kelas, jurusan, paralel, aktif"
         )
@@ -1686,7 +1686,7 @@
         .order("nama", { ascending: true });
   
       if (error) {
-        console.error("Gagal load santri_master:", error);
+        console.error("Gagal load santri_master_view:", error);
         showToast("❎ gagal memuat data.", "error");
         return;
       }
