@@ -192,12 +192,15 @@
     /* ===== TABS (BOTTOM NAV) ===== */
     .tabs {
       position: fixed;
-      left: 50%;
-      bottom: 0.75rem;
+      left: 1rem; /* Ganti dari left: 50% */
+      right: 1rem; /* Tambahkan right */
+      width: auto; /* Hapus width calc dan max-width jika perlu */
+      bottom: calc(0.75rem + env(safe-area-inset-bottom, 0));
       transform: translateX(-50%);
       z-index: 999;
 
       display: flex;
+      justify-content: center; /* Untuk centering horizontal */
       width: calc(100% - 2rem);
       max-width: 480px;
       margin: 0;
