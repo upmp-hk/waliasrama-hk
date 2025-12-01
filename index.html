@@ -247,6 +247,53 @@
       margin-top: 1rem;
     }
 
+    /* ==== ANIMASI PERPINDAHAN TAB ==== */
+.tab-content {
+  margin-top: 1rem;
+  position: relative;
+}
+
+.tab-content-hidden {
+  display: none;
+}
+
+.tab-content-active {
+  display: block;
+}
+
+/* box lama geser ke kiri */
+@keyframes tab-slide-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+}
+
+/* box baru naik dari bawah */
+@keyframes tab-slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-anim-out-left {
+  animation: tab-slide-out-left 0.25s ease-out forwards;
+}
+
+.tab-anim-in-up {
+  animation: tab-slide-in-up 0.28s ease-out forwards;
+}
+
+
     /* ===== PANELS / FILTER ===== */
     .panel {
       border-radius: 18px;
@@ -1323,6 +1370,10 @@
     let alasanSakitDistinct = [];
     let toastEnabled = false;
 
+    let activeTab = "input";
+    let isSwitchingTab = false;
+
+
     // TOAST
     function showToast(message, variant = "info") {
       if (!toastEnabled) {
@@ -1419,16 +1470,100 @@
       rekapBulan.value = `${yyyy}-${mm}`;
     }
 
-    function switchTab(tab) {
-      localStorage.setItem("sakit_active_tab", tab);
+    function getSectionByTab(tab) {
+      if (tab === "input") return tabInput;
+      if (tab === "rekap-harian") return tabRekapHarian;
+      if (tab === "rekap-bulanan") return tabRekapBulanan;
+      return null;
+    }
 
+    function switchTab(tab, options = {}) {
+      const { instant = false } = options;
+      if (!["input", "rekap-harian", "rekap-bulanan"].includes(tab)) return;
+    
+      const newSection = getSectionByTab(tab);
+      const oldSection = getSectionByTab(activeTab);
+    
+      if (!newSection) return;
+      if (tab === activeTab && !instant) return;
+      if (isSwitchingTab && !instant) return;
+    
+      // update tombol navbar
       tabButtons.forEach((btn) => {
         btn.classList.toggle("active", btn.dataset.tab === tab);
       });
-      tabInput.style.display = tab === "input" ? "block" : "none";
-      tabRekapHarian.style.display = tab === "rekap-harian" ? "block" : "none";
-      tabRekapBulanan.style.display =
-        tab === "rekap-bulanan" ? "block" : "none";
+    
+      localStorage.setItem("sakit_active_tab", tab);
+    
+      // mode tanpa animasi (awal load, print, dll)
+      if (instant) {
+        [tabInput, tabRekapHarian, tabRekapBulanan].forEach((sec) => {
+          if (!sec) return;
+          sec.style.display = sec === newSection ? "block" : "none";
+          sec.classList.remove(
+            "tab-content-active",
+            "tab-content-hidden",
+            "tab-anim-in-up",
+            "tab-anim-out-left"
+          );
+          if (sec === newSection) {
+            sec.classList.add("tab-content-active");
+          } else {
+            sec.classList.add("tab-content-hidden");
+          }
+        });
+    
+        activeTab = tab;
+        isSwitchingTab = false;
+        return;
+      }
+    
+      // --- mode animasi ---
+      isSwitchingTab = true;
+      activeTab = tab;
+    
+      // si baru tampil duluan (posisi bawah, nanti naik ke atas)
+      newSection.style.display = "block";
+      newSection.classList.remove(
+        "tab-content-hidden",
+        "tab-anim-out-left"
+      );
+      newSection.classList.add("tab-content-active", "tab-anim-in-up");
+    
+      // kalau sebelumnya belum pernah tampil, langsung selesai
+      if (!oldSection || oldSection === newSection) {
+        newSection.classList.remove("tab-anim-in-up");
+        isSwitchingTab = false;
+        return;
+      }
+    
+      oldSection.classList.remove(
+        "tab-anim-in-up"
+      );
+      oldSection.classList.add("tab-anim-out-left");
+    
+      // ketika animasi keluar selesai, sembunyikan
+      const handleOldAnimEnd = (e) => {
+        if (e.animationName !== "tab-slide-out-left") return;
+        oldSection.style.display = "none";
+        oldSection.classList.remove(
+          "tab-anim-out-left",
+          "tab-content-active"
+        );
+        oldSection.classList.add("tab-content-hidden");
+        oldSection.removeEventListener("animationend", handleOldAnimEnd);
+      };
+    
+      // ketika animasi masuk selesai, bersihkan class anim-nya
+      const handleNewAnimEnd = (e) => {
+        if (e.animationName !== "tab-slide-in-up") return;
+        newSection.classList.remove("tab-anim-in-up");
+        newSection.removeEventListener("animationend", handleNewAnimEnd);
+        isSwitchingTab = false;
+      };
+    
+      oldSection.addEventListener("animationend", handleOldAnimEnd);
+      newSection.addEventListener("animationend", handleNewAnimEnd);
     }
 
     function fillAlasanDatalist() {
@@ -2414,11 +2549,11 @@
 
       const savedTab = localStorage.getItem("sakit_active_tab");
       const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
-
+      
       if (savedTab && allowedTabs.includes(savedTab)) {
-        switchTab(savedTab);
+        switchTab(savedTab, { instant: true });
       } else {
-        switchTab("input");
+        switchTab("input", { instant: true });
       }
       toastEnabled = true;
     });
