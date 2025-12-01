@@ -1021,39 +1021,6 @@
         display: block;
       }
     }
-      .share-fab {
-        position: fixed;
-        right: 1.2rem;
-        bottom: 5.2rem; /* di atas navbar & di bawah toast */
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        padding: 0.5rem 0.9rem;
-        border-radius: 999px;
-        border: none;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        color: #ffffff;
-        font-size: 0.8rem;
-        font-weight: 500;
-        box-shadow: 0 10px 22px rgba(22, 163, 74, 0.55);
-        cursor: pointer;
-        z-index: 70; /* di atas navbar, di bawah toast (9999) */
-      }
-      
-      .share-fab:active {
-        transform: translateY(1px) scale(0.99);
-        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.5);
-      }
-      
-      /* Optional: sedikit beda di HP */
-      @media (max-width: 640px) {
-        .share-fab {
-          bottom: 5.8rem; /* supaya aman dengan tinggi navbar & toast */
-          right: 0.9rem;
-          font-size: 0.78rem;
-        }
-      }
-
 
   </style>
   <link rel="manifest" href="manifest.webmanifest" />
@@ -1337,10 +1304,6 @@
     </section>
 
     <datalist id="alasanList"></datalist>
-    <button id="btnSharePdf" class="share-fab" style="display:none;">
-      <span class="icon">📤</span>
-      <span>Bagikan</span>
-    </button>
   </div>
 
   <!-- NAV TABS (BOTTOM) dari kode baru -->
@@ -1400,7 +1363,6 @@
     const monthlyChartContainer =
       document.getElementById("monthlyChartContainer");
   
-    const btnSharePdf = document.getElementById("btnSharePdf");
     const alasanList = document.getElementById("alasanList");
     const toastEl = document.getElementById("toast");
   
@@ -1413,15 +1375,12 @@
     let santriMaster = [];
     let alasanSakitDistinct = [];
     let toastEnabled = false;
-    let lastPrintContext = null; // konteks rekap terakhir yang di-print (harian/bulanan)
-
   
     let activeTab = "input";
     let isSwitchingTab = false;
   
     let inputStep = "filter";           // "filter" atau "daftar"
     let isSwitchingInputPanel = false;  // cegah animasi tabrakan
-    
   
     // ==== UTIL LOADING BUTTON ====
     function setButtonLoading(btn, isLoading, labelLoading = "Memproses...") {
@@ -2665,20 +2624,8 @@
         showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
-    
-      // simpan konteks rekap yang baru saja dicetak
-      lastPrintContext = {
-        type: "harian",
-        label: rekapTanggal.value
-      };
-    
       switchTab("rekap-harian");
       window.print();
-    
-      // setelah print dialog dipanggil, munculkan tombol share
-      if (btnSharePdf) {
-        btnSharePdf.style.display = "inline-flex";
-      }
     });
   
     btnLoadRekapBulanan.addEventListener("click", loadRekapBulanan);
@@ -2688,51 +2635,8 @@
         showToast("⚠️ pilih bulan rekap.", "error");
         return;
       }
-    
-      lastPrintContext = {
-        type: "bulanan",
-        label: rekapBulan.value
-      };
-    
       switchTab("rekap-bulanan");
       window.print();
-    
-      if (btnSharePdf) {
-        btnSharePdf.style.display = "inline-flex";
-      }
-
-      if (btnSharePdf) {
-        btnSharePdf.addEventListener("click", async () => {
-      if (!lastPrintContext) {
-        showToast("⚠️ Belum ada rekap yang dicetak.", "warning");
-        return;
-      }
-  
-      const ctx = lastPrintContext;
-      const text =
-        ctx.type === "harian"
-          ? `Rekap santri sakit HARIAN sudah dicetak.\nTanggal: ${ctx.label}.`
-          : `Rekap santri sakit BULANAN sudah dicetak.\nBulan: ${ctx.label}.`;
-  
-      try {
-        // 1) Kalau browser mendukung Web Share API (HP modern)
-        if (navigator.share) {
-          await navigator.share({
-            title: "Rekap Santri Sakit",
-            text,
-          });
-        } else {
-          // 2) Fallback: WhatsApp Web dengan teks siap kirim
-          const waUrl = "https://wa.me/?text=" + encodeURIComponent(text);
-          window.open(waUrl, "_blank");
-        }
-      } catch (err) {
-        // user batal share / error lain
-        console.error("Share dibatalkan/gagal:", err);
-      }
-    });
-  }
-
     });
   
     // INIT
