@@ -45,7 +45,7 @@
         radial-gradient(circle at bottom right, #bbf7d0 0, transparent 50%),
         linear-gradient(135deg, #e5f0ff, #e0f9ee);
       padding: 1rem;
-      padding-bottom: 4.5rem; /* ruang untuk bottom nav */
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4.5rem);
       color: var(--dark);
     }
 
@@ -193,10 +193,10 @@
     .tabs {
       position: fixed;
       left: 50%;
-      bottom: 0.75rem;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
       transform: translateX(-50%);
       z-index: 999;
-
+    
       display: flex;
       width: calc(100% - 2rem);
       max-width: 480px;
@@ -204,7 +204,7 @@
       gap: 0.35rem;
       border-radius: 999px;
       padding: 0.15rem;
-      background: #0f172a; /* solid, tidak transparan */
+      background: #0f172a;
       border: 1px solid rgba(15, 23, 42, 0.9);
       box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
     }
