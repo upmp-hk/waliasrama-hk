@@ -1923,6 +1923,27 @@
       input.select();
     }
   
+    async function loadRekapKelas(bulan) {
+      const { data, error } = await supabase.rpc("rekap_bulanan_kelas", { bulan });
+      if (error) console.error(error);
+    
+      return data || [];
+    }
+
+    async function loadRekapSantri(bulan) {
+      const { data, error } = await supabase.rpc("rekap_bulanan_santri", { bulan });
+      if (error) console.error(error);
+    
+      return data || [];
+    }
+
+    async function loadRekapJenis(bulan) {
+      const { data, error } = await supabase.rpc("rekap_bulanan_jenis_sakit", { bulan });
+      if (error) console.error(error);
+    
+      return data || [];
+    }
+  
     async function loadRekapTable(options = {}) {
       const { silent = false } = options;
   
@@ -2099,8 +2120,19 @@
         showToast("Tidak ada data santri sakit pada bulan ini.", "info");
         return;
       }
-  
-      // Agregat per santri
+
+      const bulan = document.getElementById("bulan-value").value;
+      const kelas = await loadRekapKelas(bulan);
+      const santri = await loadRekapSantri(bulan);
+      const jenis = await loadRekapJenis(bulan);
+      
+      renderChartKelas(kelas);
+      renderChartSantri(santri);
+      renderChartJenis(jenis);
+      
+      renderTablePDF(kelas, santri, jenis);
+
+        // Agregat per santri
       const bySantri = new Map();
       sakitData.forEach((row) => {
         const sid = row.santri_id;
@@ -2673,6 +2705,8 @@
         navigator.serviceWorker.register("./sw.js").catch(console.error);
       });
     }
+
+    supabase.from("santri_sakit").select("*")
 
     supabase.from("view_rekap_bulanan_kelas")
       .select("*")
