@@ -45,7 +45,7 @@
         radial-gradient(circle at bottom right, #bbf7d0 0, transparent 50%),
         linear-gradient(135deg, #e5f0ff, #e0f9ee);
       padding: 1rem;
-      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4.5rem);
+      padding-bottom: 4.5rem; /* ruang untuk bottom nav */
       color: var(--dark);
     }
 
@@ -193,18 +193,18 @@
     .tabs {
       position: fixed;
       left: 50%;
+      bottom: 0.75rem;
       transform: translateX(-50%);
-      bottom: 0; /* selalu nempel ke bawah viewport */
       z-index: 999;
-    
+
       display: flex;
       width: calc(100% - 2rem);
       max-width: 480px;
       margin: 0;
       gap: 0.35rem;
       border-radius: 999px;
-      padding: 0.35rem 0.15rem calc(env(safe-area-inset-bottom, 0px) + 0.15rem);
-      background: #0f172a;
+      padding: 0.15rem;
+      background: #0f172a; /* solid, tidak transparan */
       border: 1px solid rgba(15, 23, 42, 0.9);
       box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
     }
@@ -878,8 +878,19 @@
         font-size: 0.74rem;
       }
 
+      .tabs {
+        position: fixed;
+        left: 50%;
+        bottom: 0.75rem;
+        transform: translateX(-50%);
+        z-index: 60;
+        max-width: 480px;
+        width: calc(100% - 2rem);
+        margin: 0;
+      }
+
       body {
-        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4.5rem);
+        padding-bottom: 4.5rem;
       }
     }
 
@@ -2230,7 +2241,7 @@
 
       const santriRows = entries.map(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
-        const nama = santri ? santri.nama : "(santri tidak ditemukan)";
+        const nama = santri ? santri.nama : "(santri tidak ditemukan)`;
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
@@ -2392,3 +2403,6 @@
   </script>
 </body>
 </html>
+
+revisi nya dari sini. tab "rekap harian" dan "rekap bulanan" belum nyantol
+
