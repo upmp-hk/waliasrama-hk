@@ -894,6 +894,19 @@
         width: calc(100% - 2rem);
         margin: 0;
       }
+      /* ✅ Khusus HP: icon di atas teks, font & padding sedikit diperkecil */
+      .tab-btn {
+        flex-direction: column;      /* icon di atas, teks di bawah */
+        gap: 0.15rem;
+        font-size: 0.72rem;
+        padding: 0.38rem 0.45rem;
+        white-space: normal;         /* boleh wrap kalau perlu */
+      }
+    
+      .tab-btn-icon {
+        font-size: 1rem;
+        line-height: 1;
+      }
 
       body {
         padding-bottom: 4.5rem;
