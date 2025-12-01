@@ -1703,12 +1703,12 @@
       const kelas = inputKelas.value;
       const jurusan = inputJurusan.value;
       const paralel = parseInt(inputParalel.value, 10);
-
+    
       if (!tanggal) {
         showToast("⚠️ pilih tanggal rekap.", "error");
         return;
       }
-
+    
       const { data: santri, error: errSantri } = await db
         .from("santri_master")
         .select("id, nis, nama, jenjang, kelas, jurusan, paralel")
@@ -1718,51 +1718,51 @@
         .eq("paralel", paralel)
         .eq("aktif", true)
         .order("nama", { ascending: true });
-
+    
       if (errSantri) {
         console.error("Gagal load santri:", errSantri);
         showToast("❎ gagal memuat data.", "error");
         return;
       }
-
+    
       inputTableBody.innerHTML = "";
-
+    
       if (!santri || santri.length === 0) {
         inputTableBody.innerHTML =
           '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
         showToast("⚠️ tidak ada data.", "warning");
         return;
       }
-
+    
       const santriIds = santri.map((s) => s.id);
-
+    
       const { data: sakitData, error: errSakit } = await db
         .from("santri_sakit")
         .select("santri_id, alasan_sakit")
         .eq("tanggal", tanggal)
         .in("santri_id", santriIds);
-
+    
       if (errSakit) {
-        console.error(" load santri_sakit:", errSakit);
+        console.error("Gagal load santri_sakit:", errSakit);
         showToast("❎ gagal memuat data.", "error");
         return;
       }
-
+    
       const mapSakit = new Map();
       (sakitData || []).forEach((row) => {
         mapSakit.set(row.santri_id, row.alasan_sakit || "");
       });
-
+    
       santri.forEach((s, index) => {
         const tr = document.createElement("tr");
-
+    
         const tdNo = document.createElement("td");
         tdNo.classList.add("col-no");
         tdNo.textContent = index + 1;
-
+    
         const tdNama = document.createElement("td");
         tdNama.textContent = s.nama;
-
+    
         const tdAlasan = document.createElement("td");
         const inp = document.createElement("input");
         inp.type = "text";
@@ -1771,40 +1771,42 @@
         inp.value = mapSakit.get(s.id) || "";
         inp.dataset.santriId = s.id;
         tdAlasan.appendChild(inp);
-
+    
         tr.appendChild(tdNo);
         tr.appendChild(tdNama);
         tr.appendChild(tdAlasan);
-
+    
         inputTableBody.appendChild(tr);
       });
-
+    
       showToast("✅ berhasil memuat data.", "info");
+    
+      // setelah data berhasil dimuat → pindah ke panel daftar dengan animasi
+      switchInputPanel("daftar");
     }
 
     async function saveInputData() {
       const tanggal = inputTanggal.value;
       if (!tanggal) {
         showToast("⚠️ pilih tanggal rekap.", "error");
-          // pindah ke panel daftar dengan animasi
-        switchInputPanel("daftar");
         return;
       }
-
+    
       const rows = inputTableBody.querySelectorAll("tr");
       if (!rows.length) {
         showToast("⚠️ tidak ada data.", "error");
         return;
       }
-
+    
       const santriIds = [];
       const payload = [];
-
+    
       rows.forEach((row) => {
         const inp = row.querySelector(".alasan-input");
         if (!inp) return;
         const santriId = Number(inp.dataset.santriId);
         const alasan = inp.value.trim();
+        if (!santriId) return;
         santriIds.push(santriId);
         if (alasan) {
           payload.push({
@@ -1814,45 +1816,38 @@
           });
         }
       });
-
+    
       if (!santriIds.length) {
-        showToastAuto("⚠️ pilih tanggal rekap.");
+        showToastAuto("⚠️ tidak ada data santri.", "warning");
         return;
       }
-
+    
+      // hapus semua data sakit lama utk tanggal dan santri2 ini
       const { error: delErr } = await db
         .from("santri_sakit")
         .delete()
         .eq("tanggal", tanggal)
         .in("santri_id", santriIds);
-
+    
       if (delErr) {
         console.error("Gagal hapus data sakit lama:", delErr);
-        showToastAuto("❎ gagal memuat rekap.");
+        showToastAuto("❎ gagal menghapus data lama.");
         return;
       }
-
+    
+      // insert yang ada isi alasan
       if (payload.length) {
         const { error: insErr } = await db
           .from("santri_sakit")
           .insert(payload);
-
+    
         if (insErr) {
           console.error("Gagal insert data sakit:", insErr);
           showToast("❎ gagal menyimpan data.", "error");
           return;
         }
       }
-
-      showToastAuto("✅ berhasil menyimpan data");
-      await loadDistinctAlasanSakit();
     }
-      showToastAuto("✅ berhasil menyimpan data");
-      await loadDistinctAlasanSakit();
-
-      // kembali ke langkah filter dengan animasi
-      switchInputPanel("filter");
-
 
     // REKAP HARIAN
     function masukModeEditAlasan(displayEl) {
