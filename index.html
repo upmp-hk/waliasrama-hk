@@ -2241,7 +2241,7 @@
 
       const santriRows = entries.map(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
-        const nama = santri ? santri.nama : "(santri tidak ditemukan)`;
+        const nama = santri ? santri.nama : "(santri tidak ditemukan)";
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
