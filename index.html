@@ -261,15 +261,14 @@
   display: block;
 }
 
-/* box lama geser ke kiri */
 @keyframes tab-slide-out-left {
   from {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translateX(-18px);
+    transform: translateY(18px); /* geser ke bawah sambil fade */
   }
 }
 
