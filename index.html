@@ -1060,7 +1060,7 @@
 
     <!-- =============== TAB INPUT DATA =============== -->
     <section id="tab-input" class="tab-content">
-      <div class="panel">
+      <div id="panelFilterInput" class="panel">
         <div class="panel-header">
           <div class="panel-title">Filter Kelas & Tanggal</div>
           <div class="panel-caption">Pilih tanggal dan kombinasi kelas yang akan diinput laporannya.</div>
@@ -1152,7 +1152,7 @@
         </div>
       </div>
 
-      <div class="panel" style="margin-top:0.65rem;">
+      <div id="panelDaftarInput" class="panel" style="margin-top:0.65rem; display:none;">
         <div class="panel-header">
           <div class="panel-title">Daftar Santri & Alasan Sakit</div>
           <div class="panel-caption">Isi kolom <strong>Alasan Sakit</strong> hanya untuk santri yang sakit.</div>
@@ -1334,6 +1334,9 @@
     const tabInput = document.getElementById("tab-input");
     const tabRekapHarian = document.getElementById("tab-rekap-harian");
     const tabRekapBulanan = document.getElementById("tab-rekap-bulanan");
+    const panelFilterInput = document.getElementById("panelFilterInput");
+    const panelDaftarInput = document.getElementById("panelDaftarInput");
+
 
     const inputTanggal = document.getElementById("inputTanggal");
     const inputJenjang = document.getElementById("inputJenjang");
@@ -1371,6 +1374,10 @@
 
     let activeTab = "input";
     let isSwitchingTab = false;
+
+    let inputStep = "filter";           // "filter" atau "daftar"
+    let isSwitchingInputPanel = false;  // cegah animasi tabrakan
+
 
 
     // TOAST
@@ -1565,6 +1572,69 @@
       newSection.addEventListener("animationend", handleNewAnimEnd);
     }
 
+    function switchInputPanel(step, options = {}) {
+      const { instant = false } = options;
+      if (!["filter", "daftar"].includes(step)) return;
+    
+      const newPanel = step === "filter" ? panelFilterInput : panelDaftarInput;
+      const oldPanel = inputStep === "filter" ? panelFilterInput : panelDaftarInput;
+    
+      if (!newPanel) return;
+      if (newPanel === oldPanel && !instant) return;
+      if (isSwitchingInputPanel && !instant) return;
+    
+      inputStep = step;
+    
+      if (instant) {
+        [panelFilterInput, panelDaftarInput].forEach((p) => {
+          if (!p) return;
+          p.style.display = p === newPanel ? "block" : "none";
+          p.classList.remove("tab-anim-out-left", "tab-anim-in-up");
+        });
+        isSwitchingInputPanel = false;
+        return;
+      }
+    
+      isSwitchingInputPanel = true;
+    
+      // panel baru muncul dulu (naik dari bawah)
+      newPanel.style.display = "block";
+      newPanel.classList.remove("tab-anim-out-left");
+      newPanel.classList.add("tab-anim-in-up");
+    
+      if (!oldPanel || oldPanel === newPanel) {
+        const handleNewEndOnly = (e) => {
+          if (e.animationName !== "tab-slide-in-up") return;
+          newPanel.classList.remove("tab-anim-in-up");
+          newPanel.removeEventListener("animationend", handleNewEndOnly);
+          isSwitchingInputPanel = false;
+        };
+        newPanel.addEventListener("animationend", handleNewEndOnly);
+        return;
+      }
+    
+      // panel lama turun ke bawah
+      oldPanel.classList.remove("tab-anim-in-up");
+      oldPanel.classList.add("tab-anim-out-left");
+    
+      const handleOldEnd = (e) => {
+        if (e.animationName !== "tab-slide-out-left") return;
+        oldPanel.style.display = "none";
+        oldPanel.classList.remove("tab-anim-out-left");
+        oldPanel.removeEventListener("animationend", handleOldEnd);
+      };
+    
+      const handleNewEnd = (e) => {
+        if (e.animationName !== "tab-slide-in-up") return;
+        newPanel.classList.remove("tab-anim-in-up");
+        newPanel.removeEventListener("animationend", handleNewEnd);
+        isSwitchingInputPanel = false;
+      };
+    
+      oldPanel.addEventListener("animationend", handleOldEnd);
+      newPanel.addEventListener("animationend", handleNewEnd);
+    }
+
     function fillAlasanDatalist() {
       alasanList.innerHTML = "";
       const seen = new Set();
@@ -1716,6 +1786,8 @@
       const tanggal = inputTanggal.value;
       if (!tanggal) {
         showToast("⚠️ pilih tanggal rekap.", "error");
+          // pindah ke panel daftar dengan animasi
+        switchInputPanel("daftar");
         return;
       }
 
@@ -1775,6 +1847,12 @@
       showToastAuto("✅ berhasil menyimpan data");
       await loadDistinctAlasanSakit();
     }
+      showToastAuto("✅ berhasil menyimpan data");
+      await loadDistinctAlasanSakit();
+
+      // kembali ke langkah filter dengan animasi
+      switchInputPanel("filter");
+
 
     // REKAP HARIAN
     function masukModeEditAlasan(displayEl) {
@@ -2505,7 +2583,13 @@
     // EVENTS
     tabButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        switchTab(btn.dataset.tab);
+        const tab = btn.dataset.tab;
+        switchTab(tab);
+    
+        // setiap kali nav "Input Data" ditekan, kembali ke langkah Filter
+        if (tab === "input") {
+          switchInputPanel("filter", { instant: true });
+        }
       });
     });
 
@@ -2551,9 +2635,14 @@
       
       if (savedTab && allowedTabs.includes(savedTab)) {
         switchTab(savedTab, { instant: true });
+        if (savedTab === "input") {
+          switchInputPanel("filter", { instant: true });
+        }
       } else {
         switchTab("input", { instant: true });
+        switchInputPanel("filter", { instant: true });
       }
+      
       toastEnabled = true;
     });
 
