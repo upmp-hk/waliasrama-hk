@@ -193,8 +193,8 @@
     .tabs {
       position: fixed;
       left: 50%;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
       transform: translateX(-50%);
+      bottom: 0; /* selalu nempel ke bawah viewport */
       z-index: 999;
     
       display: flex;
@@ -203,7 +203,7 @@
       margin: 0;
       gap: 0.35rem;
       border-radius: 999px;
-      padding: 0.15rem;
+      padding: 0.35rem 0.15rem calc(env(safe-area-inset-bottom, 0px) + 0.15rem);
       background: #0f172a;
       border: 1px solid rgba(15, 23, 42, 0.9);
       box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
@@ -878,19 +878,8 @@
         font-size: 0.74rem;
       }
 
-      .tabs {
-        position: fixed;
-        left: 50%;
-        bottom: 0.75rem;
-        transform: translateX(-50%);
-        z-index: 60;
-        max-width: 480px;
-        width: calc(100% - 2rem);
-        margin: 0;
-      }
-
       body {
-        padding-bottom: 4.5rem;
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4.5rem);
       }
     }
 
