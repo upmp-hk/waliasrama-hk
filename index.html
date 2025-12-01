@@ -1948,7 +1948,7 @@
   
       if (!sakitData || sakitData.length === 0) {
         rekapTableBody.innerHTML =
-          '<tr><td colspan="4" style="text-align:center; padding:1rem;">Belum ada data santri sakit pada tanggal ini.</td></tr>';
+          '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada data santri sakit pada tanggal ini.</td></tr>';
         if (!silent) {
           showToast("⚠️ tidak ada data.", "info");
         }
@@ -2095,8 +2095,8 @@
   
       if (!sakitData || sakitData.length === 0) {
         monthlyChartContainer.innerHTML =
-          '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Belum ada data santri sakit pada bulan ini.</div>';
-        showToast("Belum ada data santri sakit pada bulan ini.", "info");
+          '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini.</div>';
+        showToast("Tidak ada data santri sakit pada bulan ini.", "info");
         return;
       }
   
@@ -2123,8 +2123,8 @@
       const entries = Array.from(bySantri.entries());
       if (!entries.length) {
         monthlyChartContainer.innerHTML =
-          '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Belum ada data santri sakit pada bulan ini.</div>';
-        showToast("Belum ada data santri sakit pada bulan ini.", "info");
+          '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini.</div>';
+        showToast("Tidak ada data santri sakit pada bulan ini.", "info");
         return;
       }
   
