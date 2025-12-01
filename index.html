@@ -857,7 +857,8 @@
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 1.4rem;
+      /* dinaikkan supaya di atas navbar */
+      bottom: 4.8rem;
       transform: translateX(-50%) translateY(8px);
       background: #111827;
       color: #ffffff;
@@ -940,6 +941,10 @@
         width: calc(100% - 2rem);
         margin: 0;
       }
+      .toast {
+        bottom: 5.2rem; /* sedikit lebih tinggi di HP kecil */
+      }
+      
       /* ✅ Khusus HP: icon di atas teks, font & padding sedikit diperkecil */
       .tab-btn {
         flex-direction: column;      /* icon di atas, teks di bawah */
