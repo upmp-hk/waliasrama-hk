@@ -2064,346 +2064,332 @@
     }
   
     // ========== REKAP BULANAN (PAKAI VIEW) ==========
+    // Versi lebih "kebal" terhadap beda nama kolom di view Supabase
     async function loadRekapBulanan() {
       const bulanStr = rekapBulan.value;
       if (!bulanStr) {
         showToast("⚠️ pilih bulan rekap.", "error");
         return;
       }
-  
-      monthlyChartContainer.innerHTML = "";
-  
+    
+      monthlyChartContainer.innerHTML =
+        '<div style="text-align:center; padding:0.8rem; font-size:0.8rem; color:var(--gray);">Memuat rekap bulanan...</div>';
+    
+      // helper: ambil angka frekuensi dari berbagai kemungkinan nama kolom
+      function getCount(row) {
+        const candidates = ["frekuensi", "jumlah", "total", "total_kasus", "count"];
+        for (const key of candidates) {
+          if (key in row) {
+            const v = Number(row[key]);
+            if (!Number.isNaN(v)) return v;
+          }
+        }
+        return 0;
+      }
+    
+      // helper: clone & sort descending berdasarkan getCount
+      function sortByCount(data) {
+        return (data || []).slice().sort((a, b) => getCount(b) - getCount(a));
+      }
+    
       const [
-        { data: kelasData, error: kelasErr },
-        { data: santriData, error: santriErr },
-        { data: reasonData, error: reasonErr },
+        { data: kelasRaw, error: kelasErr },
+        { data: santriRaw, error: santriErr },
+        { data: reasonRaw, error: reasonErr },
       ] = await Promise.all([
-        db
-          .from("view_rekap_bulanan_kelas")
-          .select("bulan, kelas_label, frekuensi, rincian_santri")
-          .eq("bulan", bulanStr)
-          .order("frekuensi", { ascending: false }),
-        db
-          .from("view_rekap_bulanan_santri")
-          .select(
-            "bulan, santri_id, nama_santri, kelas_label, frekuensi, rincian_alasan"
-          )
-          .eq("bulan", bulanStr)
-          .order("frekuensi", { ascending: false }),
-        db
-          .from("view_rekap_bulanan_jenis_sakit")
-          .select("bulan, jenis_sakit, frekuensi, rincian_santri")
-          .eq("bulan", bulanStr)
-          .order("frekuensi", { ascending: false }),
+        db.from("view_rekap_bulanan_kelas").select("*").eq("bulan", bulanStr),
+        db.from("view_rekap_bulanan_santri").select("*").eq("bulan", bulanStr),
+        db.from("view_rekap_bulanan_jenis_sakit").select("*").eq("bulan", bulanStr),
       ]);
-  
+    
       if (kelasErr || santriErr || reasonErr) {
         console.error("Error view bulanan:", {
           kelasErr,
           santriErr,
           reasonErr,
         });
+        monthlyChartContainer.innerHTML =
+          '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Terjadi kesalahan saat memuat rekap bulanan.</div>';
         showToast("❎ gagal memuat rekap.", "error");
         return;
       }
-  
+    
+      const kelasData = sortByCount(kelasRaw);
+      const santriData = sortByCount(santriRaw);
+      const reasonData = sortByCount(reasonRaw);
+    
       const hasData =
         (kelasData && kelasData.length) ||
         (santriData && santriData.length) ||
         (reasonData && reasonData.length);
-  
+    
       if (!hasData) {
         monthlyChartContainer.innerHTML =
           '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini.</div>';
         showToast("Tidak ada data santri sakit pada bulan ini.", "info");
         return;
       }
-  
-      // Total kasus untuk persentase
+    
+      // Hitung total kasus untuk persentase
       let totalCases = 0;
       if (santriData && santriData.length) {
-        totalCases = santriData.reduce(
-          (sum, row) => sum + (row.frekuensi || 0),
-          0
-        );
+        totalCases = santriData.reduce((sum, row) => sum + getCount(row), 0);
       } else if (kelasData && kelasData.length) {
-        totalCases = kelasData.reduce(
-          (sum, row) => sum + (row.frekuensi || 0),
-          0
-        );
+        totalCases = kelasData.reduce((sum, row) => sum + getCount(row), 0);
       } else if (reasonData && reasonData.length) {
-        totalCases = reasonData.reduce(
-          (sum, row) => sum + (row.frekuensi || 0),
-          0
-        );
+        totalCases = reasonData.reduce((sum, row) => sum + getCount(row), 0);
       }
-  
+    
       const totalForPercent = totalCases || 1;
       const BAR_UNITS = 20;
-  
+    
       function calcPercent(count) {
         return (Number(count || 0) / totalForPercent) * 100;
       }
-  
+    
       function makeAsciiBar(percent) {
         const filledUnits = Math.round((percent / 100) * BAR_UNITS);
         const emptyUnits = BAR_UNITS - filledUnits;
         return "[" + "#".repeat(filledUnits) + " ".repeat(emptyUnits) + "]";
       }
-  
+    
+      // bersihkan container, siap isi diagram
+      monthlyChartContainer.innerHTML = "";
+    
       // ====== BOX: KELAS ======
       if (kelasData && kelasData.length) {
         const kelasSection = document.createElement("div");
         kelasSection.classList.add("chart-section-card");
-  
+    
         const kelasTitle = document.createElement("div");
         kelasTitle.classList.add("chart-section-title");
         kelasTitle.textContent = "Kelas dengan frekuensi sakit terbanyak";
-  
+    
         const kelasSubtitle = document.createElement("div");
         kelasSubtitle.classList.add("chart-section-subtitle");
         kelasSubtitle.textContent =
           "Ringkasan total kasus dan daftar santri sakit per kelas dalam bulan ini.";
-  
+    
         kelasSection.appendChild(kelasTitle);
         kelasSection.appendChild(kelasSubtitle);
-  
+    
         kelasData.forEach((row) => {
           const label =
-            row.kelas_label ||
-            row.kelas ||
-            row.label ||
-            "(kelas tidak ditemukan)";
-          const count = Number(row.frekuensi || 0);
+            row.kelas_label || row.kelas || row.label || "(kelas tidak ditemukan)";
+          const count = getCount(row);
           const percent = calcPercent(count);
           const percentRoundedInt = Math.round(percent);
           const rincian =
             row.rincian_santri ||
             row.rincian ||
+            row.detail ||
             `Total ${count} kasus sakit di kelas ini.`;
-  
+    
           const rowDiv = document.createElement("div");
           rowDiv.classList.add("chart-row");
-  
+    
           const headerDiv = document.createElement("div");
           headerDiv.classList.add("chart-row-header");
-  
+    
           const leftSpan = document.createElement("div");
           leftSpan.classList.add("chart-row-name");
           leftSpan.textContent = label;
-  
+    
           const rightSpan = document.createElement("div");
           rightSpan.classList.add("chart-row-meta");
           rightSpan.textContent = `${count}x (${percentRoundedInt}%)`;
-  
+    
           headerDiv.appendChild(leftSpan);
           headerDiv.appendChild(rightSpan);
-  
+    
           const barTrack = document.createElement("div");
           barTrack.classList.add("chart-bar-track");
           const barFill = document.createElement("div");
           barFill.classList.add("chart-bar-fill");
           barFill.style.width = `${percent}%`;
           barTrack.appendChild(barFill);
-  
+    
           const printBar = document.createElement("div");
           printBar.classList.add("chart-row-printbar");
-          printBar.textContent = `${makeAsciiBar(percent)} ${percent.toFixed(
-            1
-          )}%`;
-  
+          printBar.textContent = `${makeAsciiBar(percent)} ${percent.toFixed(1)}%`;
+    
           const reasonsDiv = document.createElement("div");
           reasonsDiv.classList.add("chart-row-reasons");
           reasonsDiv.innerHTML = `<strong>Rincian:</strong> ${rincian}`;
-  
+    
           rowDiv.appendChild(headerDiv);
           rowDiv.appendChild(barTrack);
           rowDiv.appendChild(printBar);
           rowDiv.appendChild(reasonsDiv);
-  
+    
           kelasSection.appendChild(rowDiv);
         });
-  
+    
         monthlyChartContainer.appendChild(kelasSection);
       }
-  
+    
       // ====== BOX: SANTRI ======
       if (santriData && santriData.length) {
         const santriSection = document.createElement("div");
         santriSection.classList.add("chart-section-card");
-  
+    
         const santriTitle = document.createElement("div");
         santriTitle.classList.add("chart-section-title");
         santriTitle.textContent = "Santri dengan frekuensi sakit terbanyak";
-  
+    
         const santriSubtitle = document.createElement("div");
         santriSubtitle.classList.add("chart-section-subtitle");
         santriSubtitle.textContent =
           "Detail per santri dengan rincian alasan sakit yang paling sering.";
-  
+    
         santriSection.appendChild(santriTitle);
         santriSection.appendChild(santriSubtitle);
-  
+    
         santriData.forEach((row) => {
-          const nama =
-            row.nama_santri ||
-            row.nama ||
-            "(santri tidak ditemukan)";
-          const kelasLabel =
-            row.kelas_label ||
-            row.kelas ||
-            "-";
-          const count = Number(row.frekuensi || 0);
+          const nama = row.nama_santri || row.nama || "(santri tidak ditemukan)";
+          const kelasLabel = row.kelas_label || row.kelas || "-";
+          const count = getCount(row);
           const percent = calcPercent(count);
           const percentRoundedInt = Math.round(percent);
           const rincian =
-            row.rincian_alasan ||
-            row.rincian ||
-            "";
-  
+            row.rincian_alasan || row.rincian || row.detail || "";
+    
           const rowDiv = document.createElement("div");
           rowDiv.classList.add("chart-row");
-  
+    
           const headerDiv = document.createElement("div");
           headerDiv.classList.add("chart-row-header");
-  
+    
           const leftSpan = document.createElement("div");
           leftSpan.classList.add("chart-row-name");
           leftSpan.textContent = `${nama} (${kelasLabel})`;
-  
+    
           const rightSpan = document.createElement("div");
           rightSpan.classList.add("chart-row-meta");
           rightSpan.textContent = `${count}x (${percentRoundedInt}%)`;
-  
+    
           headerDiv.appendChild(leftSpan);
           headerDiv.appendChild(rightSpan);
-  
+    
           const barTrack = document.createElement("div");
           barTrack.classList.add("chart-bar-track");
           const barFill = document.createElement("div");
           barFill.classList.add("chart-bar-fill");
           barFill.style.width = `${percent}%`;
           barTrack.appendChild(barFill);
-  
+    
           const printBar = document.createElement("div");
           printBar.classList.add("chart-row-printbar");
-          printBar.textContent = `${makeAsciiBar(percent)} ${percent.toFixed(
-            1
-          )}%`;
-  
+          printBar.textContent = `${makeAsciiBar(percent)} ${percent.toFixed(1)}%`;
+    
           const reasonsDiv = document.createElement("div");
           reasonsDiv.classList.add("chart-row-reasons");
           reasonsDiv.innerHTML = `<strong>Rincian:</strong> ${
             rincian || "-"
           }`;
-  
+    
           rowDiv.appendChild(headerDiv);
           rowDiv.appendChild(barTrack);
           rowDiv.appendChild(printBar);
           rowDiv.appendChild(reasonsDiv);
-  
+    
           santriSection.appendChild(rowDiv);
         });
-  
+    
         monthlyChartContainer.appendChild(santriSection);
       }
-  
+    
       // ====== BOX: JENIS SAKIT ======
       if (reasonData && reasonData.length) {
         const reasonSection = document.createElement("div");
         reasonSection.classList.add("chart-section-card");
-  
+    
         const reasonTitle = document.createElement("div");
         reasonTitle.classList.add("chart-section-title");
-        reasonTitle.textContent =
-          "Jenis sakit yang paling sering diderita santri";
-  
+        reasonTitle.textContent = "Jenis sakit yang paling sering diderita santri";
+    
         const reasonSubtitle = document.createElement("div");
         reasonSubtitle.classList.add("chart-section-subtitle");
         reasonSubtitle.textContent =
           "Perbandingan frekuensi setiap jenis sakit dalam bulan ini.";
-  
+    
         reasonSection.appendChild(reasonTitle);
         reasonSection.appendChild(reasonSubtitle);
-  
+    
         reasonData.forEach((row) => {
           const label =
-            row.jenis_sakit ||
-            row.jenis ||
-            row.label ||
-            "tanpa keterangan";
-          const count = Number(row.frekuensi || 0);
+            row.jenis_sakit || row.jenis || row.label || "tanpa keterangan";
+          const count = getCount(row);
           const percent = calcPercent(count);
           const percentRoundedInt = Math.round(percent);
           const rincian =
             row.rincian_santri ||
             row.rincian ||
+            row.detail ||
             `Total ${count} kasus untuk jenis sakit ini.`;
-  
+    
           const rowDiv = document.createElement("div");
           rowDiv.classList.add("chart-row");
-  
+    
           const headerDiv = document.createElement("div");
           headerDiv.classList.add("chart-row-header");
-  
+    
           const leftSpan = document.createElement("div");
           leftSpan.classList.add("chart-row-name");
           leftSpan.textContent = label;
-  
+    
           const rightSpan = document.createElement("div");
           rightSpan.classList.add("chart-row-meta");
           rightSpan.textContent = `${count}x (${percentRoundedInt}%)`;
-  
+    
           headerDiv.appendChild(leftSpan);
           headerDiv.appendChild(rightSpan);
-  
+    
           const barTrack = document.createElement("div");
           barTrack.classList.add("chart-bar-track");
           const barFill = document.createElement("div");
           barFill.classList.add("chart-bar-fill");
           barFill.style.width = `${percent}%`;
           barTrack.appendChild(barFill);
-  
+    
           const printBar = document.createElement("div");
           printBar.classList.add("chart-row-printbar");
-          printBar.textContent = `${makeAsciiBar(percent)} ${percent.toFixed(
-            1
-          )}%`;
-  
+          printBar.textContent = `${makeAsciiBar(percent)} ${percent.toFixed(1)}%`;
+    
           const reasonsDiv = document.createElement("div");
           reasonsDiv.classList.add("chart-row-reasons");
           reasonsDiv.innerHTML = `<strong>Rincian:</strong> ${rincian}`;
-  
+    
           rowDiv.appendChild(headerDiv);
           rowDiv.appendChild(barTrack);
           rowDiv.appendChild(printBar);
           rowDiv.appendChild(reasonsDiv);
-  
+    
           reasonSection.appendChild(rowDiv);
         });
-  
+    
         monthlyChartContainer.appendChild(reasonSection);
       }
-  
+    
       // ====== TABEL PRINT (PDF) ======
       const tableWrapper = document.createElement("div");
       tableWrapper.classList.add("monthly-table-print");
-  
+    
       function buildTableSection(titleText, rowsData, labelHeader) {
         const sectionDiv = document.createElement("div");
         sectionDiv.style.marginBottom = "0.9rem";
-  
+    
         const titleEl = document.createElement("div");
         titleEl.classList.add("monthly-table-print-title");
         titleEl.textContent = titleText;
-  
+    
         const tableEl = document.createElement("table");
         tableEl.style.width = "100%";
         tableEl.style.borderCollapse = "collapse";
-  
+    
         const thead = document.createElement("thead");
         const trHead = document.createElement("tr");
-  
+    
         const headers = ["No", labelHeader, "Rincian", "Frekuensi"];
         headers.forEach((h) => {
           const th = document.createElement("th");
@@ -2412,50 +2398,48 @@
         });
         thead.appendChild(trHead);
         tableEl.appendChild(thead);
-  
+    
         const tbody = document.createElement("tbody");
         rowsData.forEach((row, idx) => {
           const tr = document.createElement("tr");
-  
+    
           const tdNo = document.createElement("td");
           tdNo.textContent = idx + 1;
           tdNo.style.textAlign = "center";
-  
+    
           const tdLabel = document.createElement("td");
           tdLabel.textContent = row.label;
-  
+    
           const tdDetail = document.createElement("td");
           tdDetail.textContent = row.detail;
-  
+    
           const tdFreq = document.createElement("td");
           tdFreq.textContent = row.count;
           tdFreq.style.textAlign = "center";
-  
+    
           tr.appendChild(tdNo);
           tr.appendChild(tdLabel);
           tr.appendChild(tdDetail);
           tr.appendChild(tdFreq);
-  
+    
           tbody.appendChild(tr);
         });
-  
+    
         tableEl.appendChild(tbody);
-  
+    
         sectionDiv.appendChild(titleEl);
         sectionDiv.appendChild(tableEl);
         return sectionDiv;
       }
-  
+    
       const kelasRows = (kelasData || []).map((row) => {
         const label =
-          row.kelas_label ||
-          row.kelas ||
-          row.label ||
-          "(kelas tidak ditemukan)";
-        const count = Number(row.frekuensi || 0);
+          row.kelas_label || row.kelas || row.label || "(kelas tidak ditemukan)";
+        const count = getCount(row);
         const rincian =
           row.rincian_santri ||
           row.rincian ||
+          row.detail ||
           `Total ${count} kasus sakit di kelas ini.`;
         return {
           label,
@@ -2463,38 +2447,28 @@
           count,
         };
       });
-  
+    
       const santriRows = (santriData || []).map((row) => {
-        const nama =
-          row.nama_santri ||
-          row.nama ||
-          "(santri tidak ditemukan)";
-        const kelasLabel =
-          row.kelas_label ||
-          row.kelas ||
-          "-";
-        const count = Number(row.frekuensi || 0);
+        const nama = row.nama_santri || row.nama || "(santri tidak ditemukan)";
+        const kelasLabel = row.kelas_label || row.kelas || "-";
+        const count = getCount(row);
         const rincian =
-          row.rincian_alasan ||
-          row.rincian ||
-          "";
+          row.rincian_alasan || row.rincian || row.detail || "";
         return {
           label: `${nama} (${kelasLabel})`,
           detail: rincian,
           count,
         };
       });
-  
+    
       const reasonRows = (reasonData || []).map((row) => {
         const label =
-          row.jenis_sakit ||
-          row.jenis ||
-          row.label ||
-          "tanpa keterangan";
-        const count = Number(row.frekuensi || 0);
+          row.jenis_sakit || row.jenis || row.label || "tanpa keterangan";
+        const count = getCount(row);
         const rincian =
           row.rincian_santri ||
           row.rincian ||
+          row.detail ||
           `Total ${count} kasus untuk jenis sakit ini.`;
         return {
           label,
@@ -2502,7 +2476,7 @@
           count,
         };
       });
-  
+    
       if (kelasRows.length) {
         tableWrapper.appendChild(
           buildTableSection(
@@ -2530,9 +2504,9 @@
           )
         );
       }
-  
+    
       monthlyChartContainer.appendChild(tableWrapper);
-  
+    
       showToast("✅ berhasil memuat rekap.", "info");
     }
   
