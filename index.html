@@ -38,7 +38,6 @@
         sans-serif;
     }
 
-    /* BODY: tidak lagi display:flex, plus padding-bottom untuk ruang nav */
     body {
       min-height: 100vh;
       background:
@@ -46,14 +45,14 @@
         radial-gradient(circle at bottom right, #bbf7d0 0, transparent 50%),
         linear-gradient(135deg, #e5f0ff, #e0f9ee);
       padding: 1rem;
-      padding-bottom: 4.5rem; /* ruang buat bottom nav supaya konten nggak ketutup */
+      padding-bottom: 4.5rem; /* ruang untuk bottom nav */
       color: var(--dark);
     }
 
     .app {
       width: 100%;
       max-width: 1180px;
-      margin: 0 auto; /* ganti fungsi flex center body */
+      margin: 0 auto;
       background: rgba(255, 255, 255, 0.97);
       border-radius: 26px;
       box-shadow: var(--shadow-soft);
@@ -67,7 +66,7 @@
 
     @media (min-width: 768px) {
       .app {
-        padding: 1.6rem 2rem 4.8rem; /* versi gede, tetap ada ruang untuk nav bawah */
+        padding: 1.6rem 2rem 4.8rem;
       }
     }
 
@@ -190,7 +189,7 @@
       color: #111827;
     }
 
-    /* ===== TABS: NAVBAR FIXED DI BAWAH ===== */
+    /* ===== TABS (BOTTOM NAV) ===== */
     .tabs {
       position: fixed;
       left: 50%;
@@ -879,7 +878,6 @@
         font-size: 0.74rem;
       }
 
-      /* nav tetap fixed di mobile */
       .tabs {
         position: fixed;
         left: 50%;
@@ -953,21 +951,20 @@
         display: block;
       }
     }
+
   </style>
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#2563eb" />
 </head>
 <body>
   <div class="app">
-    <!-- HEADER -->
-    <header class="header-box">
+    <!-- HEADER dari kode baru -->
+    <div class="header-box">
       <div class="header-inner">
         <div class="header-main">
           <div class="header-title-row">
-            <div class="header-icon">📊</div>
-            <div>
-              <h1>Rekap Santri Sakit</h1>
-            </div>
+            <div class="header-icon">🩺</div>
+            <h1>Rekap Santri Sakit Harian & Bulanan</h1>
           </div>
           <p class="subtitle">
             Input laporan santri sakit harian, rekap per tanggal, dan analisis frekuensi bulanan dalam satu aplikasi.
@@ -976,37 +973,25 @@
         <div class="header-side">
           <div class="stat-chip-row">
             <div class="stat-chip">
-              <span>📅</span>
-              <strong>Rekap Harian</strong>
+              <span>📆</span><strong>Harian</strong><span>rekap per tanggal</span>
             </div>
             <div class="stat-chip">
-              <span>📈</span>
-              <strong>Tren Bulanan</strong>
+              <span>📊</span><strong>Bulanan</strong><span>kelas & santri terbanyak</span>
             </div>
-          </div>
-          <div class="stat-chip-row" style="margin-top:0.1rem;">
             <div class="stat-chip">
-              <span>📝</span>
-              <span>Alasan sakit bisa diedit ulang.</span>
+              <span>🧪</span><strong>Analisis</strong><span>jenis sakit terbanyak</span>
             </div>
           </div>
         </div>
       </div>
-    </header>
+    </div>
 
     <!-- INSTALL APP BUTTON -->
     <div id="installPromptContainer" class="install-app-row">
       <button id="btnInstallApp" class="btn-outline">
-        <span class="icon">📲</span> Instal Aplikasi
+        <span class="icon">📲</span> Instal aplikasi
       </button>
     </div>
-
-    <!-- NAV TABS (BOTTOM) -->
-    <nav class="tabs">
-      <button class="tab-btn active" data-tab="input">Input Data</button>
-      <button class="tab-btn" data-tab="rekap-harian">Rekap Harian</button>
-      <button class="tab-btn" data-tab="rekap-bulanan">Rekap Bulanan</button>
-    </nav>
 
     <!-- =============== TAB INPUT DATA =============== -->
     <section id="tab-input" class="tab-content">
@@ -1250,6 +1235,13 @@
 
     <datalist id="alasanList"></datalist>
   </div>
+
+  <!-- NAV TABS (BOTTOM) dari kode baru -->
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="input">Input Data</button>
+    <button class="tab-btn" data-tab="rekap-harian">Rekap Harian</button>
+    <button class="tab-btn" data-tab="rekap-bulanan">Rekap Bulanan</button>
+  </nav>
 
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast"></div>
@@ -1878,7 +1870,7 @@
 
       const totalCases = entries.reduce((sum, [, obj]) => sum + obj.count, 0);
 
-      // AGREGAT PER KELAS
+      // 1) AGREGAT PER KELAS
       const byKelas = new Map();
       entries.forEach(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
@@ -1910,6 +1902,7 @@
         (a, b) => b[1].count - a[1].count
       );
 
+      // BOX DIAGRAM KELAS
       if (kelasEntries.length) {
         const kelasSection = document.createElement("div");
         kelasSection.classList.add("chart-section-card");
@@ -1987,7 +1980,7 @@
         monthlyChartContainer.appendChild(kelasSection);
       }
 
-      // DIAGRAM SANTRI
+      // BOX DIAGRAM SANTRI
       entries.sort((a, b) => b[1].count - a[1].count);
 
       const santriSection = document.createElement("div");
@@ -2070,7 +2063,7 @@
 
       monthlyChartContainer.appendChild(santriSection);
 
-      // DIAGRAM JENIS SAKIT
+      // BOX DIAGRAM JENIS SAKIT
       const byReason = new Map();
       sakitData.forEach((row) => {
         const raw = (row.alasan_sakit || "").trim();
@@ -2248,7 +2241,7 @@
 
       const santriRows = entries.map(([santriId, obj]) => {
         const santri = santriMaster.find((s) => s.id === santriId);
-        const nama = santri ? santri.nama : "(santri tidak ditemukan)";
+        const nama = santri ? santri.nama : "(santri tidak ditemukan)`;
         const kelasLabel = santri
           ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
           : "-";
