@@ -84,17 +84,19 @@
             <label for="inputKelas">Kelas</label>
             <input type="hidden" id="inputKelas" value="VII" />
             <div class="chip-group" data-target="inputKelas">
-              <button type="button" class="chip-option active" data-value="VII">VII</button>
-              <button type="button" class="chip-option" data-value="VIII">VIII</button>
-              <button type="button" class="chip-option" data-value="IX">IX</button>
-              <button type="button" class="chip-option" data-value="X">X</button>
-              <button type="button" class="chip-option" data-value="XI">XI</button>
-              <button type="button" class="chip-option" data-value="XII">XII</button>
+              <!-- MTs -->
+              <button type="button" class="chip-option active" data-value="VII" data-jenjang="MTs">VII</button>
+              <button type="button" class="chip-option" data-value="VIII" data-jenjang="MTs">VIII</button>
+              <button type="button" class="chip-option" data-value="IX" data-jenjang="MTs">IX</button>
+              <!-- MA -->
+              <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
+              <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
+              <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
             </div>
           </div>
 
           <!-- Jurusan -->
-          <div class="field">
+          <div class="field" id="fieldJurusan">
             <label for="inputJurusan">Jurusan</label>
             <input type="hidden" id="inputJurusan" value="IPA" />
             <div class="chip-group" data-target="inputJurusan">
