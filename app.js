@@ -443,24 +443,30 @@
     return { start, end, daysInMonth, year, month };
   }
 
-  // ===== LOAD MASTER =====
-  async function loadSantriMaster() {
-    const { data, error } = await db
-      .from("santri_master_view")
-      .select(
-        "id, nis, nama, tahun_ajaran, semester, jenjang, lokasi, kelas, jurusan, paralel, aktif"
-      )
-      .order("nama", { ascending: true });
-  
-    if (error) {
-      console.error("Gagal load santri_master_view:", error);
-      showToast("❎ gagal memuat data.", "error");
-      return;
+    // ===== LOAD MASTER =====
+    async function loadSantriMaster() {
+      const { data, error } = await db
+        .from("santri_master_view")
+        .select(
+          // sesuai schema tabel yang kamu kirim
+          "id, nis, nama, tahun_ajaran, semester, jenjang, kelas, jurusan, paralel, aktif, created_at"
+        )
+        .eq("aktif", true)                 // boleh pakai filter aktif langsung, karena boolean
+        .order("nama", { ascending: true });
+    
+      if (error) {
+        console.error("Gagal load santri_master_view:", error);
+        showToast("❎ gagal memuat data santri.", "error");
+        santriMaster = [];
+        santriById = new Map();
+        return;
+      }
+    
+      santriMaster = data || [];
+      santriById = new Map(santriMaster.map((s) => [s.id, s]));
+    
+      console.log("santriMaster loaded:", santriMaster.length, "baris");
     }
-  
-    santriMaster = data || [];
-    santriById = new Map(santriMaster.map((s) => [s.id, s]));
-  }
 
   async function loadDistinctAlasanSakit() {
     const { data, error } = await db
