@@ -316,11 +316,6 @@ h1 {
   margin-bottom: 0.3rem;
 }
 
-/* baris tombol "Muat Data Santri" + legend di tengah */
-#panelFilterInput .btn-row {
-  justify-content: center;
-}
-
 .filter-row-center {
   justify-content: center;
 }
