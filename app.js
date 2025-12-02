@@ -21,6 +21,8 @@
   const inputKelas = document.getElementById("inputKelas");
   const inputJurusan = document.getElementById("inputJurusan");
   const inputParalel = document.getElementById("inputParalel");
+  const fieldJurusan = document.getElementById("fieldJurusan");
+  const kelasChipGroup = document.querySelector('.chip-group[data-target="inputKelas"]');
   const btnLoadInput = document.getElementById("btnLoadInput");
   const btnSaveInput = document.getElementById("btnSaveInput");
   const inputTableBody = document.getElementById("inputTableBody");
@@ -149,6 +151,60 @@
       });
     });
   }
+
+  function updateKelasOptionsByJenjang() {
+    if (!kelasChipGroup) return;
+  
+    const jenjang = inputJenjang.value; // "MTs" atau "MA"
+    const buttons = kelasChipGroup.querySelectorAll(".chip-option");
+  
+    let firstVisibleValue = null;
+  
+    buttons.forEach((btn) => {
+      const targetJenjang = btn.dataset.jenjang; // "MTs" / "MA"
+      const isVisible = !targetJenjang || targetJenjang === jenjang;
+  
+      if (isVisible) {
+        btn.style.display = "inline-flex";
+        if (firstVisibleValue === null) {
+          firstVisibleValue = btn.dataset.value;
+        }
+      } else {
+        btn.style.display = "none";
+        btn.classList.remove("active");
+      }
+    });
+  
+    // pastikan ada satu yang active
+    if (firstVisibleValue) {
+      const firstBtn = kelasChipGroup.querySelector(
+        `.chip-option[data-value="${firstVisibleValue}"]`
+      );
+      if (firstBtn) {
+        kelasChipGroup.querySelectorAll(".chip-option").forEach((b) => b.classList.remove("active"));
+        firstBtn.classList.add("active");
+        inputKelas.value = firstVisibleValue;
+      }
+    }
+  }
+  
+  function updateJurusanVisibility() {
+    const jenjang = inputJenjang.value;
+    if (!fieldJurusan) return;
+  
+    if (jenjang === "MA") {
+      fieldJurusan.style.display = "";
+      // jaga-jaga kalau kosong, kasih default
+      if (!inputJurusan.value) {
+        inputJurusan.value = "IPA";
+      }
+    } else {
+      fieldJurusan.style.display = "none";
+      // untuk MTs, jurusan tidak dipakai di filter
+      inputJurusan.value = "";
+    }
+  }
+
 
   // ===== UTIL TANGGAL =====
   function setTodayToInputs() {
@@ -1341,5 +1397,24 @@
         navigator.serviceWorker.register("./sw.js").catch(console.error);
       }
     });
+  
+    initChipGroups();
+    
+    // setelah chip-group ter-initialisasi, tambahkan listener khusus jenjang
+    const jenjangGroup = document.querySelector('.chip-group[data-target="inputJenjang"]');
+    if (jenjangGroup) {
+      jenjangGroup.querySelectorAll(".chip-option").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // karena initChipGroups sudah mengubah inputJenjang.value,
+          // kita cukup baca current value saja
+          updateKelasOptionsByJenjang();
+          updateJurusanVisibility();
+        });
+      });
+    }
+    
+    // set tampilan awal sesuai default (MTs, kelas VII, jurusan hidden)
+    updateKelasOptionsByJenjang();
+    updateJurusanVisibility();
 
 })();
