@@ -450,16 +450,16 @@
       .select(
         "id, nis, nama, tahun_ajaran, semester, jenjang, lokasi, kelas, jurusan, paralel, aktif"
       )
-      .eq("aktif", true)
       .order("nama", { ascending: true });
-
+  
     if (error) {
       console.error("Gagal load santri_master_view:", error);
       showToast("❎ gagal memuat data.", "error");
       return;
     }
+  
     santriMaster = data || [];
-    santriById = new Map(santriMaster.map(s => [s.id, s]));
+    santriById = new Map(santriMaster.map((s) => [s.id, s]));
   }
 
   async function loadDistinctAlasanSakit() {
@@ -497,22 +497,38 @@
     );
 
     try {
-      let santri = santriMaster.filter(
-        (s) =>
-          s.jenjang === jenjang &&
-          s.kelas === kelas &&
-          String(s.paralel) === String(paralel) &&
-          s.aktif === true
-      );
+      let santri = santriMaster.filter((s) => {
+        const sameJenjang =
+          (s.jenjang || "").toString().toUpperCase() === jenjang.toUpperCase();
+        const sameKelas =
+          (s.kelas || "").toString().toUpperCase() === kelas.toUpperCase();
+        const sameParalel = String(s.paralel) === String(paralel);
       
-      // MTs → gunakan lokasi
+        // aktif bisa berupa true / "true" / 1 / "1" / "AKTIF"
+        const valAktif = (s.aktif ?? "").toString().toUpperCase();
+        const isAktif =
+          valAktif === "TRUE" ||
+          valAktif === "1" ||
+          valAktif === "AKTIF" ||
+          valAktif === "YA";
+      
+        return sameJenjang && sameKelas && sameParalel && isAktif;
+      });
+      
+      // MTs → filter lokasi HANYA kalau kolom lokasi memang ada isinya
       if (jenjang === "MTs" && lokasi) {
-        santri = santri.filter((s) => s.lokasi === lokasi);
+        santri = santri.filter((s) => {
+          if (s.lokasi == null || s.lokasi === "") return true; // kalau view belum punya lokasi, jangan disaring
+          return s.lokasi === lokasi;
+        });
       }
       
-      // MA → gunakan jurusan
+      // MA → filter jurusan HANYA kalau kolom jurusan ada
       if (jenjang === "MA" && jurusan) {
-        santri = santri.filter((s) => s.jurusan === jurusan);
+        santri = santri.filter((s) => {
+          if (s.jurusan == null || s.jurusan === "") return true;
+          return s.jurusan === jurusan;
+        });
       }
       
       santri = santri.sort((a, b) => a.nama.localeCompare(b.nama));
