@@ -1435,7 +1435,9 @@
       }
   
       // panggil saat awal load, supaya layout MTs/MA langsung sesuai
-      applyJenjangLayout();
+      window.requestAnimationFrame(() => {
+        applyJenjangLayout();
+      });
   
       await loadSantriMaster();
       await loadDistinctAlasanSakit();
