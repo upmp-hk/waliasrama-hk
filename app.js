@@ -159,25 +159,25 @@
   }
 
   function filterChipByJenjang(chipGroupEl, jenjang) {
-    if (!chipGroupEl) return;
-  
     const buttons = chipGroupEl.querySelectorAll(".chip-option");
-    let firstVisibleValue = null;
+    let selected = null;
   
     buttons.forEach((btn) => {
-      const targetJenjang = btn.dataset.jenjang; // bisa undefined (berlaku semua)
-      const isVisible = !targetJenjang || targetJenjang === jenjang;
+      const btnJenjang = btn.dataset.jenjang;
+      const visible = !btnJenjang || btnJenjang === jenjang;
   
-      if (isVisible) {
-        btn.style.display = "inline-flex";
-        if (firstVisibleValue === null) {
-          firstVisibleValue = btn.dataset.value;
-        }
-      } else {
-        btn.style.display = "none";
-        btn.classList.remove("active");
-      }
+      btn.style.display = visible ? "inline-flex" : "none";
+      if (!visible) btn.classList.remove("active");
+      else if (!selected) selected = btn;
     });
+  
+    if (selected) {
+      const target = chipGroupEl.dataset.target;
+      document.getElementById(target).value = selected.dataset.value;
+      selected.classList.add("active");
+    }
+  }
+
   
     // pastikan ada satu yang active
     if (firstVisibleValue) {
@@ -237,10 +237,31 @@
   }
   
   function applyJenjangLayout() {
-    updateLokasiVisibility();
-    updateKelasOptionsByJenjang();
-    updateJurusanVisibility();
-    updateParalelOptionsByJenjang();
+    const jenjang = inputJenjang.value;
+  
+    // MTs → lokasi + kelas (VII–IX), paralel A–O, jurusan hidden
+    if (jenjang === "MTs") {
+      fieldLokasi.style.display = "";
+      fieldJurusan.style.display = "none";
+  
+      filterChipByJenjang(kelasChipGroup, "MTs");
+      filterChipByJenjang(paralelChipGroup, "MTs");
+  
+      inputJurusan.value = ""; // MA only
+      if (!inputLokasi.value) inputLokasi.value = "HK 1";
+    }
+  
+    // MA → kelas (X–XII) + jurusan, paralel 1–15, lokasi hidden
+    else if (jenjang === "MA") {
+      fieldLokasi.style.display = "none";
+      fieldJurusan.style.display = "";
+  
+      filterChipByJenjang(kelasChipGroup, "MA");
+      filterChipByJenjang(paralelChipGroup, "MA");
+  
+      inputLokasi.value = ""; // MTs only
+      if (!inputJurusan.value) inputJurusan.value = "IPA";
+    }
   }
 
   // ===== UTIL TANGGAL =====
@@ -1425,35 +1446,15 @@
       const jenjangGroup = document.querySelector('.chip-group[data-target="inputJenjang"]');
       if (jenjangGroup) {
         jenjangGroup.querySelectorAll(".chip-option").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            applyJenjangLayout();
-          });
+          btn.addEventListener("click", applyJenjangLayout);
         });
-      }
-      
-      // set layout awal (default MTs, HK 1, VII, paralel A, jurusan hidden)
+        
+      // panggil saat awal load
       applyJenjangLayout();
 
       await loadSantriMaster();
       await loadDistinctAlasanSakit();
-    
-      // setelah chip-group ter-initialisasi, tambahkan listener khusus jenjang
-      const jenjangGroup = document.querySelector('.chip-group[data-target="inputJenjang"]');
-      if (jenjangGroup) {
-        jenjangGroup.querySelectorAll(".chip-option").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            // karena initChipGroups sudah mengubah inputJenjang.value,
-            // kita cukup baca current value saja
-            updateKelasOptionsByJenjang();
-            updateJurusanVisibility();
-          });
-        });
-      }
-      
-      // set tampilan awal sesuai default (MTs, kelas VII, jurusan hidden)
-      updateKelasOptionsByJenjang();
-      updateJurusanVisibility();
-    
+       
       const savedTab = localStorage.getItem("sakit_active_tab");
       const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
     
