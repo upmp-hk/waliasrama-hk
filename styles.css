@@ -459,6 +459,10 @@ button:active {
   box-shadow: 0 6px 16px rgba(248, 113, 113, 0.5);
 }
 
+.btn-paralel {
+  font-variant-numeric: tabular-nums;
+}
+
 .btn-ghost {
   background: transparent;
   color: var(--gray);
