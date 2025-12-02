@@ -21,11 +21,17 @@
   const inputKelas = document.getElementById("inputKelas");
   const inputJurusan = document.getElementById("inputJurusan");
   const inputParalel = document.getElementById("inputParalel");
-  const fieldJurusan = document.getElementById("fieldJurusan");
-  const kelasChipGroup = document.querySelector('.chip-group[data-target="inputKelas"]');
   const btnLoadInput = document.getElementById("btnLoadInput");
   const btnSaveInput = document.getElementById("btnSaveInput");
   const inputTableBody = document.getElementById("inputTableBody");
+  const inputLokasi = document.getElementById("inputLokasi");
+  const fieldLokasi = document.getElementById("fieldLokasi");
+  const fieldKelas = document.getElementById("fieldKelas");
+  const fieldJurusan = document.getElementById("fieldJurusan");
+  const fieldParalel = document.getElementById("fieldParalel");
+
+  const kelasChipGroup = document.querySelector('.chip-group[data-target="inputKelas"]');
+  const paralelChipGroup = document.querySelector('.chip-group[data-target="inputParalel"]');
 
   const rekapTanggal = document.getElementById("rekapTanggal");
   const btnLoadRekap = document.getElementById("btnLoadRekap");
@@ -152,16 +158,14 @@
     });
   }
 
-  function updateKelasOptionsByJenjang() {
-    if (!kelasChipGroup) return;
+  function filterChipByJenjang(chipGroupEl, jenjang) {
+    if (!chipGroupEl) return;
   
-    const jenjang = inputJenjang.value; // "MTs" atau "MA"
-    const buttons = kelasChipGroup.querySelectorAll(".chip-option");
-  
+    const buttons = chipGroupEl.querySelectorAll(".chip-option");
     let firstVisibleValue = null;
   
     buttons.forEach((btn) => {
-      const targetJenjang = btn.dataset.jenjang; // "MTs" / "MA"
+      const targetJenjang = btn.dataset.jenjang; // bisa undefined (berlaku semua)
       const isVisible = !targetJenjang || targetJenjang === jenjang;
   
       if (isVisible) {
@@ -177,15 +181,28 @@
   
     // pastikan ada satu yang active
     if (firstVisibleValue) {
-      const firstBtn = kelasChipGroup.querySelector(
-        `.chip-option[data-value="${firstVisibleValue}"]`
-      );
+      const selector = `.chip-option[data-value="${firstVisibleValue}"]`;
+      const firstBtn = chipGroupEl.querySelector(selector);
       if (firstBtn) {
-        kelasChipGroup.querySelectorAll(".chip-option").forEach((b) => b.classList.remove("active"));
+        buttons.forEach((b) => b.classList.remove("active"));
         firstBtn.classList.add("active");
-        inputKelas.value = firstVisibleValue;
+        const targetId = chipGroupEl.dataset.target;
+        const hiddenInput = document.getElementById(targetId);
+        if (hiddenInput) {
+          hiddenInput.value = firstVisibleValue;
+        }
       }
     }
+  }
+  
+  function updateKelasOptionsByJenjang() {
+    const jenjang = inputJenjang.value;
+    filterChipByJenjang(kelasChipGroup, jenjang);
+  }
+  
+  function updateParalelOptionsByJenjang() {
+    const jenjang = inputJenjang.value;
+    filterChipByJenjang(paralelChipGroup, jenjang);
   }
   
   function updateJurusanVisibility() {
@@ -194,17 +211,37 @@
   
     if (jenjang === "MA") {
       fieldJurusan.style.display = "";
-      // jaga-jaga kalau kosong, kasih default
       if (!inputJurusan.value) {
         inputJurusan.value = "IPA";
       }
     } else {
       fieldJurusan.style.display = "none";
-      // untuk MTs, jurusan tidak dipakai di filter
       inputJurusan.value = "";
     }
   }
-
+  
+  function updateLokasiVisibility() {
+    const jenjang = inputJenjang.value;
+    if (!fieldLokasi) return;
+  
+    // Lokasi hanya berlaku untuk MTs
+    if (jenjang === "MTs") {
+      fieldLokasi.style.display = "";
+      if (!inputLokasi.value) {
+        inputLokasi.value = "HK 1";
+      }
+    } else {
+      fieldLokasi.style.display = "none";
+      inputLokasi.value = "";
+    }
+  }
+  
+  function applyJenjangLayout() {
+    updateLokasiVisibility();
+    updateKelasOptionsByJenjang();
+    updateJurusanVisibility();
+    updateParalelOptionsByJenjang();
+  }
 
   // ===== UTIL TANGGAL =====
   function setTodayToInputs() {
@@ -406,7 +443,7 @@
     const { data, error } = await db
       .from("santri_master_view")
       .select(
-        "id, nis, nama, tahun_ajaran, semester, jenjang, kelas, jurusan, paralel, aktif"
+        "id, nis, nama, tahun_ajaran, semester, jenjang, lokasi, kelas, jurusan, paralel, aktif"
       )
       .eq("aktif", true)
       .order("nama", { ascending: true });
@@ -439,9 +476,10 @@
   async function loadInputTable() {
     const tanggal = inputTanggal.value;
     const jenjang = inputJenjang.value;
+    const lokasi = inputLokasi.value;
     const kelas = inputKelas.value;
     const jurusan = inputJurusan.value;
-    const paralel = parseInt(inputParalel.value, 10);
+    const paralel = inputParalel.value; // STRING, bisa huruf (A–O) atau angka ("1"–"15")
 
     if (!tanggal) {
       showToast("⚠️ pilih tanggal rekap.", "error");
@@ -459,12 +497,17 @@
         (s) =>
           s.jenjang === jenjang &&
           s.kelas === kelas &&
-          Number(s.paralel) === paralel &&
+          String(s.paralel) === String(paralel) &&
           s.aktif === true
       );
       
-      // untuk MA, jurusan wajib sama; untuk MTs, jurusan diabaikan
-      if (jenjang === "MA") {
+      // MTs → gunakan lokasi
+      if (jenjang === "MTs" && lokasi) {
+        santri = santri.filter((s) => s.lokasi === lokasi);
+      }
+      
+      // MA → gunakan jurusan
+      if (jenjang === "MA" && jurusan) {
         santri = santri.filter((s) => s.jurusan === jurusan);
       }
       
@@ -1379,6 +1422,18 @@
       setTodayToInputs();
       setThisMonthToRekapBulan();
       initChipGroups();
+      const jenjangGroup = document.querySelector('.chip-group[data-target="inputJenjang"]');
+      if (jenjangGroup) {
+        jenjangGroup.querySelectorAll(".chip-option").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            applyJenjangLayout();
+          });
+        });
+      }
+      
+      // set layout awal (default MTs, HK 1, VII, paralel A, jurusan hidden)
+      applyJenjangLayout();
+
       await loadSantriMaster();
       await loadDistinctAlasanSakit();
     
