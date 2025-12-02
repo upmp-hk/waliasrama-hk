@@ -54,6 +54,7 @@
 
   // STATE
   let santriMaster = [];
+  let santriById = new Map(); 
   let alasanSakitDistinct = [];
   let toastEnabled = false;
 
@@ -177,24 +178,7 @@
       selected.classList.add("active");
     }
   }
-
-  
-    // pastikan ada satu yang active
-    if (firstVisibleValue) {
-      const selector = `.chip-option[data-value="${firstVisibleValue}"]`;
-      const firstBtn = chipGroupEl.querySelector(selector);
-      if (firstBtn) {
-        buttons.forEach((b) => b.classList.remove("active"));
-        firstBtn.classList.add("active");
-        const targetId = chipGroupEl.dataset.target;
-        const hiddenInput = document.getElementById(targetId);
-        if (hiddenInput) {
-          hiddenInput.value = firstVisibleValue;
-        }
-      }
-    }
-  }
-  
+ 
   function updateKelasOptionsByJenjang() {
     const jenjang = inputJenjang.value;
     filterChipByJenjang(kelasChipGroup, jenjang);
@@ -476,7 +460,6 @@
     }
     santriMaster = data || [];
     santriById = new Map(santriMaster.map(s => [s.id, s]));
-
   }
 
   async function loadDistinctAlasanSakit() {
@@ -1443,21 +1426,23 @@
       setTodayToInputs();
       setThisMonthToRekapBulan();
       initChipGroups();
+  
       const jenjangGroup = document.querySelector('.chip-group[data-target="inputJenjang"]');
       if (jenjangGroup) {
         jenjangGroup.querySelectorAll(".chip-option").forEach((btn) => {
           btn.addEventListener("click", applyJenjangLayout);
         });
-        
-      // panggil saat awal load
+      }
+  
+      // panggil saat awal load, supaya layout MTs/MA langsung sesuai
       applyJenjangLayout();
-
+  
       await loadSantriMaster();
       await loadDistinctAlasanSakit();
-       
+      
       const savedTab = localStorage.getItem("sakit_active_tab");
       const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
-    
+  
       if (savedTab && allowedTabs.includes(savedTab)) {
         switchTab(savedTab, { instant: true });
         if (savedTab === "input") {
@@ -1467,9 +1452,9 @@
         switchTab("input", { instant: true });
         switchInputPanel("filter", { instant: true });
       }
-    
+  
       toastEnabled = true;
-    
+  
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("./sw.js").catch(console.error);
       }
