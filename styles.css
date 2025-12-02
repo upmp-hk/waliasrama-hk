@@ -195,7 +195,7 @@ h1 {
   gap: 0.35rem;
   border-radius: 999px;
   padding: 0.15rem;
-  background: var(--blue);
+  background: #0f172a;
   border: 1px solid #065f46;
   box-shadow: 0 10px 25px rgba(5, 150, 105, 0.55);
 }
@@ -228,7 +228,7 @@ h1 {
 
 .tab-btn.active {
   /* 🔁 putih → biru */
-  background: var(--green);
+  background: var(--blue);
   color: #ffffff;
   font-weight: 600;
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
@@ -316,17 +316,8 @@ h1 {
   margin-bottom: 0.3rem;
 }
 
-/* ✅ Khusus panel Filter Input: form di tengah */
-#panelFilterInput .filter-row {
-  justify-content: center;
-}
-
 /* baris tombol "Muat Data Santri" + legend di tengah */
 #panelFilterInput .btn-row {
-  justify-content: center;
-}
-
-#panelFilterInput .btn-row-left {
   justify-content: center;
 }
 
