@@ -69,7 +69,6 @@
 
         <!-- Baris 1: Jenjang -->
         <div class="filter-row">
-          <!-- Jenjang -->
           <div class="field">
             <label for="inputJenjang">Jenjang</label>
             <input type="hidden" id="inputJenjang" value="MTs" />
@@ -79,10 +78,10 @@
             </div>
           </div>
         </div>
-        
-        <!-- Baris 2: Lokasi + Kelas -->
+  
+        <!-- Baris 2 -->
         <div class="filter-row">
-          <!-- Lokasi (HK 1/HK 2) - hanya untuk MTs -->
+          <!-- Lokasi (hanya MTs) -->
           <div class="field" id="fieldLokasi">
             <label for="inputLokasi">Lokasi</label>
             <input type="hidden" id="inputLokasi" value="HK 1" />
@@ -97,21 +96,21 @@
             <label for="inputKelas">Kelas</label>
             <input type="hidden" id="inputKelas" value="VII" />
             <div class="chip-group" data-target="inputKelas">
+        
               <!-- MTs -->
               <button type="button" class="chip-option active" data-value="VII" data-jenjang="MTs">VII</button>
               <button type="button" class="chip-option" data-value="VIII" data-jenjang="MTs">VIII</button>
               <button type="button" class="chip-option" data-value="IX" data-jenjang="MTs">IX</button>
+        
               <!-- MA -->
               <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
               <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
               <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
+        
             </div>
           </div>
-        </div>
         
-        <!-- Baris 3: Jurusan + Paralel -->
-        <div class="filter-row">
-          <!-- Jurusan (hanya untuk MA) -->
+          <!-- Jurusan (hanya MA) -->
           <div class="field" id="fieldJurusan">
             <label for="inputJurusan">Jurusan</label>
             <input type="hidden" id="inputJurusan" value="IPA" />
@@ -121,26 +120,31 @@
               <button type="button" class="chip-option" data-value="PK">PK</button>
             </div>
           </div>
-        
-          <!-- Paralel -->
+        </div>
+
+        <!-- Baris 3 -->
+        <div class="filter-row">
           <div class="field" id="fieldParalel">
             <label for="inputParalel">Paralel</label>
             <input type="hidden" id="inputParalel" value="A" />
             <div class="chip-group" data-target="inputParalel">
-              <!-- MTs: A–O -->
+        
+              <!-- MTs A–O -->
               <div class="chip-row">
                 <button type="button" class="chip-option active" data-value="A" data-jenjang="MTs">A</button>
                 <button type="button" class="chip-option" data-value="B" data-jenjang="MTs">B</button>
                 <button type="button" class="chip-option" data-value="C" data-jenjang="MTs">C</button>
                 <button type="button" class="chip-option" data-value="D" data-jenjang="MTs">D</button>
                 <button type="button" class="chip-option" data-value="E" data-jenjang="MTs">E</button>
+              </div>
+              <div class="chip-row">
                 <button type="button" class="chip-option" data-value="F" data-jenjang="MTs">F</button>
                 <button type="button" class="chip-option" data-value="G" data-jenjang="MTs">G</button>
                 <button type="button" class="chip-option" data-value="H" data-jenjang="MTs">H</button>
-              </div>
-              <div class="chip-row">
                 <button type="button" class="chip-option" data-value="I" data-jenjang="MTs">I</button>
                 <button type="button" class="chip-option" data-value="J" data-jenjang="MTs">J</button>
+              </div>
+              <div class="chip-row">
                 <button type="button" class="chip-option" data-value="K" data-jenjang="MTs">K</button>
                 <button type="button" class="chip-option" data-value="L" data-jenjang="MTs">L</button>
                 <button type="button" class="chip-option" data-value="M" data-jenjang="MTs">M</button>
@@ -148,7 +152,7 @@
                 <button type="button" class="chip-option" data-value="O" data-jenjang="MTs">O</button>
               </div>
         
-              <!-- MA: 1–15 -->
+              <!-- MA 1–15 -->
               <div class="chip-row">
                 <button type="button" class="chip-option" data-value="1" data-jenjang="MA">1</button>
                 <button type="button" class="chip-option" data-value="2" data-jenjang="MA">2</button>
@@ -170,6 +174,7 @@
                 <button type="button" class="chip-option" data-value="14" data-jenjang="MA">14</button>
                 <button type="button" class="chip-option" data-value="15" data-jenjang="MA">15</button>
               </div>
+        
             </div>
           </div>
         </div>
