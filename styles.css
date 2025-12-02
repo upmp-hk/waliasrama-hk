@@ -195,8 +195,7 @@ h1 {
   gap: 0.35rem;
   border-radius: 999px;
   padding: 0.15rem;
-  /* 🔁 hitam → hijau */
-  background: #ffffff;
+  background: #0f172a;
   border: 1px solid #065f46;
   box-shadow: 0 10px 25px rgba(5, 150, 105, 0.55);
 }
