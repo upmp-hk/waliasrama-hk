@@ -195,9 +195,10 @@ h1 {
   gap: 0.35rem;
   border-radius: 999px;
   padding: 0.15rem;
-  background: #0f172a; /* solid, tidak transparan */
-  border: 1px solid rgba(15, 23, 42, 0.9);
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
+  /* 🔁 hitam → hijau */
+  background: var(--green);
+  border: 1px solid #065f46;
+  box-shadow: 0 10px 25px rgba(5, 150, 105, 0.55);
 }
 
 .tab-btn {
@@ -227,10 +228,11 @@ h1 {
 }
 
 .tab-btn.active {
-  background: var(--white);
-  color: #1d4ed8;
+  /* 🔁 putih → biru */
+  background: var(--blue);
+  color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
   transform: translateY(-0.5px);
 }
 
