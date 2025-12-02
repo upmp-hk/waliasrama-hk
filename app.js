@@ -361,6 +361,8 @@
       return;
     }
     santriMaster = data || [];
+    santriById = new Map(santriMaster.map(s => [s.id, s]));
+
   }
 
   async function loadDistinctAlasanSakit() {
@@ -805,7 +807,7 @@
     // 1) AGREGAT PER KELAS
     const byKelas = new Map();
     entries.forEach(([santriId, obj]) => {
-      const santri = santriMaster.find((s) => s.id === santriId);
+      const santri = santriById.get(santriId);
       const kelasLabel = santri
         ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
         : "(kelas tidak ditemukan)";
@@ -931,7 +933,7 @@
     santriSection.appendChild(santriSubtitle);
 
     entries.forEach(([santriId, obj]) => {
-      const santri = santriMaster.find((s) => s.id === santriId);
+      const santri = santriById.get(santriId);
       const nama = santri ? santri.nama : "(santri tidak ditemukan)";
       const kelasLabel = santri
         ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
@@ -1173,7 +1175,7 @@
     });
 
     const santriRows = entries.map(([santriId, obj]) => {
-      const santri = santriMaster.find((s) => s.id === santriId);
+    const santri = santriById.get(santriId);
       const nama = santri ? santri.nama : "(santri tidak ditemukan)";
       const kelasLabel = santri
         ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
@@ -1313,34 +1315,31 @@
     window.print();
   });
 
-  // ===== INIT ON LOAD =====
-  window.addEventListener("load", async () => {
-    setTodayToInputs();
-    setThisMonthToRekapBulan();
-    initChipGroups();
-    await loadSantriMaster();
-    await loadDistinctAlasanSakit();
-
-    const savedTab = localStorage.getItem("sakit_active_tab");
-    const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
-
-    if (savedTab && allowedTabs.includes(savedTab)) {
-      switchTab(savedTab, { instant: true });
-      if (savedTab === "input") {
+    window.addEventListener("load", async () => {
+      setTodayToInputs();
+      setThisMonthToRekapBulan();
+      initChipGroups();
+      await loadSantriMaster();
+      await loadDistinctAlasanSakit();
+    
+      const savedTab = localStorage.getItem("sakit_active_tab");
+      const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
+    
+      if (savedTab && allowedTabs.includes(savedTab)) {
+        switchTab(savedTab, { instant: true });
+        if (savedTab === "input") {
+          switchInputPanel("filter", { instant: true });
+        }
+      } else {
+        switchTab("input", { instant: true });
         switchInputPanel("filter", { instant: true });
       }
-    } else {
-      switchTab("input", { instant: true });
-      switchInputPanel("filter", { instant: true });
-    }
-
-    toastEnabled = true;
-  });
-
-  // SERVICE WORKER
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js").catch(console.error);
+    
+      toastEnabled = true;
+    
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./sw.js").catch(console.error);
+      }
     });
-  }
+
 })();
