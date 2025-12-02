@@ -455,16 +455,20 @@
     );
 
     try {
-      const santri = santriMaster
-        .filter(
-          (s) =>
-            s.jenjang === jenjang &&
-            s.kelas === kelas &&
-            s.jurusan === jurusan &&
-            Number(s.paralel) === paralel &&
-            s.aktif === true
-        )
-        .sort((a, b) => a.nama.localeCompare(b.nama));
+      let santri = santriMaster.filter(
+        (s) =>
+          s.jenjang === jenjang &&
+          s.kelas === kelas &&
+          Number(s.paralel) === paralel &&
+          s.aktif === true
+      );
+      
+      // untuk MA, jurusan wajib sama; untuk MTs, jurusan diabaikan
+      if (jenjang === "MA") {
+        santri = santri.filter((s) => s.jurusan === jurusan);
+      }
+      
+      santri = santri.sort((a, b) => a.nama.localeCompare(b.nama));
 
       inputTableBody.innerHTML = "";
 
@@ -1378,6 +1382,23 @@
       await loadSantriMaster();
       await loadDistinctAlasanSakit();
     
+      // setelah chip-group ter-initialisasi, tambahkan listener khusus jenjang
+      const jenjangGroup = document.querySelector('.chip-group[data-target="inputJenjang"]');
+      if (jenjangGroup) {
+        jenjangGroup.querySelectorAll(".chip-option").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            // karena initChipGroups sudah mengubah inputJenjang.value,
+            // kita cukup baca current value saja
+            updateKelasOptionsByJenjang();
+            updateJurusanVisibility();
+          });
+        });
+      }
+      
+      // set tampilan awal sesuai default (MTs, kelas VII, jurusan hidden)
+      updateKelasOptionsByJenjang();
+      updateJurusanVisibility();
+    
       const savedTab = localStorage.getItem("sakit_active_tab");
       const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
     
@@ -1397,24 +1418,5 @@
         navigator.serviceWorker.register("./sw.js").catch(console.error);
       }
     });
-  
-    initChipGroups();
-    
-    // setelah chip-group ter-initialisasi, tambahkan listener khusus jenjang
-    const jenjangGroup = document.querySelector('.chip-group[data-target="inputJenjang"]');
-    if (jenjangGroup) {
-      jenjangGroup.querySelectorAll(".chip-option").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          // karena initChipGroups sudah mengubah inputJenjang.value,
-          // kita cukup baca current value saja
-          updateKelasOptionsByJenjang();
-          updateJurusanVisibility();
-        });
-      });
-    }
-    
-    // set tampilan awal sesuai default (MTs, kelas VII, jurusan hidden)
-    updateKelasOptionsByJenjang();
-    updateJurusanVisibility();
 
 })();
