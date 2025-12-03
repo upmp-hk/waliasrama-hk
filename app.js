@@ -448,7 +448,7 @@
       const { data, error } = await db
         .from("santri_master_view")
         .select(
-          "id, nis, nama, tahun_ajaran, semester, jenjang, kelas, jurusan, paralel, aktif, created_at"
+          "id, nis, nama, tahun_ajaran, semester, jenjang, lokasi, kelas, jurusan, paralel, aktif, created_at"
         )
         .eq("aktif", true)
         .order("nama", { ascending: true });
