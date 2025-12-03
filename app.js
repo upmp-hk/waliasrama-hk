@@ -726,6 +726,26 @@
     input.select();
   }
 
+  function getKelasLabel(santri) {
+    if (!santri) return "-";
+  
+    const jenjang = (santri.jenjang || "").toUpperCase();
+    const kelas = santri.kelas || "";
+    const paralel = santri.paralel || "";
+    const jurusan = santri.jurusan || "";
+    const lokasi = santri.lokasi || "";
+  
+    // MTs → VII A (HK 1)
+    if (jenjang === "MTS") {
+      const lokasiLabel = lokasi ? ` (${lokasi})` : "";
+      return `${kelas} ${paralel}${lokasiLabel}`.trim();
+    }
+  
+    // MA → X IPA 1, XI IPS 2, dst.
+    const jurusanLabel = jurusan ? ` ${jurusan}` : "";
+    return `${kelas}${jurusanLabel} ${paralel}`.trim();
+  }
+
   async function loadRekapTable(options = {}) {
     const { silent = false } = options;
 
@@ -761,9 +781,7 @@
     sakitData.forEach((row, index) => {
       const santri = santriMaster.find((s) => s.id === row.santri_id);
       const nama = santri ? santri.nama : "(santri tidak ditemukan)";
-      const kelasLabel = santri
-        ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
-        : "-";
+      const kelasLabel = getKelasLabel(santri);
 
       const tr = document.createElement("tr");
 
@@ -938,7 +956,7 @@
     entries.forEach(([santriId, obj]) => {
       const santri = santriById.get(santriId);
       const kelasLabel = santri
-        ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
+        ? getKelasLabel(santri)
         : "(kelas tidak ditemukan)";
 
       if (!byKelas.has(kelasLabel)) {
@@ -1305,8 +1323,8 @@
 
     const santriRows = entries.map(([santriId, obj]) => {
     const santri = santriById.get(santriId);
-      const nama = santri ? santri.nama : "(santri tidak ditemukan)";
-      const kelasLabel = santri
+    const nama = santri ? santri.nama : "(santri tidak ditemukan)";
+    const kelasLabel = santri ? getKelasLabel(santri) : "-";
         ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
         : "-";
 
