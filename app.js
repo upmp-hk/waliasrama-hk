@@ -1172,7 +1172,7 @@
 
       const reasonTitle = document.createElement("div");
       reasonTitle.classList.add("chart-section-title");
-      reasonTitle.textContent = "JENIS SAKIT YANG PALING SERING DIALAMI SANTRI";
+      reasonTitle.textContent = "JENIS SAKIT YANG SERING DIDERITA SANTRI";
 
       const reasonSubtitle = document.createElement("div");
       reasonSubtitle.classList.add("chart-section-subtitle");
