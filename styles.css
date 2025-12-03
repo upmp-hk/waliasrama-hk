@@ -47,7 +47,7 @@ body {
   background: rgba(255, 255, 255, 0.97);
   border-radius: 26px;
   box-shadow: var(--shadow-soft);
-  padding: 1.25rem 1.25rem 1.6rem; /* bottom digedein untuk ruang nav bawah */
+  padding: 1.25rem 1.25rem 1.5rem; /* bottom digedein untuk ruang nav bawah */
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, 0.15);
