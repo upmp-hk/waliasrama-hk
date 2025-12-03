@@ -669,7 +669,7 @@
         }
       }
 
-      showToast("✅ berhasil menyimpan laporan.", "info");
+      showToast("✅ berhasil menyimpan data.", "info");
       switchInputPanel("filter");
       inputTableBody.innerHTML = "";
     } finally {
@@ -972,7 +972,7 @@
 
       const kelasTitle = document.createElement("div");
       kelasTitle.classList.add("chart-section-title");
-      kelasTitle.textContent = "Kelas dengan frekuensi sakit terbanyak";
+      kelasTitle.textContent = "KELAS DENGAN FREKUENSI SAKIT TERBANYAK";
 
       const kelasSubtitle = document.createElement("div");
       kelasSubtitle.classList.add("chart-section-subtitle");
@@ -1051,7 +1051,7 @@
 
     const santriTitle = document.createElement("div");
     santriTitle.classList.add("chart-section-title");
-    santriTitle.textContent = "Santri dengan frekuensi sakit terbanyak";
+    santriTitle.textContent = "SANTRI DENGAN FREKUENSI SAKIT TERBANYAK";
 
     const santriSubtitle = document.createElement("div");
     santriSubtitle.classList.add("chart-section-subtitle");
@@ -1156,7 +1156,7 @@
 
       const reasonTitle = document.createElement("div");
       reasonTitle.classList.add("chart-section-title");
-      reasonTitle.textContent = "Jenis sakit yang paling sering diderita santri";
+      reasonTitle.textContent = "JENIS SAKIT YANG PALING SERING DIALAMI SANTRI";
 
       const reasonSubtitle = document.createElement("div");
       reasonSubtitle.classList.add("chart-section-subtitle");
