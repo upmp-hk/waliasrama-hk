@@ -30,8 +30,12 @@
   const fieldJurusan = document.getElementById("fieldJurusan");
   const fieldParalel = document.getElementById("fieldParalel");
 
-  const kelasChipGroup = document.querySelector('.chip-group[data-target="inputKelas"]');
-  const paralelChipGroup = document.querySelector('.chip-group[data-target="inputParalel"]');
+  const kelasChipGroup = document.querySelector(
+    '.chip-group[data-target="inputKelas"]'
+  );
+  const paralelChipGroup = document.querySelector(
+    '.chip-group[data-target="inputParalel"]'
+  );
 
   const rekapTanggal = document.getElementById("rekapTanggal");
   const btnLoadRekap = document.getElementById("btnLoadRekap");
@@ -41,27 +45,33 @@
 
   const rekapBulan = document.getElementById("rekapBulan");
   const btnLoadRekapBulanan = document.getElementById("btnLoadRekapBulanan");
-  const btnPrintRekapBulanan = document.getElementById("btnPrintRekapBulanan");
-  const monthlyChartContainer = document.getElementById("monthlyChartContainer");
+  const btnPrintRekapBulanan = document.getElementById(
+    "btnPrintRekapBulanan"
+  );
+  const monthlyChartContainer = document.getElementById(
+    "monthlyChartContainer"
+  );
 
   const alasanList = document.getElementById("alasanList");
   const toastEl = document.getElementById("toast");
 
   // PWA INSTALL
-  const installPromptContainer = document.getElementById("installPromptContainer");
+  const installPromptContainer = document.getElementById(
+    "installPromptContainer"
+  );
   const btnInstallApp = document.getElementById("btnInstallApp");
   let deferredPwaPrompt = null;
 
   // STATE
   let santriMaster = [];
-  let santriById = new Map(); 
+  let santriById = new Map();
   let alasanSakitDistinct = [];
   let toastEnabled = false;
 
   let activeTab = "input";
   let isSwitchingTab = false;
 
-  let inputStep = "filter";          // "filter" atau "daftar"
+  let inputStep = "filter"; // "filter" atau "daftar"
   let isSwitchingInputPanel = false; // cegah animasi tabrakan
 
   // ===== UTIL LOADING BUTTON =====
@@ -83,9 +93,7 @@
 
   // ===== TOAST =====
   function showToast(message, variant = "info") {
-    if (!toastEnabled) {
-      return;
-    }
+    if (!toastEnabled) return;
 
     if (!toastEl) {
       alert(message);
@@ -162,37 +170,43 @@
   function filterChipByJenjang(chipGroupEl, jenjang) {
     const buttons = chipGroupEl.querySelectorAll(".chip-option");
     let selected = null;
-  
+
     buttons.forEach((btn) => {
       const btnJenjang = btn.dataset.jenjang;
       const visible = !btnJenjang || btnJenjang === jenjang;
-  
+
       btn.style.display = visible ? "inline-flex" : "none";
-      if (!visible) btn.classList.remove("active");
-      else if (!selected) selected = btn;
+      if (!visible) {
+        btn.classList.remove("active");
+      } else if (!selected) {
+        selected = btn;
+      }
     });
-  
+
     if (selected) {
       const target = chipGroupEl.dataset.target;
-      document.getElementById(target).value = selected.dataset.value;
+      const hiddenInput = document.getElementById(target);
+      if (hiddenInput) {
+        hiddenInput.value = selected.dataset.value;
+      }
       selected.classList.add("active");
     }
   }
- 
+
   function updateKelasOptionsByJenjang() {
     const jenjang = inputJenjang.value;
     filterChipByJenjang(kelasChipGroup, jenjang);
   }
-  
+
   function updateParalelOptionsByJenjang() {
     const jenjang = inputJenjang.value;
     filterChipByJenjang(paralelChipGroup, jenjang);
   }
-  
+
   function updateJurusanVisibility() {
     const jenjang = inputJenjang.value;
     if (!fieldJurusan) return;
-  
+
     if (jenjang === "MA") {
       fieldJurusan.style.display = "";
       if (!inputJurusan.value) {
@@ -203,12 +217,11 @@
       inputJurusan.value = "";
     }
   }
-  
+
   function updateLokasiVisibility() {
     const jenjang = inputJenjang.value;
     if (!fieldLokasi) return;
-  
-    // Lokasi hanya berlaku untuk MTs
+
     if (jenjang === "MTs") {
       fieldLokasi.style.display = "";
       if (!inputLokasi.value) {
@@ -219,30 +232,30 @@
       inputLokasi.value = "";
     }
   }
-  
+
   function applyJenjangLayout() {
     const jenjang = inputJenjang.value;
-  
+
     // MTs → lokasi + kelas (VII–IX), paralel A–O, jurusan hidden
     if (jenjang === "MTs") {
-      fieldLokasi.style.display = "";
-      fieldJurusan.style.display = "none";
-  
+      if (fieldLokasi) fieldLokasi.style.display = "";
+      if (fieldJurusan) fieldJurusan.style.display = "none";
+
       filterChipByJenjang(kelasChipGroup, "MTs");
       filterChipByJenjang(paralelChipGroup, "MTs");
-  
+
       inputJurusan.value = ""; // MA only
       if (!inputLokasi.value) inputLokasi.value = "HK 1";
     }
-  
+
     // MA → kelas (X–XII) + jurusan, paralel 1–15, lokasi hidden
     else if (jenjang === "MA") {
-      fieldLokasi.style.display = "none";
-      fieldJurusan.style.display = "";
-  
+      if (fieldLokasi) fieldLokasi.style.display = "none";
+      if (fieldJurusan) fieldJurusan.style.display = "";
+
       filterChipByJenjang(kelasChipGroup, "MA");
       filterChipByJenjang(paralelChipGroup, "MA");
-  
+
       inputLokasi.value = ""; // MTs only
       if (!inputJurusan.value) inputJurusan.value = "IPA";
     }
@@ -416,11 +429,14 @@
   function fillAlasanDatalist() {
     alasanList.innerHTML = "";
     const seen = new Set();
+
     alasanSakitDistinct.forEach((a) => {
       const text = (a || "").trim();
       if (!text) return;
-      if (seen.has(text.toLowerCase())) return;
-      seen.add(text.toLowerCase());
+      const lower = text.toLowerCase();
+      if (seen.has(lower)) return;
+      seen.add(lower);
+
       const opt = document.createElement("option");
       opt.value = text;
       alasanList.appendChild(opt);
@@ -435,7 +451,6 @@
     if (!year || !month) return null;
 
     const daysInMonth = new Date(year, month, 0).getDate();
-
     const mm = String(month).padStart(2, "0");
     const start = `${year}-${mm}-01`;
     const end = `${year}-${mm}-${String(daysInMonth).padStart(2, "0")}`;
@@ -443,29 +458,29 @@
     return { start, end, daysInMonth, year, month };
   }
 
-    // ===== LOAD MASTER =====
-    async function loadSantriMaster() {
-      const { data, error } = await db
-        .from("santri_master_view")
-        .select(
-          "id, nis, nama, tahun_ajaran, semester, jenjang, lokasi, kelas, jurusan, paralel, aktif, created_at"
-        )
-        .eq("aktif", true)
-        .order("nama", { ascending: true });
-    
-      if (error) {
-        console.error("Gagal load santri_master_view:", error);
-        showToast("❎ gagal memuat data santri.", "error");
-        santriMaster = [];
-        santriById = new Map();
-        return;
-      }
-    
-      santriMaster = data || [];
-      santriById = new Map(santriMaster.map((s) => [s.id, s]));  // s.id = santri.id
-    
-      console.log("santriMaster loaded:", santriMaster.length, "baris");
+  // ===== LOAD MASTER =====
+  async function loadSantriMaster() {
+    const { data, error } = await db
+      .from("santri_master_view")
+      .select(
+        "id, nis, nama, tahun_ajaran, semester, jenjang, lokasi, kelas, jurusan, paralel, aktif, created_at"
+      )
+      .eq("aktif", true)
+      .order("nama", { ascending: true });
+
+    if (error) {
+      console.error("Gagal load santri_master_view:", error);
+      showToast("❎ gagal memuat data santri.", "error");
+      santriMaster = [];
+      santriById = new Map();
+      return;
     }
+
+    santriMaster = data || [];
+    santriById = new Map(santriMaster.map((s) => [s.id, s])); // s.id = santri.id
+
+    console.log("santriMaster loaded:", santriMaster.length, "baris");
+  }
 
   async function loadDistinctAlasanSakit() {
     const { data, error } = await db
@@ -477,6 +492,7 @@
       console.error("Gagal load alasan_sakit:", error);
       return;
     }
+
     alasanSakitDistinct = (data || []).map((d) => d.alasan_sakit);
     fillAlasanDatalist();
   }
@@ -504,11 +520,13 @@
     try {
       let santri = santriMaster.filter((s) => {
         const sameJenjang =
-          (s.jenjang || "").toString().toUpperCase() === jenjang.toUpperCase();
+          (s.jenjang || "").toString().toUpperCase() ===
+          jenjang.toUpperCase();
         const sameKelas =
-          (s.kelas || "").toString().toUpperCase() === kelas.toUpperCase();
+          (s.kelas || "").toString().toUpperCase() ===
+          kelas.toUpperCase();
         const sameParalel = String(s.paralel) === String(paralel);
-      
+
         // aktif bisa berupa true / "true" / 1 / "1" / "AKTIF"
         const valAktif = (s.aktif ?? "").toString().toUpperCase();
         const isAktif =
@@ -516,18 +534,18 @@
           valAktif === "1" ||
           valAktif === "AKTIF" ||
           valAktif === "YA";
-      
+
         return sameJenjang && sameKelas && sameParalel && isAktif;
       });
-      
+
       // MTs → filter lokasi HANYA kalau kolom lokasi memang ada isinya
       if (jenjang === "MTs" && lokasi) {
         santri = santri.filter((s) => {
-          if (s.lokasi == null || s.lokasi === "") return true; // kalau view belum punya lokasi, jangan disaring
+          if (s.lokasi == null || s.lokasi === "") return true;
           return s.lokasi === lokasi;
         });
       }
-      
+
       // MA → filter jurusan HANYA kalau kolom jurusan ada
       if (jenjang === "MA" && jurusan) {
         santri = santri.filter((s) => {
@@ -535,7 +553,7 @@
           return s.jurusan === jurusan;
         });
       }
-      
+
       santri = santri.sort((a, b) => a.nama.localeCompare(b.nama));
 
       inputTableBody.innerHTML = "";
@@ -582,7 +600,7 @@
         inp.classList.add("alasan-input");
         inp.setAttribute("list", "alasanList");
         inp.value = mapSakit.get(s.id) || "";
-        inp.dataset.santriId = s.id;  // sekarang ini = santri.id
+        inp.dataset.santriId = s.id;
         tdAlasan.appendChild(inp);
 
         tr.appendChild(tdNo);
@@ -593,7 +611,6 @@
       });
 
       showToast("✅ berhasil memuat data.", "info");
-
       switchInputPanel("daftar");
     } finally {
       setButtonLoading(btnLoadInput, false);
@@ -626,10 +643,11 @@
       rows.forEach((row) => {
         const inp = row.querySelector(".alasan-input");
         if (!inp) return;
+
         const santriId = Number(inp.dataset.santriId);
-        // ... insert ke santri_sakit (santri_id: santriId)
         const alasan = inp.value.trim();
         if (!santriId) return;
+
         santriIds.push(santriId);
         if (alasan) {
           payload.push({
@@ -728,19 +746,19 @@
 
   function getKelasLabel(santri) {
     if (!santri) return "-";
-  
+
     const jenjang = (santri.jenjang || "").toUpperCase();
     const kelas = santri.kelas || "";
     const paralel = santri.paralel || "";
     const jurusan = santri.jurusan || "";
     const lokasi = santri.lokasi || "";
-  
+
     // MTs → VII A (HK 1)
     if (jenjang === "MTS") {
       const lokasiLabel = lokasi ? ` (${lokasi})` : "";
       return `${kelas} ${paralel}${lokasiLabel}`.trim();
     }
-  
+
     // MA → X IPA 1, XI IPS 2, dst.
     const jurusanLabel = jurusan ? ` ${jurusan}` : "";
     return `${kelas}${jurusanLabel} ${paralel}`.trim();
@@ -834,7 +852,10 @@
       return;
     }
 
-    if (document.activeElement && document.activeElement.tagName === "INPUT") {
+    if (
+      document.activeElement &&
+      document.activeElement.tagName === "INPUT"
+    ) {
       document.activeElement.blur();
     }
 
@@ -1002,7 +1023,6 @@
 
       kelasEntries.forEach(([kelasLabel, obj]) => {
         const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
-        const percentRoundedInt = Math.round(percent);
 
         const santriArr = Array.from(obj.santriCounts.entries()).sort(
           (a, b) => b[1] - a[1]
@@ -1023,7 +1043,7 @@
 
         const rightSpan = document.createElement("div");
         rightSpan.classList.add("chart-row-meta");
-        rightSpan.textContent = `${obj.count}x (${percentRoundedInt}%)`;
+        rightSpan.textContent = `${obj.count}x (${Math.round(percent)}%)`;
 
         headerDiv.appendChild(leftSpan);
         headerDiv.appendChild(rightSpan);
@@ -1085,7 +1105,6 @@
       const kelasLabel = santri ? getKelasLabel(santri) : "-";
 
       const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
-      const percentRoundedInt = Math.round(percent);
 
       const reasonsArr = Array.from(obj.reasons.entries()).sort(
         (a, b) => b[1] - a[1]
@@ -1106,7 +1125,7 @@
 
       const rightSpan = document.createElement("div");
       rightSpan.classList.add("chart-row-meta");
-      rightSpan.textContent = `${obj.count}x (${percentRoundedInt}%)`;
+      rightSpan.textContent = `${obj.count}x (${Math.round(percent)}%)`;
 
       headerDiv.appendChild(leftSpan);
       headerDiv.appendChild(rightSpan);
@@ -1184,7 +1203,6 @@
 
       reasonEntries.forEach(([reasonLabel, obj]) => {
         const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
-        const percentRoundedInt = Math.round(percent);
 
         const santriArr = Array.from(obj.santriCounts.entries()).sort(
           (a, b) => b[1] - a[1]
@@ -1203,7 +1221,7 @@
 
         const rightSpan = document.createElement("div");
         rightSpan.classList.add("chart-row-meta");
-        rightSpan.textContent = `${obj.count}x (${percentRoundedInt}%)`;
+        rightSpan.textContent = `${obj.count}x (${Math.round(percent)}%)`;
 
         headerDiv.appendChild(leftSpan);
         headerDiv.appendChild(rightSpan);
@@ -1323,14 +1341,14 @@
       const santri = santriById.get(santriId);
       const nama = santri ? santri.nama : "(santri tidak ditemukan)";
       const kelasLabel = santri ? getKelasLabel(santri) : "-";
-    
+
       const reasonsArr = Array.from(obj.reasons.entries()).sort(
         (a, b) => b[1] - a[1]
       );
       const reasonsText = reasonsArr
         .map(([reason, n]) => `${reason} (${n}x)`)
         .join(", ");
-    
+
       return {
         label: `${nama} (${kelasLabel})`,
         detail: reasonsText,
@@ -1458,44 +1476,47 @@
     window.print();
   });
 
-    window.addEventListener("load", async () => {
-      setTodayToInputs();
-      setThisMonthToRekapBulan();
-      initChipGroups();
-  
-      const jenjangGroup = document.querySelector('.chip-group[data-target="inputJenjang"]');
-      if (jenjangGroup) {
-        jenjangGroup.querySelectorAll(".chip-option").forEach((btn) => {
+  window.addEventListener("load", async () => {
+    setTodayToInputs();
+    setThisMonthToRekapBulan();
+    initChipGroups();
+
+    const jenjangGroup = document.querySelector(
+      '.chip-group[data-target="inputJenjang"]'
+    );
+    if (jenjangGroup) {
+      jenjangGroup
+        .querySelectorAll(".chip-option")
+        .forEach((btn) => {
           btn.addEventListener("click", applyJenjangLayout);
         });
-      }
-  
-      // panggil saat awal load, supaya layout MTs/MA langsung sesuai
-      window.requestAnimationFrame(() => {
-        applyJenjangLayout();
-      });
-  
-      await loadSantriMaster();
-      await loadDistinctAlasanSakit();
-      
-      const savedTab = localStorage.getItem("sakit_active_tab");
-      const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
-  
-      if (savedTab && allowedTabs.includes(savedTab)) {
-        switchTab(savedTab, { instant: true });
-        if (savedTab === "input") {
-          switchInputPanel("filter", { instant: true });
-        }
-      } else {
-        switchTab("input", { instant: true });
-        switchInputPanel("filter", { instant: true });
-      }
-  
-      toastEnabled = true;
-  
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("./sw.js").catch(console.error);
-      }
+    }
+
+    // panggil saat awal load, supaya layout MTs/MA langsung sesuai
+    window.requestAnimationFrame(() => {
+      applyJenjangLayout();
     });
 
+    await loadSantriMaster();
+    await loadDistinctAlasanSakit();
+
+    const savedTab = localStorage.getItem("sakit_active_tab");
+    const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
+
+    if (savedTab && allowedTabs.includes(savedTab)) {
+      switchTab(savedTab, { instant: true });
+      if (savedTab === "input") {
+        switchInputPanel("filter", { instant: true });
+      }
+    } else {
+      switchTab("input", { instant: true });
+      switchInputPanel("filter", { instant: true });
+    }
+
+    toastEnabled = true;
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(console.error);
+    }
+  });
 })();
