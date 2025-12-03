@@ -458,6 +458,13 @@ h1 {
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
 }
 
+.rekap-mode-btn {
+  width: auto;                 /* jangan dipaksa 100% */
+  padding: 0.48rem 1.1rem;     /* sama dengan button / btn-primary */
+  font-size: 0.8rem;
+  font-weight: 500;            /* biar feel-nya sama dengan tombol utama */
+}
+
 /* ===== BUTTONS ===== */
 button {
   border: none;
