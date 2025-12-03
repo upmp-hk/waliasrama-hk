@@ -370,6 +370,10 @@ h1 {
   background: #ffffff;
   transform: translateY(-0.5px);
 }
+/* field yang harus ambil lebar penuh baris */
+.field-wide {
+  flex: 1 1 100%;
+}
 
 /* === CHIP GROUP (pengganti select) === */
 .chip-group {
