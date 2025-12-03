@@ -236,36 +236,45 @@
           <div class="panel-caption">Lihat dan edit rekap santri sakit per tanggal.</div>
         </div>
     
-        <!-- 🔹 Mode Rekap: Gabungan / Per Kelas -->
-        <div class="filter-row">
-          <div class="field">
-            <label>Mode Rekap:</label>
-            <input type="hidden" id="rekapHarianMode" value="gabungan" />
-            <div class="chip-group" data-target="rekapHarianMode">
-              <button type="button" class="chip-option active" data-value="gabungan">Rekap Gabungan</button>
-              <button type="button" class="chip-option" data-value="kelas">Rekap per Kelas</button>
+        <!-- 🔹 MODE REKAP: tombol besar di tengah -->
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field field-wide">
+              <label>Mode Rekap:</label>
+              <input type="hidden" id="rekapHarianMode" value="gabungan" />
+              <div class="rekap-mode-row chip-group" data-target="rekapHarianMode">
+                <!-- POSISI DITUKAR: kiri = per kelas, kanan = gabungan -->
+                <button type="button" class="chip-option rekap-mode-btn" data-value="kelas">
+                  Rekap per Kelas
+                </button>
+                <button type="button" class="chip-option rekap-mode-btn active" data-value="gabungan">
+                  Rekap Gabungan
+                </button>
+              </div>
             </div>
-          </div>
-    
-          <!-- 🔹 Pilih Kelompok Kelas (muncul kalau mode = per kelas) -->
-          <div class="field" id="fieldRekapHarianKelas" style="display:none;">
-            <label for="rekapHarianKelas">Kelompok Kelas:</label>
-            <select id="rekapHarianKelas">
-              <option value="">-- Pilih Kelompok Kelas --</option>
-              <option value="VII HK 1">VII HK 1</option>
-              <option value="VIII HK 1">VIII HK 1</option>
-              <option value="IX HK 1">IX HK 1</option>
-              <option value="VII HK 2">VII HK 2</option>
-              <option value="VIII HK 2">VIII HK 2</option>
-              <option value="IX HK 2">IX HK 2</option>
-              <option value="X">X (MA)</option>
-              <option value="XI">XI (MA)</option>
-              <option value="XII">XII (MA)</option>
-            </select>
           </div>
         </div>
     
-        <!-- 🔹 Tanggal Rekap -->
+        <!-- 🔹 PILIH SESUAI KELAS (muncul hanya saat mode = "Rekap per Kelas") -->
+        <div class="filter-row" id="fieldRekapHarianKelas" style="display:none;">
+          <div class="field field-wide">
+            <label>Pilih sesuai kelas:</label>
+            <input type="hidden" id="rekapHarianKelas" />
+            <div class="chip-group kelas-grid" data-target="rekapHarianKelas">
+              <button type="button" class="chip-option" data-value="VII HK 1">VII HK 1</button>
+              <button type="button" class="chip-option" data-value="VIII HK 1">VIII HK 1</button>
+              <button type="button" class="chip-option" data-value="IX HK 1">IX HK 1</button>
+              <button type="button" class="chip-option" data-value="VII HK 2">VII HK 2</button>
+              <button type="button" class="chip-option" data-value="VIII HK 2">VIII HK 2</button>
+              <button type="button" class="chip-option" data-value="IX HK 2">IX HK 2</button>
+              <button type="button" class="chip-option" data-value="X">X (MA)</button>
+              <button type="button" class="chip-option" data-value="XI">XI (MA)</button>
+              <button type="button" class="chip-option" data-value="XII">XII (MA)</button>
+            </div>
+          </div>
+        </div>
+    
+        <!-- 🔹 TANGGAL REKAP (tetap seperti semula) -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field">
@@ -277,7 +286,8 @@
             </button>
           </div>
         </div>
-
+    
+        <!-- setelah ini biarkan struktur table-card, legend, dan btn-row seperti file asli -->
 
         <div class="table-container">
           <div class="table-card">
@@ -327,36 +337,45 @@
           <div class="panel-caption">Analisis frekuensi sakit santri dalam satu bulan.</div>
         </div>
     
-        <!-- 🔹 Mode Rekap: Gabungan / Per Kelas -->
-        <div class="filter-row">
-          <div class="field">
-            <label>Mode Rekap:</label>
-            <input type="hidden" id="rekapBulananMode" value="gabungan" />
-            <div class="chip-group" data-target="rekapBulananMode">
-              <button type="button" class="chip-option active" data-value="gabungan">Rekap Gabungan</button>
-              <button type="button" class="chip-option" data-value="kelas">Rekap per Kelas</button>
+        <!-- 🔹 MODE REKAP: tombol besar di tengah -->
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field field-wide">
+              <label>Mode Rekap:</label>
+              <input type="hidden" id="rekapBulananMode" value="gabungan" />
+              <div class="rekap-mode-row chip-group" data-target="rekapBulananMode">
+                <!-- POSISI DITUKAR: kiri = per kelas, kanan = gabungan -->
+                <button type="button" class="chip-option rekap-mode-btn" data-value="kelas">
+                  Rekap per Kelas
+                </button>
+                <button type="button" class="chip-option rekap-mode-btn active" data-value="gabungan">
+                  Rekap Gabungan
+                </button>
+              </div>
             </div>
-          </div>
-    
-          <!-- 🔹 Pilih Kelompok Kelas (muncul kalau mode = per kelas) -->
-          <div class="field" id="fieldRekapBulananKelas" style="display:none;">
-            <label for="rekapBulananKelas">Kelompok Kelas:</label>
-            <select id="rekapBulananKelas">
-              <option value="">-- Pilih Kelompok Kelas --</option>
-              <option value="VII HK 1">VII HK 1</option>
-              <option value="VIII HK 1">VIII HK 1</option>
-              <option value="IX HK 1">IX HK 1</option>
-              <option value="VII HK 2">VII HK 2</option>
-              <option value="VIII HK 2">VIII HK 2</option>
-              <option value="IX HK 2">IX HK 2</option>
-              <option value="X">X (MA)</option>
-              <option value="XI">XI (MA)</option>
-              <option value="XII">XII (MA)</option>
-            </select>
           </div>
         </div>
     
-        <!-- 🔹 Bulan Rekap -->
+        <!-- 🔹 PILIH SESUAI KELAS (muncul hanya saat mode = "Rekap per Kelas") -->
+        <div class="filter-row" id="fieldRekapBulananKelas" style="display:none;">
+          <div class="field field-wide">
+            <label>Pilih sesuai kelas:</label>
+            <input type="hidden" id="rekapBulananKelas" />
+            <div class="chip-group kelas-grid" data-target="rekapBulananKelas">
+              <button type="button" class="chip-option" data-value="VII HK 1">VII HK 1</button>
+              <button type="button" class="chip-option" data-value="VIII HK 1">VIII HK 1</button>
+              <button type="button" class="chip-option" data-value="IX HK 1">IX HK 1</button>
+              <button type="button" class="chip-option" data-value="VII HK 2">VII HK 2</button>
+              <button type="button" class="chip-option" data-value="VIII HK 2">VIII HK 2</button>
+              <button type="button" class="chip-option" data-value="IX HK 2">IX HK 2</button>
+              <button type="button" class="chip-option" data-value="X">X (MA)</button>
+              <button type="button" class="chip-option" data-value="XI">XI (MA)</button>
+              <button type="button" class="chip-option" data-value="XII">XII (MA)</button>
+            </div>
+          </div>
+        </div>
+    
+        <!-- 🔹 BULAN REKAP (tetap seperti semula) -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field">
@@ -368,8 +387,7 @@
             </button>
           </div>
         </div>
-
-
+        
         <div id="monthlyChartContainer" class="monthly-chart-container">
           <!-- isi via JS -->
         </div>
