@@ -861,7 +861,7 @@
       }
     }
 
-    showToast("✅ berhasil menyimpan revisi.", "info");
+    showToast("✅ berhasil menyimpan data.", "info");
     await loadDistinctAlasanSakit();
     await loadRekapTable({ silent: true });
   }
