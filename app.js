@@ -43,6 +43,11 @@
   const btnPrintRekap = document.getElementById("btnPrintRekap");
   const rekapTableBody = document.getElementById("rekapTableBody");
 
+  // 🔹 Mode & Kelas Rekap Harian
+  const rekapHarianMode = document.getElementById("rekapHarianMode");
+  const rekapHarianKelas = document.getElementById("rekapHarianKelas");
+  const fieldRekapHarianKelas = document.getElementById("fieldRekapHarianKelas");
+
   const rekapBulan = document.getElementById("rekapBulan");
   const btnLoadRekapBulanan = document.getElementById("btnLoadRekapBulanan");
   const btnPrintRekapBulanan = document.getElementById(
@@ -51,6 +56,12 @@
   const monthlyChartContainer = document.getElementById(
     "monthlyChartContainer"
   );
+
+  // 🔹 Mode & Kelas Rekap Bulanan
+  const rekapBulananMode = document.getElementById("rekapBulananMode");
+  const rekapBulananKelas = document.getElementById("rekapBulananKelas");
+  const fieldRekapBulananKelas = document.getElementById("fieldRekapBulananKelas");
+
 
   const alasanList = document.getElementById("alasanList");
   const toastEl = document.getElementById("toast");
@@ -260,6 +271,19 @@
       if (!inputJurusan.value) inputJurusan.value = "IPA";
     }
   }
+
+  function updateRekapModeLayout() {
+    if (fieldRekapHarianKelas && rekapHarianMode) {
+      const mode = rekapHarianMode.value || "gabungan";
+      fieldRekapHarianKelas.style.display = mode === "kelas" ? "" : "none";
+    }
+
+    if (fieldRekapBulananKelas && rekapBulananMode) {
+      const mode = rekapBulananMode.value || "gabungan";
+      fieldRekapBulananKelas.style.display = mode === "kelas" ? "" : "none";
+    }
+  }
+
 
   // ===== UTIL TANGGAL =====
   function setTodayToInputs() {
@@ -764,12 +788,48 @@
     return `${kelas}${jurusanLabel} ${paralel}`.trim();
   }
 
+  // ===== HELPER: KELOMPOK KELAS (VII HK 1, X, XI, XII) =====
+  function matchKelompokKelas(santri, kelompok) {
+    if (!santri || !kelompok) return false;
+
+    const label = kelompok.trim().toUpperCase();
+    const jenjang = (santri.jenjang || "").toString().toUpperCase();
+    const kelas = (santri.kelas || "").toString().toUpperCase();
+    const lokasi = (santri.lokasi || "").toString().toUpperCase();
+
+    // MA → X / XI / XII (semua jurusan & paralel)
+    if (["X", "XI", "XII"].includes(label)) {
+      if (jenjang !== "MA") return false;
+      return kelas === label;
+    }
+
+    // MTs → "VII HK 1", "VIII HK 2", dll
+    const parts = label.split(" ");
+    if (parts.length === 3 && parts[1] === "HK") {
+      const targetKelas = parts[0];         // "VII"
+      const targetLokasi = `${parts[1]} ${parts[2]}`; // "HK 1"
+      if (jenjang !== "MTS") return false;
+      return kelas === targetKelas && lokasi === targetLokasi;
+    }
+
+    return false;
+  }
+
   async function loadRekapTable(options = {}) {
     const { silent = false } = options;
 
     const tanggal = rekapTanggal.value;
     if (!tanggal) {
       showToast("⚠️ pilih tanggal rekap.", "error");
+      return;
+    }
+
+    const mode =
+      rekapHarianMode ? (rekapHarianMode.value || "gabungan") : "gabungan";
+    const selectedKelompok = rekapHarianKelas ? rekapHarianKelas.value : "";
+
+    if (mode === "kelas" && !selectedKelompok) {
+      showToast("⚠️ pilih kelompok kelas untuk rekap per kelas.", "error");
       return;
     }
 
@@ -796,8 +856,16 @@
       return;
     }
 
-    sakitData.forEach((row, index) => {
+    let rowsCount = 0;
+
+    sakitData.forEach((row) => {
       const santri = santriMaster.find((s) => s.id === row.santri_id);
+
+      // 🔹 Filter jika mode = "per kelas"
+      if (mode === "kelas" && !matchKelompokKelas(santri, selectedKelompok)) {
+        return;
+      }
+
       const nama = santri ? santri.nama : "(santri tidak ditemukan)";
       const kelasLabel = getKelasLabel(santri);
 
@@ -805,7 +873,7 @@
 
       const tdNo = document.createElement("td");
       tdNo.classList.add("col-no");
-      tdNo.textContent = index + 1;
+      tdNo.textContent = rowsCount + 1;
 
       const tdNama = document.createElement("td");
       tdNama.textContent = nama;
@@ -838,7 +906,17 @@
       tr.appendChild(tdAlasan);
 
       rekapTableBody.appendChild(tr);
+      rowsCount++;
     });
+
+    if (rowsCount === 0) {
+      rekapTableBody.innerHTML =
+        '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada data untuk kelompok kelas ini pada tanggal tersebut.</td></tr>';
+      if (!silent) {
+        showToast("⚠️ tidak ada data untuk filter ini.", "info");
+      }
+      return;
+    }
 
     if (!silent) {
       showToast("✅ berhasil memuat rekap.", "info");
@@ -919,9 +997,18 @@
       return;
     }
 
+    const mode =
+      rekapBulananMode ? (rekapBulananMode.value || "gabungan") : "gabungan";
+    const selectedKelompok = rekapBulananKelas ? rekapBulananKelas.value : "";
+
+    if (mode === "kelas" && !selectedKelompok) {
+      showToast("⚠️ pilih kelompok kelas untuk rekap per kelas.", "error");
+      return;
+    }
+
     const { start, end } = range;
 
-    const { data: sakitData, error } = await db
+    const { data: rawSakitData, error } = await db
       .from("santri_sakit")
       .select("santri_id, alasan_sakit, tanggal")
       .gte("tanggal", start)
@@ -933,11 +1020,21 @@
       return;
     }
 
+    let sakitData = rawSakitData || [];
+
+    // 🔹 Kalau mode per kelas → filter dulu santri-nya
+    if (mode === "kelas" && selectedKelompok) {
+      sakitData = sakitData.filter((row) => {
+        const santri = santriById.get(row.santri_id);
+        return matchKelompokKelas(santri, selectedKelompok);
+      });
+    }
+
     monthlyChartContainer.innerHTML = "";
 
     if (!sakitData || sakitData.length === 0) {
       monthlyChartContainer.innerHTML =
-        '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini.</div>';
+        '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini untuk filter yang dipilih.</div>';
       showToast("⚠️ tidak ada data.", "info");
       return;
     }
@@ -1480,6 +1577,18 @@
     setTodayToInputs();
     setThisMonthToRekapBulan();
     initChipGroups();
+
+    // 🔹 Reaksi kalau mode rekap harian/bulanan diganti (gabungan / per kelas)
+    const rekapModeGroups = document.querySelectorAll(
+      '.chip-group[data-target="rekapHarianMode"], .chip-group[data-target="rekapBulananMode"]'
+    );
+    rekapModeGroups.forEach((group) => {
+      group.querySelectorAll(".chip-option").forEach((btn) => {
+        btn.addEventListener("click", updateRekapModeLayout);
+      });
+    });
+    // set awal
+    updateRekapModeLayout();
 
     const jenjangGroup = document.querySelector(
       '.chip-group[data-target="inputJenjang"]'
