@@ -1082,9 +1082,7 @@
     entries.forEach(([santriId, obj]) => {
       const santri = santriById.get(santriId);
       const nama = santri ? santri.nama : "(santri tidak ditemukan)";
-      const kelasLabel = santri
-        ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
-        : "-";
+      const kelasLabel = santri ? getKelasLabel(santri) : "-";
 
       const percent = totalCases ? (obj.count / totalCases) * 100 : 0;
       const percentRoundedInt = Math.round(percent);
@@ -1322,19 +1320,17 @@
     });
 
     const santriRows = entries.map(([santriId, obj]) => {
-    const santri = santriById.get(santriId);
-    const nama = santri ? santri.nama : "(santri tidak ditemukan)";
-    const kelasLabel = santri ? getKelasLabel(santri) : "-";
-        ? `${santri.kelas} ${santri.jurusan} ${santri.paralel}`
-        : "-";
-
+      const santri = santriById.get(santriId);
+      const nama = santri ? santri.nama : "(santri tidak ditemukan)";
+      const kelasLabel = santri ? getKelasLabel(santri) : "-";
+    
       const reasonsArr = Array.from(obj.reasons.entries()).sort(
         (a, b) => b[1] - a[1]
       );
       const reasonsText = reasonsArr
         .map(([reason, n]) => `${reason} (${n}x)`)
         .join(", ");
-
+    
       return {
         label: `${nama} (${kelasLabel})`,
         detail: reasonsText,
