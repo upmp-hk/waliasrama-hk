@@ -783,31 +783,6 @@
     return `${kelas}${jurusanLabel} ${paralel}`.trim();
   }
 
-  function matchKelompokKelas(santri, kelompok) {
-    if (!santri || !kelompok) return false;
-  
-    const label = kelompok.trim().toUpperCase();
-    const jenjang = (santri.jenjang || "").toUpperCase();
-    const kelas = (santri.kelas || "").toUpperCase();
-    const lokasi = (santri.lokasi || "").toUpperCase();
-  
-    // MA → X / XI / XII
-    if (["X", "XI", "XII"].includes(label)) {
-      return jenjang === "MA" && kelas === label;
-    }
-  
-    // MTs → "VII HK 1", "VIII HK 2", dll
-    const parts = label.split(" ");
-    if (parts.length === 3 && parts[1] === "HK") {
-      const targetKelas = parts[0];               // "VII"
-      const targetLokasi = `${parts[1]} ${parts[2]}`; // "HK 1"
-      if (jenjang !== "MTS") return false;
-      return kelas === targetKelas && lokasi === targetLokasi;
-    }
-  
-    return false;
-  }
-
   // ===== HELPER: KELOMPOK KELAS (VII HK 1, X, XI, XII) =====
   function matchKelompokKelas(santri, kelompok) {
     if (!santri || !kelompok) return false;
@@ -1087,34 +1062,6 @@ async function loadRekapTable(options = {}) {
       return;
     }
 
-    // Agregat per santri
-    const bySantri = new Map();
-    sakitData.forEach((row) => {
-      const sid = row.santri_id;
-      if (!sid) return;
-      if (!bySantri.has(sid)) {
-        bySantri.set(sid, {
-          count: 0,
-          dates: new Set(),
-          reasons: new Map(),
-        });
-      }
-      const obj = bySantri.get(sid);
-      obj.count += 1;
-      obj.dates.add(row.tanggal);
-
-      const reason = (row.alasan_sakit || "").trim() || "tanpa keterangan";
-      obj.reasons.set(reason, (obj.reasons.get(reason) || 0) + 1);
-    });
-
-    const entries = Array.from(bySantri.entries());
-    if (!entries.length) {
-      monthlyChartContainer.innerHTML =
-        '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini.</div>';
-      showToast("⚠️ tidak ada data.", "info");
-      return;
-    }
-
     const totalCases = entries.reduce((sum, [, obj]) => sum + obj.count, 0);
 
     // 1) AGREGAT PER KELAS
@@ -1307,7 +1254,7 @@ async function loadRekapTable(options = {}) {
 
     // BOX DIAGRAM JENIS SAKIT
     const byReason = new Map();
-    sakitData.forEach((row) => {
+    filteredData.forEach((row) => {
       const raw = (row.alasan_sakit || "").trim();
       const label = raw || "tanpa keterangan";
       if (!byReason.has(label)) {
@@ -1625,18 +1572,6 @@ async function loadRekapTable(options = {}) {
     setTodayToInputs();
     setThisMonthToRekapBulan();
     initChipGroups();
-
-    function updateRekapModeLayout() {
-      if (fieldRekapHarianKelas && rekapHarianMode) {
-        const mode = rekapHarianMode.value || "gabungan";
-        fieldRekapHarianKelas.style.display = mode === "kelas" ? "" : "none";
-      }
-    
-      if (fieldRekapBulananKelas && rekapBulananMode) {
-        const mode2 = rekapBulananMode.value || "gabungan";
-        fieldRekapBulananKelas.style.display = mode2 === "kelas" ? "" : "none";
-      }
-    }
 
     // 🔹 Reaksi kalau mode rekap harian/bulanan diganti (gabungan / per kelas)
     const rekapModeGroups = document.querySelectorAll(
