@@ -399,6 +399,34 @@ h1 {
   font-weight: 600;
 }
 
+/* ==== GRID KELAS UNTUK REKAP (VII HK 1, dst.) ==== */
+.kelas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.kelas-grid .chip-option {
+  width: 100%;
+  justify-content: center;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ==== TOMBOL MODE REKAP (GABUNGAN / PER KELAS) ==== */
+.rekap-mode-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.rekap-mode-row .chip-option {
+  flex: 1 1 0;
+  max-width: 220px;      /* biar dua tombol rapi & sejajar */
+}
 
 .chip-option {
   border: none;
