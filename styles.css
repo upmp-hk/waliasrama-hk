@@ -1065,3 +1065,70 @@ tbody tr:hover {
 }
 
 }
+
+/* ===== TIGHTER SPACING: VERSION SETENGAH ===== */
+
+/* jarak tepi layar dengan box utama */
+body {
+  padding: 0.5rem;
+  padding-bottom: 4.5rem; /* tetap besar untuk ruang navbar bawah */
+}
+
+/* padding dalam kotak aplikasi utama */
+.app {
+  padding: 0.625rem 0.625rem 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .app {
+    padding: 0.8rem 1rem 0.95rem;
+  }
+}
+
+/* header paling atas */
+.header-box {
+  padding: 0.48rem 0.58rem;
+  margin-bottom: 0.45rem;
+}
+
+/* semua panel (filter, tabel, dll) */
+.panel {
+  padding: 0.38rem 0.45rem 0.4rem;
+  margin-bottom: 0.42rem;
+}
+
+/* jarak antar konten tab ke header */
+.tab-content {
+  margin-top: 0.5rem;
+}
+
+/* jarak tabel dari judul panel */
+.table-container {
+  margin-top: 0.35rem;
+}
+
+/* baris tombol + legend */
+.btn-row {
+  margin-top: 0.35rem;
+}
+
+/* kartu tabel & kartu chart bulanan */
+.table-card {
+  min-height: 200px; /* sedikit diperkecil dari 220 */
+}
+
+.chart-section-card {
+  padding: 0.4rem 0.45rem;
+  margin-bottom: 0.38rem;
+}
+
+/* container chart bulanan */
+.monthly-chart-container {
+  margin-top: 0.4rem;
+}
+
+/* padding sel tabel */
+th,
+td {
+  padding: 0.4rem 0.35rem;
+}
