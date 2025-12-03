@@ -378,6 +378,24 @@ h1 {
   gap: 0.35rem;
 }
 
+/* ==== PARAREL GRID BARU ==== */
+.paralel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  gap: 0.35rem;
+  width: 100%;
+}
+
+/* style tombol paralel */
+.paralel-grid .chip-option {
+  width: 100%;
+  justify-content: center;
+  padding: 0.32rem 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+
 .chip-option {
   border: none;
   border-radius: 999px;
