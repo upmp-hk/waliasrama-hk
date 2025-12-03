@@ -1643,15 +1643,6 @@ async function loadRekapTable(options = {}) {
         fieldRekapBulananKelas.style.display = mode2 === "kelas" ? "" : "none";
       }
     }
- 
-    // 🔹 Hubungkan perubahan mode rekap ke tampilan field kelas
-    const rekapModeGroups = document.querySelectorAll(".rekap-mode-row");
-    rekapModeGroups.forEach((group) => {
-      group.querySelectorAll(".chip-option").forEach((btn) => {
-        btn.addEventListener("click", updateRekapModeLayout);
-      });
-    });
-    updateRekapModeLayout();
 
     // 🔹 Reaksi kalau mode rekap harian/bulanan diganti (gabungan / per kelas)
     const rekapModeGroups = document.querySelectorAll(
