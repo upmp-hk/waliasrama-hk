@@ -235,7 +235,37 @@
           <div class="panel-title">Rekap Harian</div>
           <div class="panel-caption">Lihat dan edit rekap santri sakit per tanggal.</div>
         </div>
-
+    
+        <!-- 🔹 Mode Rekap: Gabungan / Per Kelas -->
+        <div class="filter-row">
+          <div class="field">
+            <label>Mode Rekap:</label>
+            <input type="hidden" id="rekapHarianMode" value="gabungan" />
+            <div class="chip-group" data-target="rekapHarianMode">
+              <button type="button" class="chip-option active" data-value="gabungan">Rekap Gabungan</button>
+              <button type="button" class="chip-option" data-value="kelas">Rekap per Kelas</button>
+            </div>
+          </div>
+    
+          <!-- 🔹 Pilih Kelompok Kelas (muncul kalau mode = per kelas) -->
+          <div class="field" id="fieldRekapHarianKelas" style="display:none;">
+            <label for="rekapHarianKelas">Kelompok Kelas:</label>
+            <select id="rekapHarianKelas">
+              <option value="">-- Pilih Kelompok Kelas --</option>
+              <option value="VII HK 1">VII HK 1</option>
+              <option value="VIII HK 1">VIII HK 1</option>
+              <option value="IX HK 1">IX HK 1</option>
+              <option value="VII HK 2">VII HK 2</option>
+              <option value="VIII HK 2">VIII HK 2</option>
+              <option value="IX HK 2">IX HK 2</option>
+              <option value="X">X (MA)</option>
+              <option value="XI">XI (MA)</option>
+              <option value="XII">XII (MA)</option>
+            </select>
+          </div>
+        </div>
+    
+        <!-- 🔹 Tanggal Rekap -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field">
@@ -247,6 +277,7 @@
             </button>
           </div>
         </div>
+
 
         <div class="table-container">
           <div class="table-card">
@@ -295,7 +326,37 @@
           <div class="panel-title">Rekap Bulanan</div>
           <div class="panel-caption">Analisis frekuensi sakit santri dalam satu bulan.</div>
         </div>
-
+    
+        <!-- 🔹 Mode Rekap: Gabungan / Per Kelas -->
+        <div class="filter-row">
+          <div class="field">
+            <label>Mode Rekap:</label>
+            <input type="hidden" id="rekapBulananMode" value="gabungan" />
+            <div class="chip-group" data-target="rekapBulananMode">
+              <button type="button" class="chip-option active" data-value="gabungan">Rekap Gabungan</button>
+              <button type="button" class="chip-option" data-value="kelas">Rekap per Kelas</button>
+            </div>
+          </div>
+    
+          <!-- 🔹 Pilih Kelompok Kelas (muncul kalau mode = per kelas) -->
+          <div class="field" id="fieldRekapBulananKelas" style="display:none;">
+            <label for="rekapBulananKelas">Kelompok Kelas:</label>
+            <select id="rekapBulananKelas">
+              <option value="">-- Pilih Kelompok Kelas --</option>
+              <option value="VII HK 1">VII HK 1</option>
+              <option value="VIII HK 1">VIII HK 1</option>
+              <option value="IX HK 1">IX HK 1</option>
+              <option value="VII HK 2">VII HK 2</option>
+              <option value="VIII HK 2">VIII HK 2</option>
+              <option value="IX HK 2">IX HK 2</option>
+              <option value="X">X (MA)</option>
+              <option value="XI">XI (MA)</option>
+              <option value="XII">XII (MA)</option>
+            </select>
+          </div>
+        </div>
+    
+        <!-- 🔹 Bulan Rekap -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field">
@@ -307,6 +368,7 @@
             </button>
           </div>
         </div>
+
 
         <div id="monthlyChartContainer" class="monthly-chart-container">
           <!-- isi via JS -->
