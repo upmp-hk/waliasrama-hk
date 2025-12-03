@@ -2,18 +2,36 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Rekap Santri Sakit Harian & Bulanan</title>
+  <title>Rekap Santri Sakit – Harian & Bulanan per Kelas</title>
+
+  <!-- Responsive -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Deskripsi aplikasi (termasuk fitur per kelas) -->
+  <meta name="description"
+        content="Aplikasi rekap santri sakit harian dan bulanan dengan filter per kelas (VII–XII) dan rekap gabungan, dilengkapi download PDF untuk laporan resmi." />
+
+  <!-- Warna utama untuk browser / PWA -->
+  <meta name="theme-color" content="#2563eb" />
 
   <!-- Supabase JS (harus sebelum app.js) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- CSS terpisah -->
+  <!-- CSS utama -->
   <link rel="stylesheet" href="styles.css" />
 
+  <!-- PWA manifest -->
   <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#2563eb" />
+
+  <!-- (Opsional) icon PWA / favicon -->
+  <!--
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Rekap Santri Sakit" />
+  -->
 </head>
+
 <body>
   <div class="app">
     <!-- HEADER -->
