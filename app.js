@@ -58,12 +58,6 @@
   const rekapBulananKelas = document.getElementById("rekapBulananKelas");
   const fieldRekapBulananKelas = document.getElementById("fieldRekapBulananKelas");
 
-  // 🔹 Mode & Kelas Rekap Bulanan
-  const rekapBulananMode = document.getElementById("rekapBulananMode");
-  const rekapBulananKelas = document.getElementById("rekapBulananKelas");
-  const fieldRekapBulananKelas = document.getElementById("fieldRekapBulananKelas");
-
-
   const alasanList = document.getElementById("alasanList");
   const toastEl = document.getElementById("toast");
 
