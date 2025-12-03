@@ -448,10 +448,9 @@
       const { data, error } = await db
         .from("santri_master_view")
         .select(
-          // sesuai schema tabel yang kamu kirim
           "id, nis, nama, tahun_ajaran, semester, jenjang, kelas, jurusan, paralel, aktif, created_at"
         )
-        .eq("aktif", true)                 // boleh pakai filter aktif langsung, karena boolean
+        .eq("aktif", true)
         .order("nama", { ascending: true });
     
       if (error) {
@@ -463,7 +462,7 @@
       }
     
       santriMaster = data || [];
-      santriById = new Map(santriMaster.map((s) => [s.id, s]));
+      santriById = new Map(santriMaster.map((s) => [s.id, s]));  // s.id = santri.id
     
       console.log("santriMaster loaded:", santriMaster.length, "baris");
     }
@@ -583,7 +582,7 @@
         inp.classList.add("alasan-input");
         inp.setAttribute("list", "alasanList");
         inp.value = mapSakit.get(s.id) || "";
-        inp.dataset.santriId = s.id;
+        inp.dataset.santriId = s.id;  // sekarang ini = santri.id
         tdAlasan.appendChild(inp);
 
         tr.appendChild(tdNo);
@@ -628,6 +627,7 @@
         const inp = row.querySelector(".alasan-input");
         if (!inp) return;
         const santriId = Number(inp.dataset.santriId);
+        // ... insert ke santri_sakit (santri_id: santriId)
         const alasan = inp.value.trim();
         if (!santriId) return;
         santriIds.push(santriId);
@@ -899,7 +899,7 @@
     if (!sakitData || sakitData.length === 0) {
       monthlyChartContainer.innerHTML =
         '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini.</div>';
-      showToast("Tidak ada data santri sakit pada bulan ini.", "info");
+      showToast("⚠️ tidak ada data.", "info");
       return;
     }
 
@@ -927,7 +927,7 @@
     if (!entries.length) {
       monthlyChartContainer.innerHTML =
         '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini.</div>';
-      showToast("Tidak ada data santri sakit pada bulan ini.", "info");
+      showToast("⚠️ tidak ada data.", "info");
       return;
     }
 
