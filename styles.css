@@ -1157,3 +1157,12 @@ td {
   box-shadow: 0 10px 25px rgba(37, 99, 235, 0.55);
 }
 
+/* ===== ACTIVE TAB: WARNA HIJAU SEPERTI TOMBOL SIMPAN ===== */
+.tab-btn.active {
+  background: linear-gradient(135deg, #10b981, #059669); /* sama seperti .btn-secondary */
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.45);
+  transform: translateY(-0.5px);
+}
+
