@@ -239,20 +239,22 @@
 
     <!-- =============== TAB REKAP HARIAN =============== -->
     <section id="tab-rekap-harian" class="tab-content" style="display:none;">
+      <!-- PANEL FILTER -->
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Rekap Harian</div>
           <div class="panel-caption">Lihat dan edit rekap santri sakit per tanggal.</div>
         </div>
-    
-        <!-- 🔹 MODE REKAP: tombol besar di tengah -->
+
+        <!-- 🔹 MODE REKAP -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field field-wide">
               <label>Mode Rekap:</label>
-              <input type="hidden" id="rekapHarianMode" value="gabungan" />
+              <!-- default: per kelas -->
+              <input type="hidden" id="rekapHarianMode" value="kelas" />
               <div class="rekap-mode-row chip-group" data-target="rekapHarianMode">
-                <!-- POSISI DITUKAR: kiri = per kelas, kanan = gabungan -->
+                <!-- kiri = per kelas, kanan = gabungan -->
                 <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
                   Rekap per Kelas
                 </button>
@@ -263,40 +265,87 @@
             </div>
           </div>
         </div>
-    
-        <!-- 🔹 PILIH SESUAI KELAS (muncul hanya saat mode = "Rekap per Kelas") -->
-        <div class="filter-row" id="fieldRekapHarianKelas" style="display:none;">
-          <div class="field field-wide">
-            <label>Pilih sesuai kelas:</label>
-            <input type="hidden" id="rekapHarianKelas" />
-            <div class="chip-group kelas-grid" data-target="rekapHarianKelas">
-              <button type="button" class="chip-option" data-value="VII HK 1">VII HK 1</button>
-              <button type="button" class="chip-option" data-value="VIII HK 1">VIII HK 1</button>
-              <button type="button" class="chip-option" data-value="IX HK 1">IX HK 1</button>
-              <button type="button" class="chip-option" data-value="VII HK 2">VII HK 2</button>
-              <button type="button" class="chip-option" data-value="VIII HK 2">VIII HK 2</button>
-              <button type="button" class="chip-option" data-value="IX HK 2">IX HK 2</button>
-              <button type="button" class="chip-option" data-value="X">X (MA)</button>
-              <button type="button" class="chip-option" data-value="XI">XI (MA)</button>
-              <button type="button" class="chip-option" data-value="XII">XII (MA)</button>
+
+        <!-- 🔹 TANGGAL REKAP (PALING ATAS, SEPERTI INPUT DATA) -->
+        <div class="filter-row">
+          <div class="field">
+            <label for="rekapTanggal">Tanggal Rekap:</label>
+            <input type="date" id="rekapTanggal" />
+          </div>
+        </div>
+
+        <!-- 🔹 FILTER PER KELAS: JENJANG / LOKASI / KELAS / JURUSAN -->
+        <!-- hanya dipakai saat mode = "kelas" (di-toggle via JS) -->
+        <div id="fieldRekapHarianKelas" style="display:none;">
+          <!-- Jenjang -->
+          <div class="filter-row">
+            <div class="field">
+              <label for="rekapHarianJenjang">Jenjang:</label>
+              <input type="hidden" id="rekapHarianJenjang" value="MTs" />
+              <div class="chip-group" data-target="rekapHarianJenjang">
+                <button type="button" class="chip-option active" data-value="MTs">MTs</button>
+                <button type="button" class="chip-option" data-value="MA">MA</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lokasi (MTs) + Kelas + Jurusan (MA) -->
+          <div class="filter-row">
+            <!-- Lokasi (hanya relevan untuk MTs, tapi tetap ditampilkan) -->
+            <div class="field" id="fieldRekapHarianLokasi">
+              <label for="rekapHarianLokasi">Lokasi:</label>
+              <input type="hidden" id="rekapHarianLokasi" value="HK 1" />
+              <div class="chip-group" data-target="rekapHarianLokasi">
+                <button type="button" class="chip-option active" data-value="HK 1">HK 1</button>
+                <button type="button" class="chip-option" data-value="HK 2">HK 2</button>
+              </div>
+            </div>
+
+            <!-- Kelas (VII–IX untuk MTs, X–XII untuk MA) -->
+            <div class="field">
+              <label for="rekapHarianKelas">Kelas:</label>
+              <input type="hidden" id="rekapHarianKelas" value="VII" />
+              <div class="chip-group" data-target="rekapHarianKelas">
+                <!-- MTs -->
+                <button type="button" class="chip-option active" data-value="VII" data-jenjang="MTs">VII</button>
+                <button type="button" class="chip-option" data-value="VIII" data-jenjang="MTs">VIII</button>
+                <button type="button" class="chip-option" data-value="IX" data-jenjang="MTs">IX</button>
+                <!-- MA -->
+                <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
+                <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
+                <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
+              </div>
+            </div>
+
+            <!-- Jurusan (hanya relevan untuk MA, tapi tetap ditampilkan) -->
+            <div class="field" id="fieldRekapHarianJurusan">
+              <label for="rekapHarianJurusan">Jurusan:</label>
+              <input type="hidden" id="rekapHarianJurusan" value="IPA" />
+              <div class="chip-group" data-target="rekapHarianJurusan">
+                <button type="button" class="chip-option active" data-value="IPA">IPA</button>
+                <button type="button" class="chip-option" data-value="IPS">IPS</button>
+                <button type="button" class="chip-option" data-value="PK">PK</button>
+              </div>
             </div>
           </div>
         </div>
-    
-        <!-- 🔹 TANGGAL REKAP (tetap seperti semula) -->
-        <div class="filter-row filter-row-center">
-          <div class="filter-row-center-inner">
-            <div class="field">
-              <label for="rekapTanggal">Tanggal Rekap:</label>
-              <input type="date" id="rekapTanggal" />
-            </div>
+
+        <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
+        <div class="btn-row" style="margin-top:0.55rem; justify-content:flex-start;">
+          <div class="btn-row-left">
             <button class="btn-primary" id="btnLoadRekap">
               <span class="icon">🔍</span> Tampilkan Rekap
             </button>
           </div>
         </div>
-    
-        <!-- setelah ini biarkan struktur table-card, legend, dan btn-row seperti file asli -->
+      </div>
+
+      <!-- PANEL HASIL REKAP: TABEL + PDF -->
+      <div id="panelRekapHarianResult" class="panel" style="margin-top:0.65rem; display:none;">
+        <div class="panel-header">
+          <div class="panel-title">Hasil Rekap Harian</div>
+          <div class="panel-caption">Tabel santri sakit sesuai filter di atas.</div>
+        </div>
 
         <div class="table-container">
           <div class="table-card">
@@ -340,20 +389,20 @@
 
     <!-- =============== TAB REKAP BULANAN =============== -->
     <section id="tab-rekap-bulanan" class="tab-content" style="display:none;">
+      <!-- PANEL FILTER -->
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Rekap Bulanan</div>
           <div class="panel-caption">Analisis frekuensi sakit santri dalam satu bulan.</div>
         </div>
-    
-        <!-- 🔹 MODE REKAP: tombol besar di tengah -->
+
+        <!-- 🔹 MODE REKAP -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field field-wide">
               <label>Mode Rekap:</label>
-              <input type="hidden" id="rekapBulananMode" value="gabungan" />
+              <input type="hidden" id="rekapBulananMode" value="kelas" />
               <div class="rekap-mode-row chip-group" data-target="rekapBulananMode">
-                <!-- POSISI DITUKAR: kiri = per kelas, kanan = gabungan -->
                 <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
                   Rekap per Kelas
                 </button>
@@ -364,39 +413,84 @@
             </div>
           </div>
         </div>
-    
-        <!-- 🔹 PILIH SESUAI KELAS (muncul hanya saat mode = "Rekap per Kelas") -->
-        <div class="filter-row" id="fieldRekapBulananKelas" style="display:none;">
-          <div class="field field-wide">
-            <label>Pilih sesuai kelas:</label>
-            <input type="hidden" id="rekapBulananKelas" />
-            <div class="chip-group kelas-grid" data-target="rekapBulananKelas">
-              <button type="button" class="chip-option" data-value="VII HK 1">VII HK 1</button>
-              <button type="button" class="chip-option" data-value="VIII HK 1">VIII HK 1</button>
-              <button type="button" class="chip-option" data-value="IX HK 1">IX HK 1</button>
-              <button type="button" class="chip-option" data-value="VII HK 2">VII HK 2</button>
-              <button type="button" class="chip-option" data-value="VIII HK 2">VIII HK 2</button>
-              <button type="button" class="chip-option" data-value="IX HK 2">IX HK 2</button>
-              <button type="button" class="chip-option" data-value="X">X (MA)</button>
-              <button type="button" class="chip-option" data-value="XI">XI (MA)</button>
-              <button type="button" class="chip-option" data-value="XII">XII (MA)</button>
+
+        <!-- 🔹 BULAN REKAP PALING ATAS -->
+        <div class="filter-row">
+          <div class="field">
+            <label for="rekapBulan">Bulan Rekap:</label>
+            <input type="month" id="rekapBulan" />
+          </div>
+        </div>
+
+        <!-- 🔹 FILTER PER KELAS (untuk mode = "kelas") -->
+        <div id="fieldRekapBulananKelas" style="display:none;">
+          <!-- Jenjang -->
+          <div class="filter-row">
+            <div class="field">
+              <label for="rekapBulananJenjang">Jenjang:</label>
+              <input type="hidden" id="rekapBulananJenjang" value="MTs" />
+              <div class="chip-group" data-target="rekapBulananJenjang">
+                <button type="button" class="chip-option active" data-value="MTs">MTs</button>
+                <button type="button" class="chip-option" data-value="MA">MA</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lokasi (MTs) + Kelas + Jurusan (MA) -->
+          <div class="filter-row">
+            <div class="field" id="fieldRekapBulananLokasi">
+              <label for="rekapBulananLokasi">Lokasi:</label>
+              <input type="hidden" id="rekapBulananLokasi" value="HK 1" />
+              <div class="chip-group" data-target="rekapBulananLokasi">
+                <button type="button" class="chip-option active" data-value="HK 1">HK 1</button>
+                <button type="button" class="chip-option" data-value="HK 2">HK 2</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="rekapBulananKelas">Kelas:</label>
+              <input type="hidden" id="rekapBulananKelas" value="VII" />
+              <div class="chip-group" data-target="rekapBulananKelas">
+                <!-- MTs -->
+                <button type="button" class="chip-option active" data-value="VII" data-jenjang="MTs">VII</button>
+                <button type="button" class="chip-option" data-value="VIII" data-jenjang="MTs">VIII</button>
+                <button type="button" class="chip-option" data-value="IX" data-jenjang="MTs">IX</button>
+                <!-- MA -->
+                <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
+                <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
+                <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
+              </div>
+            </div>
+
+            <div class="field" id="fieldRekapBulananJurusan">
+              <label for="rekapBulananJurusan">Jurusan:</label>
+              <input type="hidden" id="rekapBulananJurusan" value="IPA" />
+              <div class="chip-group" data-target="rekapBulananJurusan">
+                <button type="button" class="chip-option active" data-value="IPA">IPA</button>
+                <button type="button" class="chip-option" data-value="IPS">IPS</button>
+                <button type="button" class="chip-option" data-value="PK">PK</button>
+              </div>
             </div>
           </div>
         </div>
-    
-        <!-- 🔹 BULAN REKAP (tetap seperti semula) -->
-        <div class="filter-row filter-row-center">
-          <div class="filter-row-center-inner">
-            <div class="field">
-              <label for="rekapBulan">Bulan Rekap:</label>
-              <input type="month" id="rekapBulan" />
-            </div>
+
+        <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
+        <div class="btn-row" style="margin-top:0.55rem; justify-content:flex-start;">
+          <div class="btn-row-left">
             <button class="btn-primary" id="btnLoadRekapBulanan">
               <span class="icon">🔍</span> Tampilkan Rekap
             </button>
           </div>
         </div>
-        
+      </div>
+
+      <!-- PANEL HASIL REKAP BULANAN -->
+      <div id="panelRekapBulananResult" class="panel" style="margin-top:0.65rem; display:none;">
+        <div class="panel-header">
+          <div class="panel-title">Hasil Rekap Bulanan</div>
+          <div class="panel-caption">Diagram & tabel rekap sakit bulanan sesuai filter.</div>
+        </div>
+
         <div id="monthlyChartContainer" class="monthly-chart-container">
           <!-- isi via JS -->
         </div>
