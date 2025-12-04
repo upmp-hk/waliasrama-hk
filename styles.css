@@ -123,6 +123,35 @@ body {
   margin-bottom: 0.15rem;
 }
 
+.header-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.18rem;
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  padding: 0.18rem 0.55rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.badge-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #f9fafb;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.badge-outline {
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f172a;
+}
+
 .header-icon {
   width: 38px;
   height: 38px;
