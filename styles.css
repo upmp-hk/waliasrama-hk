@@ -457,17 +457,19 @@ h1 {
   max-width: 220px;      /* biar dua tombol rapi & sejajar */
 }
 
+/* ✅ Semua chip (jenjang, lokasi, kelas, jurusan, dll) pakai ukuran yang sama dengan paralel */
 .chip-option {
   border: none;
   border-radius: 999px;
-  padding: 0.25rem 0.8rem;
+  padding: 0.32rem 0.9rem;      /* vertikal sama seperti paralel, horizontal sedikit lega */
   font-size: 0.78rem;
+  font-weight: 600;             /* sama seperti paralel */
   cursor: pointer;
   background: #f3f4f6;
   color: #4b5563;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center;          /* teks tepat di tengah vertikal */
+  justify-content: center;      /* teks tepat di tengah horizontal */
   transition:
     background 0.12s ease,
     color 0.12s ease,
