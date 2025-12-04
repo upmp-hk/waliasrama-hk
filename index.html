@@ -240,7 +240,7 @@
     <!-- =============== TAB REKAP HARIAN =============== -->
     <section id="tab-rekap-harian" class="tab-content" style="display:none;">
       <!-- PANEL FILTER -->
-      <div class="panel">
+      <div id="panelRekapHarianFilter" class="panel">
         <div class="panel-header">
           <div class="panel-title">Rekap Harian</div>
           <div class="panel-caption">Lihat dan edit rekap santri sakit per tanggal.</div>
@@ -274,7 +274,7 @@
           </div>
         </div>
 
-        <!-- 🔹 FILTER PER KELAS: JENJANG / LOKASI / KELAS / JURUSAN -->
+        <!-- 🔹 FILTER PER KELAS: JENJANG / LOKASI / KELAS -->
         <!-- hanya dipakai saat mode = "kelas" (di-toggle via JS) -->
         <div id="fieldRekapHarianKelas" style="display:none;">
           <!-- Jenjang -->
@@ -289,9 +289,9 @@
             </div>
           </div>
 
-          <!-- Lokasi (MTs) + Kelas + Jurusan (MA) -->
+          <!-- Lokasi (MTs) + Kelas -->
           <div class="filter-row">
-            <!-- Lokasi (hanya relevan untuk MTs, tapi tetap ditampilkan) -->
+            <!-- Lokasi (hanya relevan untuk MTs, disembunyikan saat MA) -->
             <div class="field" id="fieldRekapHarianLokasi">
               <label for="rekapHarianLokasi">Lokasi:</label>
               <input type="hidden" id="rekapHarianLokasi" value="HK 1" />
@@ -314,17 +314,6 @@
                 <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
                 <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
                 <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
-              </div>
-            </div>
-
-            <!-- Jurusan (hanya relevan untuk MA, tapi tetap ditampilkan) -->
-            <div class="field" id="fieldRekapHarianJurusan">
-              <label for="rekapHarianJurusan">Jurusan:</label>
-              <input type="hidden" id="rekapHarianJurusan" value="IPA" />
-              <div class="chip-group" data-target="rekapHarianJurusan">
-                <button type="button" class="chip-option active" data-value="IPA">IPA</button>
-                <button type="button" class="chip-option" data-value="IPS">IPS</button>
-                <button type="button" class="chip-option" data-value="PK">PK</button>
               </div>
             </div>
           </div>
@@ -390,7 +379,7 @@
     <!-- =============== TAB REKAP BULANAN =============== -->
     <section id="tab-rekap-bulanan" class="tab-content" style="display:none;">
       <!-- PANEL FILTER -->
-      <div class="panel">
+      <div id="panelRekapBulananFilter" class="panel">
         <div class="panel-header">
           <div class="panel-title">Rekap Bulanan</div>
           <div class="panel-caption">Analisis frekuensi sakit santri dalam satu bulan.</div>
@@ -436,7 +425,7 @@
             </div>
           </div>
 
-          <!-- Lokasi (MTs) + Kelas + Jurusan (MA) -->
+          <!-- Lokasi (MTs) + Kelas -->
           <div class="filter-row">
             <div class="field" id="fieldRekapBulananLokasi">
               <label for="rekapBulananLokasi">Lokasi:</label>
@@ -459,16 +448,6 @@
                 <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
                 <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
                 <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
-              </div>
-            </div>
-
-            <div class="field" id="fieldRekapBulananJurusan">
-              <label for="rekapBulananJurusan">Jurusan:</label>
-              <input type="hidden" id="rekapBulananJurusan" value="IPA" />
-              <div class="chip-group" data-target="rekapBulananJurusan">
-                <button type="button" class="chip-option active" data-value="IPA">IPA</button>
-                <button type="button" class="chip-option" data-value="IPS">IPS</button>
-                <button type="button" class="chip-option" data-value="PK">PK</button>
               </div>
             </div>
           </div>
