@@ -277,7 +277,6 @@
       const mode = rekapBulananMode.value || "gabungan";
       fieldRekapBulananKelas.style.display = mode === "kelas" ? "" : "none";
     }
-  }
     // Rekap Harian
     const modeHarianInput = document.getElementById("rekapHarianMode");
     const fieldHarian = document.getElementById("fieldRekapHarianKelas");
@@ -285,7 +284,6 @@
       const mode = modeHarianInput.value || "gabungan";
       fieldHarian.style.display = mode === "kelas" ? "" : "none";
     }
-
     // Rekap Bulanan
     const modeBulananInput = document.getElementById("rekapBulananMode");
     const fieldBulanan = document.getElementById("fieldRekapBulananKelas");
@@ -293,6 +291,7 @@
       const mode = modeBulananInput.value || "gabungan";
       fieldBulanan.style.display = mode === "kelas" ? "" : "none";
     }
+  }
 
   // ===== UTIL TANGGAL =====
   function setTodayToInputs() {
