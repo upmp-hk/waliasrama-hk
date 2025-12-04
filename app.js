@@ -43,20 +43,20 @@
   const btnPrintRekap = document.getElementById("btnPrintRekap");
   const rekapTableBody = document.getElementById("rekapTableBody");
   
-  // 🔹 Mode & kelas Rekap Harian
+  // 🔹 Mode & filter Rekap Harian
   const rekapHarianMode = document.getElementById("rekapHarianMode");
-  const rekapHarianKelas = document.getElementById("rekapHarianKelas");
   const fieldRekapHarianKelas = document.getElementById("fieldRekapHarianKelas");
+  const panelRekapHarianResult = document.getElementById("panelRekapHarianResult");
   
   const rekapBulan = document.getElementById("rekapBulan");
   const btnLoadRekapBulanan = document.getElementById("btnLoadRekapBulanan");
   const btnPrintRekapBulanan = document.getElementById("btnPrintRekapBulanan");
   const monthlyChartContainer = document.getElementById("monthlyChartContainer");
   
-  // 🔹 Mode & kelas Rekap Bulanan
+  // 🔹 Mode & filter Rekap Bulanan
   const rekapBulananMode = document.getElementById("rekapBulananMode");
-  const rekapBulananKelas = document.getElementById("rekapBulananKelas");
   const fieldRekapBulananKelas = document.getElementById("fieldRekapBulananKelas");
+  const panelRekapBulananResult = document.getElementById("panelRekapBulananResult");
 
   const alasanList = document.getElementById("alasanList");
   const toastEl = document.getElementById("toast");
@@ -809,114 +809,168 @@
     return false;
   }
 
-async function loadRekapTable(options = {}) {
-  const { silent = false } = options;
-
-  const tanggal = rekapTanggal.value;
-  if (!tanggal) {
-    showToast("⚠️ pilih tanggal rekap.", "error");
-    return;
-  }
-
-  const mode =
-    rekapHarianMode ? rekapHarianMode.value || "gabungan" : "gabungan";
-  const selectedKelompok = rekapHarianKelas ? rekapHarianKelas.value : "";
-
-  if (mode === "kelas" && !selectedKelompok) {
-    showToast("⚠️ pilih sesuai kelas dulu.", "error");
-    return;
-  }
-
-  const { data: sakitData, error: errSakit } = await db
-    .from("santri_sakit")
-    .select("id, tanggal, santri_id, alasan_sakit")
-    .eq("tanggal", tanggal)
-    .order("id", { ascending: true });
-
-  if (errSakit) {
-    console.error("Gagal load rekap sakit:", errSakit);
-    showToast("❎ gagal memuat rekap.", "error");
-    return;
-  }
-
-  rekapTableBody.innerHTML = "";
-
-  if (!sakitData || sakitData.length === 0) {
-    rekapTableBody.innerHTML =
-      '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri sakit pada tanggal ini.</td></tr>';
-    if (!silent) {
-      showToast("⚠️ tidak ada data.", "info");
-    }
-    return;
-  }
-
-  let rowNumber = 0;
-
-  sakitData.forEach((row) => {
-    const santri = santriMaster.find((s) => s.id === row.santri_id);
-
-    // filter per kelas jika mode = "kelas"
-    if (mode === "kelas" && !matchKelompokKelas(santri, selectedKelompok)) {
+  async function loadRekapTable(options = {}) {
+    const { silent = false } = options;
+  
+    const tanggal = rekapTanggal.value;
+    if (!tanggal) {
+      showToast("⚠️ pilih tanggal rekap.", "error");
       return;
     }
-
-    rowNumber += 1;
-
-    const nama = santri ? santri.nama : "(santri tidak ditemukan)";
-    const kelasLabel = getKelasLabel(santri);
-
-    const tr = document.createElement("tr");
-
-    const tdNo = document.createElement("td");
-    tdNo.classList.add("col-no");
-    tdNo.textContent = rowNumber;
-
-    const tdNama = document.createElement("td");
-    tdNama.textContent = nama;
-
-    const tdKelas = document.createElement("td");
-    const spanKelas = document.createElement("span");
-    spanKelas.classList.add("kelas-badge");
-    spanKelas.textContent = kelasLabel;
-    tdKelas.appendChild(spanKelas);
-
-    const tdAlasan = document.createElement("td");
-    const spanAlasan = document.createElement("div");
-    spanAlasan.classList.add("alasan-display");
-    spanAlasan.dataset.santriId = row.santri_id;
-    spanAlasan.dataset.value = row.alasan_sakit || "";
-    if (!row.alasan_sakit) {
-      spanAlasan.textContent = "(kosong)";
-      spanAlasan.classList.add("empty");
-    } else {
-      spanAlasan.textContent = row.alasan_sakit;
+  
+    // sembunyikan panel hasil dulu
+    if (panelRekapHarianResult) {
+      panelRekapHarianResult.style.display = "none";
     }
-    spanAlasan.addEventListener("click", () =>
-      masukModeEditAlasan(spanAlasan)
-    );
-    tdAlasan.appendChild(spanAlasan);
-
-    tr.appendChild(tdNo);
-    tr.appendChild(tdNama);
-    tr.appendChild(tdKelas);
-    tr.appendChild(tdAlasan);
-
-    rekapTableBody.appendChild(tr);
-  });
-
-  if (rowNumber === 0) {
-    rekapTableBody.innerHTML =
-      '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri sakit pada tanggal ini.</td></tr>';
+  
+    const mode =
+      rekapHarianMode ? rekapHarianMode.value || "gabungan" : "gabungan";
+  
+    // filter per-kelas: jenjang / lokasi / kelas / jurusan
+    let rJenjang = "";
+    let rLokasi = "";
+    let rKelas = "";
+    let rJurusan = "";
+  
+    if (mode === "kelas") {
+      const jenjangInput = document.getElementById("rekapHarianJenjang");
+      const lokasiInput = document.getElementById("rekapHarianLokasi");
+      const kelasInput = document.getElementById("rekapHarianKelas");
+      const jurusanInput = document.getElementById("rekapHarianJurusan");
+  
+      rJenjang = (jenjangInput?.value || "").toUpperCase();
+      rLokasi = lokasiInput?.value || "";
+      rKelas = (kelasInput?.value || "").toUpperCase();
+      rJurusan = jurusanInput?.value || "";
+  
+      if (!rJenjang || !rKelas) {
+        showToast("⚠️ pilih jenjang dan kelas.", "error");
+        return;
+      }
+      if (rJenjang === "MTS" && !rLokasi) {
+        showToast("⚠️ pilih lokasi untuk MTs.", "error");
+        return;
+      }
+      if (rJenjang === "MA" && !rJurusan) {
+        showToast("⚠️ pilih jurusan untuk MA.", "error");
+        return;
+      }
+    }
+  
+    const { data: sakitData, error: errSakit } = await db
+      .from("santri_sakit")
+      .select("id, tanggal, santri_id, alasan_sakit")
+      .eq("tanggal", tanggal)
+      .order("id", { ascending: true });
+  
+    if (errSakit) {
+      console.error("Gagal load rekap sakit:", errSakit);
+      showToast("❎ gagal memuat rekap.", "error");
+      return;
+    }
+  
+    rekapTableBody.innerHTML = "";
+  
+    if (!sakitData || sakitData.length === 0) {
+      rekapTableBody.innerHTML =
+        '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri sakit pada tanggal ini.</td></tr>';
+      if (panelRekapHarianResult) {
+        panelRekapHarianResult.style.display = "block";
+      }
+      if (!silent) {
+        showToast("⚠️ tidak ada data.", "info");
+      }
+      return;
+    }
+  
+    let rowNumber = 0;
+  
+    sakitData.forEach((row) => {
+      const santri = santriMaster.find((s) => s.id === row.santri_id);
+  
+      // filter per kelas jika mode = "kelas"
+      if (mode === "kelas") {
+        if (!santri) return;
+  
+        const sJenjang = (santri.jenjang || "").toString().toUpperCase();
+        const sKelas = (santri.kelas || "").toString().toUpperCase();
+        const sLokasi = (santri.lokasi || "").toString();
+        const sJurusan = (santri.jurusan || "").toString();
+  
+        if (sJenjang !== rJenjang) return;
+        if (sKelas !== rKelas) return;
+  
+        if (rJenjang === "MTS") {
+          if (rLokasi && sLokasi !== rLokasi) return;
+        } else if (rJenjang === "MA") {
+          if (rJurusan && sJurusan !== rJurusan) return;
+        }
+      }
+  
+      rowNumber += 1;
+  
+      const nama = santri ? santri.nama : "(santri tidak ditemukan)";
+      const kelasLabel = getKelasLabel(santri);
+  
+      const tr = document.createElement("tr");
+  
+      const tdNo = document.createElement("td");
+      tdNo.classList.add("col-no");
+      tdNo.textContent = rowNumber;
+  
+      const tdNama = document.createElement("td");
+      tdNama.textContent = nama;
+  
+      const tdKelas = document.createElement("td");
+      const spanKelas = document.createElement("span");
+      spanKelas.classList.add("kelas-badge");
+      spanKelas.textContent = kelasLabel;
+      tdKelas.appendChild(spanKelas);
+  
+      const tdAlasan = document.createElement("td");
+      const spanAlasan = document.createElement("div");
+      spanAlasan.classList.add("alasan-display");
+      spanAlasan.dataset.santriId = row.santri_id;
+      spanAlasan.dataset.value = row.alasan_sakit || "";
+      if (!row.alasan_sakit) {
+        spanAlasan.textContent = "(kosong)";
+        spanAlasan.classList.add("empty");
+      } else {
+        spanAlasan.textContent = row.alasan_sakit;
+      }
+      spanAlasan.addEventListener("click", () =>
+        masukModeEditAlasan(spanAlasan)
+      );
+      tdAlasan.appendChild(spanAlasan);
+  
+      tr.appendChild(tdNo);
+      tr.appendChild(tdNama);
+      tr.appendChild(tdKelas);
+      tr.appendChild(tdAlasan);
+  
+      rekapTableBody.appendChild(tr);
+    });
+  
+    if (rowNumber === 0) {
+      rekapTableBody.innerHTML =
+        '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri sakit pada tanggal ini.</td></tr>';
+      if (panelRekapHarianResult) {
+        panelRekapHarianResult.style.display = "block";
+      }
+      if (!silent) {
+        showToast("⚠️ tidak ada data.", "info");
+      }
+      return;
+    }
+  
+    if (panelRekapHarianResult) {
+      panelRekapHarianResult.style.display = "block";
+    }
+  
     if (!silent) {
-      showToast("⚠️ tidak ada data.", "info");
+      showToast("✅ berhasil memuat rekap.", "info");
     }
-    return;
   }
-
-  if (!silent) {
-    showToast("✅ berhasil memuat rekap.", "info");
-  }
-}
 
   async function saveRekapData() {
     const tanggal = rekapTanggal.value;
@@ -985,6 +1039,9 @@ async function loadRekapTable(options = {}) {
       showToast("⚠️ pilih bulan rekap.", "error");
       return;
     }
+    if (panelRekapBulananResult) {
+      panelRekapBulananResult.style.display = "none";
+    }
   
     const range = getMonthRange(bulanStr);
     if (!range) {
@@ -1008,19 +1065,60 @@ async function loadRekapTable(options = {}) {
   
     const mode =
       rekapBulananMode ? rekapBulananMode.value || "gabungan" : "gabungan";
-    const selectedKelompok = rekapBulananKelas ? rekapBulananKelas.value : "";
   
-    if (mode === "kelas" && !selectedKelompok) {
-      showToast("⚠️ pilih sesuai kelas dulu.", "error");
-      return;
+    // filter per-kelas
+    let rJenjang = "";
+    let rLokasi = "";
+    let rKelas = "";
+    let rJurusan = "";
+  
+    if (mode === "kelas") {
+      const jenjangInput = document.getElementById("rekapBulananJenjang");
+      const lokasiInput = document.getElementById("rekapBulananLokasi");
+      const kelasInput = document.getElementById("rekapBulananKelas");
+      const jurusanInput = document.getElementById("rekapBulananJurusan");
+  
+      rJenjang = (jenjangInput?.value || "").toUpperCase();
+      rLokasi = lokasiInput?.value || "";
+      rKelas = (kelasInput?.value || "").toUpperCase();
+      rJurusan = jurusanInput?.value || "";
+  
+      if (!rJenjang || !rKelas) {
+        showToast("⚠️ pilih jenjang dan kelas.", "error");
+        return;
+      }
+      if (rJenjang === "MTS" && !rLokasi) {
+        showToast("⚠️ pilih lokasi untuk MTs.", "error");
+        return;
+      }
+      if (rJenjang === "MA" && !rJurusan) {
+        showToast("⚠️ pilih jurusan untuk MA.", "error");
+        return;
+      }
     }
   
     let filteredData = sakitData || [];
   
-    if (mode === "kelas" && selectedKelompok) {
+    if (mode === "kelas") {
       filteredData = filteredData.filter((row) => {
         const santri = santriById.get(row.santri_id);
-        return matchKelompokKelas(santri, selectedKelompok);
+        if (!santri) return false;
+  
+        const sJenjang = (santri.jenjang || "").toString().toUpperCase();
+        const sKelas = (santri.kelas || "").toString().toUpperCase();
+        const sLokasi = (santri.lokasi || "").toString();
+        const sJurusan = (santri.jurusan || "").toString();
+  
+        if (sJenjang !== rJenjang) return false;
+        if (sKelas !== rKelas) return false;
+  
+        if (rJenjang === "MTS") {
+          if (rLokasi && sLokasi !== rLokasi) return false;
+        } else if (rJenjang === "MA") {
+          if (rJurusan && sJurusan !== rJurusan) return false;
+        }
+  
+        return true;
       });
     }
   
@@ -1028,10 +1126,14 @@ async function loadRekapTable(options = {}) {
   
     if (!filteredData.length) {
       monthlyChartContainer.innerHTML =
-        '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada santri sakit pada bulan ini.</div>';
+          '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada santri sakit pada bulan ini.</div>';
+      if (panelRekapBulananResult) {
+        panelRekapBulananResult.style.display = "block";
+      }
       showToast("⚠️ tidak ada data.", "info");
       return;
     }
+    
   
     // Agregat per santri
     const bySantri = new Map();
@@ -1057,6 +1159,9 @@ async function loadRekapTable(options = {}) {
     if (!entries.length) {
       monthlyChartContainer.innerHTML =
         '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada santri sakit pada bulan ini.</div>';
+      if (panelRekapBulananResult) {
+        panelRekapBulananResult.style.display = "block";
+      }
       showToast("⚠️ tidak ada data.", "info");
       return;
     }
@@ -1485,7 +1590,10 @@ async function loadRekapTable(options = {}) {
     );
 
     monthlyChartContainer.appendChild(tableWrapper);
-
+    
+    if (panelRekapBulananResult) {
+      panelRekapBulananResult.style.display = "block";
+    }   
     showToast("✅ berhasil memuat rekap.", "info");
   }
 
