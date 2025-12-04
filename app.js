@@ -278,7 +278,21 @@
       fieldRekapBulananKelas.style.display = mode === "kelas" ? "" : "none";
     }
   }
+    // Rekap Harian
+    const modeHarianInput = document.getElementById("rekapHarianMode");
+    const fieldHarian = document.getElementById("fieldRekapHarianKelas");
+    if (modeHarianInput && fieldHarian) {
+      const mode = modeHarianInput.value || "gabungan";
+      fieldHarian.style.display = mode === "kelas" ? "" : "none";
+    }
 
+    // Rekap Bulanan
+    const modeBulananInput = document.getElementById("rekapBulananMode");
+    const fieldBulanan = document.getElementById("fieldRekapBulananKelas");
+    if (modeBulananInput && fieldBulanan) {
+      const mode = modeBulananInput.value || "gabungan";
+      fieldBulanan.style.display = mode === "kelas" ? "" : "none";
+    }
 
   // ===== UTIL TANGGAL =====
   function setTodayToInputs() {
