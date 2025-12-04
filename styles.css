@@ -1195,23 +1195,6 @@ td {
   padding: 0.4rem 0.35rem;
 }
 
-/* ===== WARNA BIRU SERAGAM (DOWNLOAD PDF & NAVBAR) ===== */
-
-/* Tombol Download PDF: samakan dengan btn-primary */
-#btnPrintRekap,
-#btnPrintRekapBulanan {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #ffffff;
-  border: none;
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.45);
-}
-
-#btnPrintRekap:hover,
-#btnPrintRekapBulanan:hover {
-  filter: brightness(1.02);
-  transform: translateY(-1px);
-}
-
 /* Navbar bawah: pakai biru yang sama */
 .tabs {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
