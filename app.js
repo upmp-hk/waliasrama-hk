@@ -677,7 +677,7 @@
       });
 
       if (!santriIds.length) {
-        showToastAuto("⚠️ tidak ada data santri.");
+        showToastAuto("⚠️ tidak ada data.");
         return;
       }
 
@@ -843,7 +843,7 @@ async function loadRekapTable(options = {}) {
 
   if (!sakitData || sakitData.length === 0) {
     rekapTableBody.innerHTML =
-      '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada data santri sakit pada tanggal ini.</td></tr>';
+      '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri sakit pada tanggal ini.</td></tr>';
     if (!silent) {
       showToast("⚠️ tidak ada data.", "info");
     }
@@ -906,9 +906,9 @@ async function loadRekapTable(options = {}) {
 
   if (rowNumber === 0) {
     rekapTableBody.innerHTML =
-      '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada data untuk kelas yang dipilih pada tanggal ini.</td></tr>';
+      '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri sakit pada tanggal ini.</td></tr>';
     if (!silent) {
-      showToast("⚠️ tidak ada data untuk filter ini.", "info");
+      showToast("⚠️ tidak ada data.", "info");
     }
     return;
   }
@@ -1028,7 +1028,7 @@ async function loadRekapTable(options = {}) {
   
     if (!filteredData.length) {
       monthlyChartContainer.innerHTML =
-        '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini untuk filter yang dipilih.</div>';
+        '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada santri sakit pada bulan ini.</div>';
       showToast("⚠️ tidak ada data.", "info");
       return;
     }
@@ -1056,7 +1056,7 @@ async function loadRekapTable(options = {}) {
     const entries = Array.from(bySantri.entries());
     if (!entries.length) {
       monthlyChartContainer.innerHTML =
-        '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada data santri sakit pada bulan ini.</div>';
+        '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada santri sakit pada bulan ini.</div>';
       showToast("⚠️ tidak ada data.", "info");
       return;
     }
