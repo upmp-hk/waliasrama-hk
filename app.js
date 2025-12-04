@@ -1255,12 +1255,12 @@
 
       const kelasTitle = document.createElement("div");
       kelasTitle.classList.add("chart-section-title");
-      kelasTitle.textContent = "KELAS DENGAN FREKUENSI SAKIT TERBANYAK";
+      kelasTitle.textContent = "Kelas dengan Frekuensi Sakit Terbanyak";
 
       const kelasSubtitle = document.createElement("div");
       kelasSubtitle.classList.add("chart-section-subtitle");
       kelasSubtitle.textContent =
-        "Ringkasan total kasus dan daftar santri sakit per kelas dalam bulan ini.";
+        "Ringkasan daftar santri sakit per kelas dalam bulan ini.";
 
       kelasSection.appendChild(kelasTitle);
       kelasSection.appendChild(kelasSubtitle);
@@ -1333,7 +1333,7 @@
 
     const santriTitle = document.createElement("div");
     santriTitle.classList.add("chart-section-title");
-    santriTitle.textContent = "SANTRI DENGAN FREKUENSI SAKIT TERBANYAK";
+    santriTitle.textContent = "Santri dengan Frekuensi Sakit Terbanyak";
 
     const santriSubtitle = document.createElement("div");
     santriSubtitle.classList.add("chart-section-subtitle");
@@ -1435,7 +1435,7 @@
 
       const reasonTitle = document.createElement("div");
       reasonTitle.classList.add("chart-section-title");
-      reasonTitle.textContent = "JENIS SAKIT YANG SERING DIDERITA SANTRI";
+      reasonTitle.textContent = "Jenis Sakit yang sering diderita Santri";
 
       const reasonSubtitle = document.createElement("div");
       reasonSubtitle.classList.add("chart-section-subtitle");
