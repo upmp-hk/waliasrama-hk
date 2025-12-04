@@ -1698,6 +1698,10 @@
       } else if (tab === "rekap-bulanan") {
         switchRekapBulananPanel("filter");
       }
+      // push state ke history, supaya tombol back kembali ke tab sebelumnya dulu
+      if (window.history && window.history.pushState) {
+        window.history.pushState({ sakit_app: true, tab }, "");
+      }
     });
   });
 
@@ -1725,6 +1729,29 @@
     }
     switchTab("rekap-bulanan");
     window.print();
+  });
+
+  // ===== BROWSER BACK BUTTON HANDLER =====
+  window.addEventListener("popstate", (e) => {
+    const state = e.state;
+
+    // Kalau state kita sendiri
+    if (state && state.sakit_app && state.tab) {
+      const tab = state.tab;
+
+      if (["input", "rekap-harian", "rekap-bulanan"].includes(tab)) {
+        // pindah tab tanpa nambah history lagi
+        switchTab(tab, { instant: true });
+
+        if (tab === "input") {
+          switchInputPanel("filter", { instant: true });
+        } else if (tab === "rekap-harian") {
+          switchRekapHarianPanel("filter");
+        } else if (tab === "rekap-bulanan") {
+          switchRekapBulananPanel("filter");
+        }
+      }
+    }
   });
 
   window.addEventListener("load", async () => {
@@ -1794,17 +1821,15 @@
     await loadSantriMaster();
     await loadDistinctAlasanSakit();
 
-    const savedTab = localStorage.getItem("sakit_active_tab");
-    const allowedTabs = ["input", "rekap-harian", "rekap-bulanan"];
+    // Selalu mulai dari tab Input Data
+    switchTab("input", { instant: true });
+    switchInputPanel("filter", { instant: true });
+    switchRekapHarianPanel("filter");
+    switchRekapBulananPanel("filter");
 
-    if (savedTab && allowedTabs.includes(savedTab)) {
-      switchTab(savedTab, { instant: true });
-      if (savedTab === "input") {
-        switchInputPanel("filter", { instant: true });
-      }
-    } else {
-      switchTab("input", { instant: true });
-      switchInputPanel("filter", { instant: true });
+    // Set base state untuk tombol back
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState({ sakit_app: true, tab: "input" }, "");
     }
 
     toastEnabled = true;
