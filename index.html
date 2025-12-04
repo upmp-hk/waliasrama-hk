@@ -2,65 +2,56 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Rekap Santri Sakit – Harian & Bulanan per Kelas</title>
-
-  <!-- Responsive -->
+  <title>Rekap Santri Sakit Harian & Bulanan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Deskripsi aplikasi (termasuk fitur per kelas) -->
-  <meta name="description"
-        content="Aplikasi rekap santri sakit harian dan bulanan dengan filter per kelas (VII–XII) dan rekap gabungan, dilengkapi download PDF untuk laporan resmi." />
-
-  <!-- Warna utama untuk browser / PWA -->
-  <meta name="theme-color" content="#2563eb" />
 
   <!-- Supabase JS (harus sebelum app.js) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- CSS utama -->
+  <!-- CSS terpisah -->
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- PWA manifest -->
   <link rel="manifest" href="manifest.webmanifest" />
-
-  <!-- (Opsional) icon PWA / favicon -->
-  <!--
-  <link rel="icon" type="image/png" href="icons/icon-192.png" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Rekap Santri Sakit" />
-  -->
+  <meta name="theme-color" content="#2563eb" />
 </head>
-
 <body>
   <div class="app">
+    <!-- HEADER -->
     <!-- HEADER -->
     <div class="header-box">
       <div class="header-inner">
         <div class="header-main">
           <div class="header-title-row">
             <div class="header-icon">🩺</div>
-            <h1>Rekap Santri Sakit Harian & Bulanan</h1>
+            <div>
+              <h1>Rekap Santri Sakit Harian & Bulanan</h1>
+              <!-- 🔹 Badge kecil yang menegaskan fitur baru -->
+              <div class="header-badge-row">
+                <span class="header-badge badge-primary">Rekap Gabungan</span>
+                <span class="header-badge badge-outline">Rekap per Kelas VII–XII</span>
+              </div>
+            </div>
           </div>
           <p class="subtitle">
-            Input laporan santri sakit harian, rekap per tanggal, dan analisis frekuensi bulanan dalam satu aplikasi.
+            Input laporan santri sakit harian, rekap per kelas (VII-XII) atau rekap gabungan seluruh santri dalam satu aplikasi.
           </p>
         </div>
         <div class="header-side">
           <div class="stat-chip-row">
             <div class="stat-chip">
-              <span>📆</span><strong>Harian</strong><span>rekap per tanggal</span>
+              <span>📆</span><strong>Harian</strong><span>rekap harian sesuai tanggal, kelas, gabungan</span>
             </div>
             <div class="stat-chip">
-              <span>📊</span><strong>Bulanan</strong><span>kelas & santri terbanyak</span>
+              <span>📊</span><strong>Bulanan</strong><span>rekap bulanan sesuai tanggal, kelas, gabungans</span>
             </div>
             <div class="stat-chip">
-              <span>🧪</span><strong>Analisis</strong><span>jenis sakit terbanyak</span>
+              <span>🧪</span><strong>Analisis</strong><span>rekap jenis sakit sesuai tanggal, kelas, gabungan</span>
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
     <!-- INSTALL APP BUTTON -->
     <div id="installPromptContainer" class="install-app-row">
