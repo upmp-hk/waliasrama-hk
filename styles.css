@@ -1132,20 +1132,33 @@ tbody tr:hover {
 
 /* ===== TIGHTER SPACING: VERSION SETENGAH ===== */
 
+/* ===== SPACING SIMETRIS ===== */
+
 /* jarak tepi layar dengan box utama */
 body {
-  padding: 0.5rem;
-  padding-bottom: 4.5rem; /* tetap besar untuk ruang navbar bawah */
+  padding: 0.5rem;              /* semua sisi sama */
 }
 
 /* padding dalam kotak aplikasi utama */
 .app {
-  padding: 0.625rem 0.625rem 0.625rem;
+  padding: 0.75rem;             /* semua sisi sama */
+}
+
+/* header paling atas (judul + tab biru/hijau) */
+.header-box {
+  padding: 0.5rem;              /* semua sisi sama */
+  margin-bottom: 0.45rem;
+}
+
+/* semua panel (Filter, Rekap Harian, Rekap Bulanan, dsb.) */
+.panel {
+  padding: 0.5rem;              /* semua sisi sama */
+  margin-bottom: 0.42rem;
 }
 
 @media (min-width: 768px) {
   .app {
-    padding: 0.8rem 1rem 0.95rem;
+    padding: 1rem;              /* semua sisi sama di layar lebar */
   }
 }
 
