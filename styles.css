@@ -1135,7 +1135,6 @@ tbody tr:hover {
 /* jarak tepi layar dengan box utama */
 body {
   padding: 0.5rem;
-  padding-bottom: 4.5rem; /* tetap besar untuk ruang navbar bawah */
 }
 
 /* padding dalam kotak aplikasi utama */
