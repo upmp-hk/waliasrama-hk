@@ -302,11 +302,11 @@ h1 {
 }
 
 .tab-anim-out-left {
-  animation: tab-slide-out-left 0.20s ease-out forwards;
+  animation: tab-slide-out-left 0.23s ease-out forwards;
 }
 
 .tab-anim-in-up {
-  animation: tab-slide-in-up 0.20s ease-in-out forwards;
+  animation: tab-slide-in-up 0.23s ease-in-out forwards;
 }
 
 
@@ -1212,3 +1212,4 @@ td {
   box-shadow: 0 8px 20px rgba(16, 185, 129, 0.45);
   transform: translateY(-0.5px);
 }
+
