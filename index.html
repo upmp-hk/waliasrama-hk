@@ -76,7 +76,7 @@
 
         <!-- Baris 1: Jenjang -->
         <div class="filter-row">
-          <div class="field" style="margin-top:0.45rem">
+          <div class="field" style="margin-top:0.9rem">
             <label for="inputJenjang">Jenjang:</label>
             <input type="hidden" id="inputJenjang" value="MTs" />
             <div class="chip-group" data-target="inputJenjang">
@@ -89,7 +89,7 @@
         <!-- Baris 2 -->
         <div class="filter-row">
           <!-- Lokasi (hanya MTs) -->
-          <div class="field" id="fieldLokasi" style="margin-top:0.45rem">
+          <div class="field" id="fieldLokasi" style="margin-top:0.9rem">
             <label for="inputLokasi">Lokasi:</label>
             <input type="hidden" id="inputLokasi" value="HK 1" />
             <div class="chip-group" data-target="inputLokasi">
@@ -99,7 +99,7 @@
           </div>
         
           <!-- Kelas -->
-          <div class="field" id="fieldKelas" style="margin-top:0.45rem">
+          <div class="field" id="fieldKelas" style="margin-top:0.9rem">
             <label for="inputKelas">Kelas:</label>
             <input type="hidden" id="inputKelas" value="VII" />
             <div class="chip-group" data-target="inputKelas">
@@ -178,13 +178,13 @@
         </div>
 
         <div>
-          <span class="legend" style="margin-top:0.45rem">
+          <span class="legend" style="margin-top:0.9rem">
             <span class="legend-dot"></span>
             Data santri diambil dari filter jenjang, kelas, jurusan, dan paralel.
           </span>
         </div>
 
-        <div class="btn-row" style="margin-top:0.45rem; justify-content:center; text-align:center;">
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
           <div class="btn-row-left">
             <button class="btn-secondary" id="btnLoadInput">
               <span class="icon">🔍</span> Muat Data Santri
@@ -193,7 +193,7 @@
         </div>
       </div>
 
-      <div id="panelDaftarInput" class="panel" style="margin-top:0.45rem; display:none;">
+      <div id="panelDaftarInput" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
           <div class="panel-title">Daftar Santri & Alasan Sakit</div>
           <div class="panel-caption">Isi kolom <strong>Alasan Sakit</strong> hanya untuk santri yang sakit.</div>
@@ -218,7 +218,7 @@
           </div>
         </div>
 
-        <p class="legend" style="margin-top:0.45rem;">
+        <p class="legend" style="margin-top:0.9rem;">
           <span class="legend-dot"></span>
           Kosong = tidak sakit.
         </p>
@@ -228,7 +228,7 @@
           <strong>Muat Data Santri</strong>).
         </p>
 
-        <div class="btn-row" style="margin-top:0.45rem; justify-content:flex-end;">
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:flex-end;">
           <div class="btn-row-right">
             <button class="btn-secondary" id="btnSaveInput">
               <span class="icon">💾</span> Simpan Laporan
@@ -267,7 +267,7 @@
         </div>
 
         <!-- 🔹 TANGGAL REKAP (PALING ATAS, SEPERTI INPUT DATA) -->
-        <div class="filter-row filter-row-center" style="margin-top:0.45rem; justify-content:center; text-align:center;">
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem; justify-content:center; text-align:center;">
           <div class="field">
             <input type="date" id="rekapTanggal"/>
           </div>
@@ -319,7 +319,7 @@
         </div>
 
         <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
-        <div class="btn-row" style="margin-top:0.45rem; justify-content:center; text-align:center;">
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
           <div class="btn-row-left">
             <button class="btn-secondary" id="btnLoadRekap">
               <span class="icon">🔍</span> Tampilkan Rekap
@@ -329,7 +329,7 @@
       </div>
 
       <!-- PANEL HASIL REKAP: TABEL + PDF -->
-      <div id="panelRekapHarianResult" class="panel" style="margin-top:0.45rem; display:none;">
+      <div id="panelRekapHarianResult" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
           <div class="panel-title">Hasil Rekap Harian</div>
           <div class="panel-caption">Tabel santri sakit sesuai filter di atas.</div>
@@ -355,7 +355,7 @@
           </div>
         </div>
 
-        <p class="legend" style="margin-top:0.45rem;">
+        <p class="legend" style="margin-top:0.9rem;">
           <span class="legend-dot"></span>
           Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
         </p>
@@ -402,7 +402,7 @@
         </div>
 
         <!-- 🔹 BULAN REKAP PALING ATAS -->
-        <div class="filter-row filter-row-center" style="margin-top:0.45rem; justify-content:center; text-align:center;">
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem; justify-content:center; text-align:center;">
           <div class="field">
             <input type="month" id="rekapBulan" />
           </div>
@@ -412,7 +412,7 @@
         <div id="fieldRekapBulananKelas" style="display:none;">
           <!-- Jenjang -->
           <div class="filter-row">
-            <div class="field" style="margin-top:0.45rem">
+            <div class="field" style="margin-top:0.9rem">
               <label for="rekapBulananJenjang">Jenjang:</label>
               <input type="hidden" id="rekapBulananJenjang" value="MTs" />
               <div class="chip-group" data-target="rekapBulananJenjang">
@@ -424,7 +424,7 @@
 
           <!-- Lokasi (MTs) + Kelas -->
           <div class="filter-row">
-            <div class="field" id="fieldRekapBulananLokasi" style="margin-top:0.45rem">
+            <div class="field" id="fieldRekapBulananLokasi" style="margin-top:0.9rem">
               <label for="rekapBulananLokasi">Lokasi:</label>
               <input type="hidden" id="rekapBulananLokasi" value="HK 1" />
               <div class="chip-group" data-target="rekapBulananLokasi">
@@ -433,7 +433,7 @@
               </div>
             </div>
 
-            <div class="field" style="margin-top:0.45rem">
+            <div class="field" style="margin-top:0.9rem">
               <label for="rekapBulananKelas">Kelas:</label>
               <input type="hidden" id="rekapBulananKelas" value="VII" />
               <div class="chip-group" data-target="rekapBulananKelas">
@@ -451,7 +451,7 @@
         </div>
 
         <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
-        <div class="btn-row" style="margin-top:0.45rem; justify-content:center;">
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:center;">
           <div class="btn-row-left">
             <button class="btn-secondary" id="btnLoadRekapBulanan">
               <span class="icon">🔍</span> Tampilkan Rekap
@@ -461,7 +461,7 @@
       </div>
 
       <!-- PANEL HASIL REKAP BULANAN -->
-      <div id="panelRekapBulananResult" class="panel" style="margin-top:0.45rem; display:none;">
+      <div id="panelRekapBulananResult" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
           <div class="panel-title">Hasil Rekap Bulanan</div>
           <div class="panel-caption">Diagram rekap sakit bulanan sesuai filter.</div>
@@ -471,12 +471,12 @@
           <!-- isi via JS -->
         </div>
 
-        <div class="legend" style="margin-top:0.45rem;">
+        <div class="legend" style="margin-top:0.9rem;">
           <span class="legend-dot"></span>
           Diagram menampilkan kelas, santri, dan jenis sakit dengan frekuensi terbanyak dalam satu bulan.
         </div>
 
-        <div class="btn-row" style="margin-top:0.45rem; justify-content:flex-start;">
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:flex-start;">
           <button class="btn-secondary" id="btnPrintRekapBulanan">
             <span class="icon">📄</span> Download PDF
           </button>
