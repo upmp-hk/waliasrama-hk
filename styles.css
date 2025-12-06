@@ -46,7 +46,7 @@ body {
   background: rgba(255, 255, 255, 0.97);
   border-radius: 26px;
   box-shadow: var(--shadow-soft);
-  padding: 1.25rem; /* bottom digedein untuk ruang nav bawah */
+  padding: 1rem;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, 0.15);
@@ -1140,25 +1140,23 @@ body {
 
 /* padding dalam kotak aplikasi utama */
 .app {
-  padding: 0.625rem 0.625rem 0.75rem;
+  padding: 0.5rem;
 }
 
 @media (min-width: 768px) {
   .app {
-    padding: 0.8rem 1rem 0.95rem;
+    padding: 1rem;
   }
 }
 
 /* header paling atas */
 .header-box {
-  padding: 0.48rem 0.58rem;
-  margin-bottom: 0.45rem;
+  padding: 0.5rem;
 }
 
 /* semua panel (filter, tabel, dll) */
 .panel {
-  padding: 0.38rem 0.45rem 0.4rem;
-  margin-bottom: 0.42rem;
+  padding: 0.5;
 }
 
 /* jarak antar konten tab ke header */
