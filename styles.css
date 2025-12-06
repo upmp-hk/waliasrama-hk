@@ -57,6 +57,7 @@ body {
 @media (min-width: 768px) {
   .app {
     padding: 1.6rem 2rem;
+    margin-bottom: 5rem;
   }
 }
 
