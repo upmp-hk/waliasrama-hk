@@ -572,7 +572,7 @@
 
     if (error) {
       console.error("Gagal load santri_master_view:", error);
-      showToast("❎ gagal memuat data santri.", "error");
+      showToast("❎ gagal memuat data.", "error");
       santriMaster = [];
       santriById = new Map();
       return;
@@ -773,7 +773,7 @@
 
       if (delErr) {
         console.error("Gagal hapus data sakit lama:", delErr);
-        showToastAuto("❎ gagal menghapus data lama.");
+        showToastAuto("❎ gagal menghapus data.");
         return;
       }
 
