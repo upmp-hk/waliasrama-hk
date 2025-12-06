@@ -36,7 +36,7 @@ body {
     radial-gradient(circle at bottom right, #bbf7d0 0, transparent 50%),
     linear-gradient(135deg, #e5f0ff, #e0f9ee);
   padding: 1rem;
-  padding-bottom: 5rem; /* ruang untuk bottom nav */
+  padding-bottom: 4.5rem; /* ruang untuk bottom nav */
   color: var(--dark);
 }
 
@@ -47,7 +47,7 @@ body {
   background: rgba(255, 255, 255, 0.97);
   border-radius: 26px;
   box-shadow: var(--shadow-soft);
-  padding: 1.25rem 1.25rem 1.25rem;
+  padding: 1.25rem 1.25rem 1.5rem; /* bottom digedein untuk ruang nav bawah */
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, 0.15);
@@ -57,7 +57,7 @@ body {
 
 @media (min-width: 768px) {
   .app {
-    padding: 1.5rem 2rem 2rem;
+    padding: 1.6rem 2rem 1.9rem;
   }
 }
 
@@ -1132,33 +1132,20 @@ tbody tr:hover {
 
 /* ===== TIGHTER SPACING: VERSION SETENGAH ===== */
 
-/* ===== SPACING SIMETRIS ===== */
-
 /* jarak tepi layar dengan box utama */
 body {
-  padding: 0.5rem;              /* semua sisi sama */
+  padding: 0.5rem;
+  padding-bottom: 4.5rem; /* tetap besar untuk ruang navbar bawah */
 }
 
 /* padding dalam kotak aplikasi utama */
 .app {
-  padding: 0.75rem;             /* semua sisi sama */
-}
-
-/* header paling atas (judul + tab biru/hijau) */
-.header-box {
-  padding: 0.5rem;              /* semua sisi sama */
-  margin-bottom: 0.45rem;
-}
-
-/* semua panel (Filter, Rekap Harian, Rekap Bulanan, dsb.) */
-.panel {
-  padding: 0.5rem;              /* semua sisi sama */
-  margin-bottom: 0.42rem;
+  padding: 0.625rem 0.625rem 0.75rem;
 }
 
 @media (min-width: 768px) {
   .app {
-    padding: 1rem;              /* semua sisi sama di layar lebar */
+    padding: 0.8rem 1rem 0.95rem;
   }
 }
 
