@@ -470,31 +470,27 @@
           </div>
         </div>
       
-        <!-- BARIS BULAN + TOMBOL (MODEL CHIP) -->
+        <!-- BARIS BULAN + TOMBOL -->
         <div class="filter-row filter-row-center" style="margin-top:0.8rem;">
-          <div class="filter-row-center-inner">
-            <div class="field field-wide">
-              <label for="rekapBulan"><center>Pilih bulan & tampilkan rekap</center></label>
-              <div class="rekap-mode-row">
-                <!-- CHIP KIRI: MONTH -->
-                <div class="chip-option rekap-mode-btn" style="flex:1;">
-                  <input
-                    type="month"
-                    id="rekapBulan"
-                    style="width:100%;border:none;background:transparent;padding:0;text-align:center;"
-                  />
-                </div>
-                <!-- CHIP KANAN: TOMBOL AKSI -->
-                <button
-                  type="button"
-                  class="chip-option rekap-mode-btn"
-                  id="btnLoadRekapBulanan"
-                  style="flex:1;justify-content:center;"
-                >
-                  <span class="icon">🔍</span> Tampilkan Rekap
-                </button>
-              </div>
+          <div class="filter-row-center-inner" style="gap:0;">
+            <!-- KIRI: BULAN -->
+            <div class="field" style="flex:1 1 0;">
+              <label for="rekapBulan"><center>Pilih bulan</center></label>
+              <input
+                type="month"
+                id="rekapBulan"
+                style="border-top-right-radius:0; border-bottom-right-radius:0;"
+              />
             </div>
+            
+            <!-- KANAN: TOMBOL -->
+            <button
+              class="btn-secondary"
+              id="btnLoadRekapBulanan"
+              style="flex:1 1 0; justify-content:center; border-top-left-radius:0; border-bottom-left-radius:0;"
+            >
+              <span class="icon">🔍</span> Tampilkan Rekap
+            </button>
           </div>
         </div>
 
