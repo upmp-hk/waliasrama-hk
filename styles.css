@@ -233,11 +233,11 @@ h1 {
   border: none;
   background: transparent;
   padding: 0.45rem 0.9rem;
-  border-radius: 999px;
+  border-radius: 0;              /* nanti diatur per posisi */
   font-size: calc(0.78rem);
   cursor: pointer;
   color: #e5e7eb;
-  flex: 1;
+  flex: 1 1 0;                   /* bagi rata lebar nav: 3 tombol = 3 segmen */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -247,6 +247,21 @@ h1 {
     box-shadow 0.14s ease,
     transform 0.06s ease;
   white-space: nowrap;
+}
+/* navbar: kiri rata kiri, kanan rata kanan, ketemu di tengah */
+.tabs .tab-btn:first-child {
+  border-top-left-radius: 999px;
+  border-bottom-left-radius: 999px;
+}
+
+.tabs .tab-btn:last-child {
+  border-top-right-radius: 999px;
+  border-bottom-right-radius: 999px;
+}
+
+/* tombol tengah (kalau ada) flat semua sudut */
+.tabs .tab-btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
 }
 .tab-btn-icon {
   font-size: 1rem;
