@@ -170,28 +170,33 @@
         </span>
       </div>
     
-      <!-- BARIS TANGGAL + TOMBOL (MODEL “MONTH + TERAPKAN”) -->
+      <!-- BARIS TANGGAL + TOMBOL (MODEL CHIP SEPERTI REKAP PER KELAS/GABUNGAN) -->
       <div class="filter-row filter-row-center" style="margin-top:0.8rem;">
-        <div class="filter-row-center-inner" style="gap:0;">
-          <!-- KIRI: TANGGAL -->
-          <div class="field" style="flex:1 1 0;">
-            <input
-              type="date"
-              id="inputTanggal"
-              style="border-top-right-radius:0;border-bottom-right-radius:0;"
-            />
+        <div class="filter-row-center-inner">
+          <div class="field field-wide">
+            <label for="inputTanggal"><center>Pilih tanggal & muat data</center></label>
+            <div class="rekap-mode-row">
+              <!-- CHIP KIRI: DATE -->
+              <div class="chip-option rekap-mode-btn" style="flex:1;">
+                <input
+                  type="date"
+                  id="inputTanggal"
+                  style="width:100%;border:none;background:transparent;padding:0;text-align:center;"
+                />
+              </div>
+              <!-- CHIP KANAN: TOMBOL AKSI -->
+              <button
+                type="button"
+                class="chip-option rekap-mode-btn"
+                id="btnLoadInput"
+                style="flex:1;justify-content:center;"
+              >
+                <span class="icon">🔍</span> Muat Data Santri
+              </button>
+            </div>
           </div>
-          <!-- KANAN: TOMBOL -->
-          <button
-            class="btn-secondary"
-            id="btnLoadInput"
-            style="flex:1 1 0;justify-content:center;border-top-left-radius:0;border-bottom-left-radius:0;"
-          >
-            <span class="icon">🔍</span> Muat Data Santri
-          </button>
         </div>
       </div>
-    </div> <!-- ⬅️ penutup panelFilterInput WAJIB -->
 
       <div id="panelDaftarInput" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
@@ -317,26 +322,33 @@
           </div>
         </div>
 
-        <!-- BARIS TANGGAL + TOMBOL (MENYATU DI TENGAH) -->
-        <div class="filter-row filter-row-center"
-             style="margin-top:1rem; width:100%; justify-content:center; gap:0;">
-        
-          <div style="display:flex; width:100%; max-width:720px;">
-        
-            <!-- KIRI: TANGGAL -->
-            <div class="field" style="flex:1;">
-              <input type="date" id="rekapTanggal" />
+        <!-- BARIS TANGGAL + TOMBOL (MODEL CHIP) -->
+        <div class="filter-row filter-row-center" style="margin-top:0.8rem;">
+          <div class="filter-row-center-inner">
+            <div class="field field-wide">
+              <label for="rekapTanggal"><center>Pilih tanggal & tampilkan rekap</center></label>
+              <div class="rekap-mode-row">
+                <!-- CHIP KIRI: DATE -->
+                <div class="chip-option rekap-mode-btn" style="flex:1;">
+                  <input
+                    type="date"
+                    id="rekapTanggal"
+                    style="width:100%;border:none;background:transparent;padding:0;text-align:center;"
+                  />
+                </div>
+                <!-- CHIP KANAN: TOMBOL AKSI -->
+                <button
+                  type="button"
+                  class="chip-option rekap-mode-btn"
+                  id="btnLoadRekap"
+                  style="flex:1;justify-content:center;"
+                >
+                  <span class="icon">🔍</span> Tampilkan Rekap
+                </button>
+              </div>
             </div>
-        
-            <!-- KANAN: TOMBOL -->
-            <button class="btn-secondary" id="btnLoadRekap"
-                    style="flex:1; justify-content:center;">
-              <span class="icon">🔍</span> Tampilkan Rekap
-            </button>
-        
           </div>
         </div>
-      </div>
 
       <!-- PANEL HASIL REKAP: TABEL + PDF -->
       <div id="panelRekapHarianResult" class="panel" style="margin-top:0.9rem; display:none;">
@@ -458,21 +470,33 @@
           </div>
         </div>
       
-        <!-- BARIS BULAN + TOMBOL -->
+        <!-- BARIS BULAN + TOMBOL (MODEL CHIP) -->
         <div class="filter-row filter-row-center" style="margin-top:0.8rem;">
-          <div class="filter-row-center-inner" style="gap:0;">
-            <!-- KIRI: BULAN -->
-            <div class="field" style="flex:1 1 0;">
-              <inputtype="month" id="rekapBulan" style="border-top-right-radius:0; border-bottom-right-radius:0;"/>
+          <div class="filter-row-center-inner">
+            <div class="field field-wide">
+              <label for="rekapBulan"><center>Pilih bulan & tampilkan rekap</center></label>
+              <div class="rekap-mode-row">
+                <!-- CHIP KIRI: MONTH -->
+                <div class="chip-option rekap-mode-btn" style="flex:1;">
+                  <input
+                    type="month"
+                    id="rekapBulan"
+                    style="width:100%;border:none;background:transparent;padding:0;text-align:center;"
+                  />
+                </div>
+                <!-- CHIP KANAN: TOMBOL AKSI -->
+                <button
+                  type="button"
+                  class="chip-option rekap-mode-btn"
+                  id="btnLoadRekapBulanan"
+                  style="flex:1;justify-content:center;"
+                >
+                  <span class="icon">🔍</span> Tampilkan Rekap
+                </button>
+              </div>
             </div>
-            
-            <!-- KANAN: TOMBOL -->
-            <button class="btn-secondary" id="btnLoadRekapBulanan" style="flex:1 1 0;justify-content:center; border-top-left-radius:0; border-bottom-left-radius:0;">
-              <span class="icon">🔍</span> Tampilkan Rekap
-            </button>
           </div>
         </div>
-      </div> <!-- penutup panelRekapBulananFilter -->
 
       <!-- PANEL HASIL REKAP BULANAN -->
       <div id="panelRekapBulananResult" class="panel" style="margin-top:0.9rem; display:none;">
