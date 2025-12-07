@@ -120,7 +120,7 @@
       </div>
     
       <!-- Baris 3 -->
-      <div class="">
+      <div class="filter-row">
         <div class="field field-wide" id="fieldParalel">
           <label for="inputParalel">Paralel:</label>
           <input type="hidden" id="inputParalel" value="A" />
@@ -170,7 +170,7 @@
         </span>
       </div>
     
-      <!-- BARIS TANGGAL + TOMBOL (MODEL CHIP SEPERTI REKAP PER KELAS/GABUNGAN) -->
+      <!-- BARIS TANGGAL + TOMBOL (MODEL “MONTH + TERAPKAN”) -->
       <div class="filter-row filter-row-center" style="margin-top:0.8rem;">
         <div class="filter-row-center-inner" style="gap:0;">
           <!-- KIRI: TANGGAL -->
@@ -182,9 +182,9 @@
               style="border-top-right-radius:0;border-bottom-right-radius:0;"
             />
           </div>
-          <!-- KANAN: TOMBOL (MODEL CHIP) -->
+          <!-- KANAN: TOMBOL -->
           <button
-            class="chip-option rekap-mode-btn"
+            class="btn-secondary"
             id="btnLoadInput"
             style="flex:1 1 0;justify-content:center;border-top-left-radius:0;border-bottom-left-radius:0;"
           >
@@ -192,6 +192,7 @@
           </button>
         </div>
       </div>
+    </div> <!-- ⬅️ penutup panelFilterInput WAJIB -->
 
       <div id="panelDaftarInput" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
@@ -317,28 +318,26 @@
           </div>
         </div>
 
-        <!-- BARIS TANGGAL + TOMBOL (MODEL CHIP) -->
-        <div class="filter-row filter-row-center" style="margin-top:0.8rem;">
-          <div class="filter-row-center-inner" style="gap:0;">
+        <!-- BARIS TANGGAL + TOMBOL (MENYATU DI TENGAH) -->
+        <div class="filter-row filter-row-center"
+             style="margin-top:1rem; width:100%; justify-content:center; gap:0;">
+        
+          <div style="display:flex; width:100%; max-width:720px;">
+        
             <!-- KIRI: TANGGAL -->
-            <div class="field" style="flex:1 1 0;">
-              <label for="rekapTanggal"><center>Pilih tanggal</center></label>
-              <input
-                type="date"
-                id="rekapTanggal"
-                style="border-top-right-radius:0;border-bottom-right-radius:0;"
-              />
+            <div class="field" style="flex:1;">
+              <input type="date" id="rekapTanggal" />
             </div>
-            <!-- KANAN: TOMBOL (MODEL CHIP) -->
-            <button
-              class="chip-option rekap-mode-btn"
-              id="btnLoadRekap"
-              style="flex:1 1 0;justify-content:center;border-top-left-radius:0;border-bottom-left-radius:0;"
-            >
+        
+            <!-- KANAN: TOMBOL -->
+            <button class="btn-secondary" id="btnLoadRekap"
+                    style="flex:1; justify-content:center;">
               <span class="icon">🔍</span> Tampilkan Rekap
             </button>
+        
           </div>
         </div>
+      </div>
 
       <!-- PANEL HASIL REKAP: TABEL + PDF -->
       <div id="panelRekapHarianResult" class="panel" style="margin-top:0.9rem; display:none;">
@@ -460,29 +459,21 @@
           </div>
         </div>
       
-        <!-- BARIS BULAN + TOMBOL (MODEL CHIP) -->
+        <!-- BARIS BULAN + TOMBOL -->
         <div class="filter-row filter-row-center" style="margin-top:0.8rem;">
           <div class="filter-row-center-inner" style="gap:0;">
             <!-- KIRI: BULAN -->
             <div class="field" style="flex:1 1 0;">
-              <label for="rekapBulan"><center>Pilih bulan</center></label>
-              <input
-                type="month"
-                id="rekapBulan"
-                style="border-top-right-radius:0; border-bottom-right-radius:0;"
-              />
+              <inputtype="month" id="rekapBulan" style="border-top-right-radius:0; border-bottom-right-radius:0;"/>
             </div>
             
-            <!-- KANAN: TOMBOL (MODEL CHIP) -->
-            <button
-              class="chip-option rekap-mode-btn"
-              id="btnLoadRekapBulanan"
-              style="flex:1 1 0;justify-content:center; border-top-left-radius:0; border-bottom-left-radius:0;"
-            >
+            <!-- KANAN: TOMBOL -->
+            <button class="btn-secondary" id="btnLoadRekapBulanan" style="flex:1 1 0;justify-content:center; border-top-left-radius:0; border-bottom-left-radius:0;">
               <span class="icon">🔍</span> Tampilkan Rekap
             </button>
           </div>
         </div>
+      </div> <!-- penutup panelRekapBulananFilter -->
 
       <!-- PANEL HASIL REKAP BULANAN -->
       <div id="panelRekapBulananResult" class="panel" style="margin-top:0.9rem; display:none;">
