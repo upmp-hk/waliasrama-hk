@@ -392,8 +392,8 @@
           <div class="panel-title">Rekap Sakit Bulanan</div>
           <div class="panel-caption">Lihat rekap santri sakit dalam satu bulan.</div>
         </div>
-
-        <!-- 🔹 MODE REKAP -->
+      
+        <!-- MODE REKAP -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field field-wide">
@@ -409,10 +409,9 @@
             </div>
           </div>
         </div>
-
-        <!-- 🔹 FILTER PER KELAS (untuk mode = "kelas") -->
+      
+        <!-- FILTER PER KELAS (mode = kelas) -->
         <div id="fieldRekapBulananKelas" style="display:none;">
-          <!-- Jenjang -->
           <div class="filter-row">
             <div class="field">
               <label for="rekapBulananJenjang">Jenjang:</label>
@@ -423,8 +422,7 @@
               </div>
             </div>
           </div>
-
-          <!-- Lokasi (MTs) + Kelas -->
+      
           <div class="filter-row">
             <div class="field" id="fieldRekapBulananLokasi">
               <label for="rekapBulananLokasi">Lokasi:</label>
@@ -434,7 +432,7 @@
                 <button type="button" class="chip-option" data-value="HK 2">HK 2</button>
               </div>
             </div>
-
+      
             <div class="field">
               <label for="rekapBulananKelas">Kelas:</label>
               <input type="hidden" id="rekapBulananKelas" value="VII" />
@@ -450,33 +448,38 @@
               </div>
             </div>
           </div>
+      
           <div>
             <span class="legend" style="margin-top:0.45rem">
               <span class="legend-dot"></span>
               Rekap santri akan diambil berdasarkan filter jenjang, lokasi, kelas, jurusan, dan paralel.
             </span>
-          </div>        
-        </div>
-
-        <!-- BARIS BULAN + TOMBOL (MENYATU DI TENGAH) -->
-        <div class="filter-row filter-row-center"
-             style="margin-top:1rem; width:100%; justify-content:center; gap:0;">
-        
-          <div style="display:flex; width:100%; max-width:720px;">
-        
-            <!-- KIRI: BULAN -->
-            <div class="field" style="flex:1;">
-              <input type="month" id="rekapBulan" />
-            </div>
-        
-            <!-- KANAN: TOMBOL -->
-            <button class="btn-secondary" id="btnLoadRekapBulanan"
-                    style="flex:1; justify-content:center;">
-              <span class="icon">🔍</span> Tampilkan Rekap
-            </button>
-        
           </div>
         </div>
+      
+        <!-- BARIS BULAN + TOMBOL -->
+        <div class="filter-row filter-row-center" style="margin-top:0.8rem;">
+          <div class="filter-row-center-inner" style="gap:0;">
+            <!-- KIRI: BULAN -->
+            <div class="field" style="flex:1 1 0;">
+              <label for="rekapBulan"><center>Pilih bulan</center></label>
+              <input
+                type="month"
+                id="rekapBulan"
+                style="border-top-right-radius:0;border-bottom-right-radius:0;"
+              />
+            </div>
+            <!-- KANAN: TOMBOL -->
+            <button
+              class="btn-secondary"
+              id="btnLoadRekapBulanan"
+              style="flex:1 1 0;justify-content:center;border-top-left-radius:0;border-bottom-left-radius:0;"
+            >
+              <span class="icon">🔍</span> Tampilkan Rekap
+            </button>
+          </div>
+        </div>
+      </div> <!-- penutup panelRekapBulananFilter -->
 
       <!-- PANEL HASIL REKAP BULANAN -->
       <div id="panelRekapBulananResult" class="panel" style="margin-top:0.9rem; display:none;">
