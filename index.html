@@ -67,6 +67,14 @@
           <div class="panel-caption">Pilih tanggal dan kelas yang sesuai untuk mengisi data santri yang sakit.</div>
         </div>
 
+        <!-- Baris 1: hanya tanggal -->
+        <div class="filter-row filter-row-center">
+          <div class="field">
+            <label for="inputTanggal"><center>Pilih tanggal</center></label>          
+            <input type="date" id="inputTanggal" />
+          </div>
+        </div>
+
         <!-- Baris 1: Jenjang -->
         <div class="filter-row">
           <div class="field">
@@ -177,13 +185,9 @@
           </span>
         </div>
 
-        <!-- Baris 1: hanya tanggal -->
-        <div class="filter-row" style="margin-top:0.9rem; display: flex; justify-content: space-between;">
-          <div class="field" style="flex: 1;">
-            <input type="date" id="inputTanggal" />
-          </div>
-          <div class="btn-row" style="flex: 1; display: flex; justify-content: flex-end;">
-            <button class="btn-secondary" id="btnLoadRekap">
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
+          <div class="btn-row-left">
+            <button class="btn-secondary" id="btnLoadInput">
               <span class="icon">🔍</span> Muat Data Santri
             </button>
           </div>
@@ -244,12 +248,23 @@
           <div class="panel-caption">Lihat dan edit rekap santri sakit berdasarkan tanggal.</div>
         </div>
 
+        <!-- 🔹 TANGGAL REKAP (PALING ATAS, SEPERTI INPUT DATA) -->
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem; justify-content:center; text-align:center;">
+          <div class="field">
+            <label for="rekapTanggal"><center>Pilih tanggal</center></label>          
+            <input type="date" id="rekapTanggal"/>
+          </div>
+        </div>
+        
         <!-- 🔹 MODE REKAP -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field field-wide">
               <!-- default: per kelas -->
               <input type="hidden" id="rekapHarianMode" value="kelas" />
+              <div class="field">
+                <label><center>Pilih mode rekap</center></label>          
+              </div>
               <div class="rekap-mode-row chip-group" data-target="rekapHarianMode">
                 <!-- kiri = per kelas, kanan = gabungan -->
                 <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
@@ -314,12 +329,9 @@
           </div>
         </div>
 
-        <!-- 🔹 TANGGAL REKAP (PALING ATAS, SEPERTI INPUT DATA) -->
-        <div class="filter-row" style="margin-top:0.9rem; display: flex; justify-content: space-between;">
-          <div class="field" style="flex: 1;">
-            <input type="date" id="rekapTanggal"/>
-          </div>
-          <div class="btn-row" style="flex: 1; display: flex; justify-content: flex-end;">
+        <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
+          <div class="btn-row-left">
             <button class="btn-secondary" id="btnLoadRekap">
               <span class="icon">🔍</span> Tampilkan Rekap
             </button>
@@ -365,7 +377,6 @@
               <span class="icon">📄</span> Download PDF
             </button>
           </div>
-          
           <div class="btn-row-right">
             <button class="btn-secondary" id="btnSaveRekap">
               <span class="icon">💾</span> Simpan Revisi
@@ -384,11 +395,22 @@
           <div class="panel-caption">Lihat rekap santri sakit dalam satu bulan.</div>
         </div>
 
+        <!-- 🔹 BULAN REKAP PALING ATAS -->
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem; justify-content:center; text-align:center;">
+          <div class="field">
+            <label for="rekapBulan"><center>Pilih bulan</center></label>                     
+            <input type="month" id="rekapBulan" />
+          </div>
+        </div>
+
         <!-- 🔹 MODE REKAP -->
         <div class="filter-row filter-row-center">
           <div class="filter-row-center-inner">
             <div class="field field-wide">
               <input type="hidden" id="rekapBulananMode" value="kelas" />
+              <div class="field">
+                <label><center>Pilih mode rekap</center></label>          
+              </div>
               <div class="rekap-mode-row chip-group" data-target="rekapBulananMode">
                 <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
                   Rekap per Kelas
@@ -449,20 +471,16 @@
           </div>        
         </div>
 
-        <!-- 🔹 BULAN REKAP PALING ATAS -->
-        <div class="filter-row" style="margin-top:0.9rem; display: flex; justify-content: space-between;">
-          <div class="field" style="flex: 1;">
-            <input type="month" id="rekapBulan" />
-          </div>
-          <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
-          <div class="btn-row" style="flex: 1; display: flex; justify-content: flex-end;">
+        <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:center;">
+          <div class="btn-row-left">
             <button class="btn-secondary" id="btnLoadRekapBulanan">
               <span class="icon">🔍</span> Tampilkan Rekap
             </button>
           </div>
         </div>
       </div>
-      
+
       <!-- PANEL HASIL REKAP BULANAN -->
       <div id="panelRekapBulananResult" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
