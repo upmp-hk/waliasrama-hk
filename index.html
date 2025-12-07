@@ -179,19 +179,22 @@
 
         <!-- Baris 1: hanya tanggal -->
         <div class="filter-row filter-row-center">
-          <div class="field">
-            <input type="date" id="inputTanggal" />
-          </div>
-        </div>
+          <div class="filter-row-center-inner">
+            <div class="filter-row filter-row-center">
+              <div class="field">
+                <input type="date" id="inputTanggal" />
+              </div>
+            </div>
 
-        <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
-          <div class="btn-row-left">
-            <button class="btn-secondary" id="btnLoadInput">
-              <span class="icon">🔍</span> Muat Data Santri
-            </button>
+            <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
+              <div class="btn-row-left">
+                <button class="btn-secondary" id="btnLoadInput">
+                  <span class="icon">🔍</span> Muat Data Santri
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
       <div id="panelDaftarInput" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
@@ -253,9 +256,6 @@
             <div class="field field-wide">
               <!-- default: per kelas -->
               <input type="hidden" id="rekapHarianMode" value="kelas" />
-              <div class="field">
-                <label><center>Pilih mode rekap</center></label>          
-              </div>
               <div class="rekap-mode-row chip-group" data-target="rekapHarianMode">
                 <!-- kiri = per kelas, kanan = gabungan -->
                 <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
@@ -398,9 +398,6 @@
           <div class="filter-row-center-inner">
             <div class="field field-wide">
               <input type="hidden" id="rekapBulananMode" value="kelas" />
-              <div class="field">
-                <label><center>Pilih mode rekap</center></label>          
-              </div>
               <div class="rekap-mode-row chip-group" data-target="rekapBulananMode">
                 <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
                   Rekap per Kelas
