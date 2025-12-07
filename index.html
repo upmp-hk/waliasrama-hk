@@ -372,6 +372,7 @@
               <span class="icon">📄</span> Download PDF
             </button>
           </div>
+          
           <div class="btn-row-right">
             <button class="btn-secondary" id="btnSaveRekap">
               <span class="icon">💾</span> Simpan Revisi
@@ -388,14 +389,6 @@
         <div class="panel-header">
           <div class="panel-title">Rekap Sakit Bulanan</div>
           <div class="panel-caption">Lihat rekap santri sakit dalam satu bulan.</div>
-        </div>
-
-        <!-- 🔹 BULAN REKAP PALING ATAS -->
-        <div class="filter-row filter-row-center" style="margin-top:0.9rem; justify-content:center; text-align:center;">
-          <div class="field">
-            <label for="rekapBulan"><center>Pilih bulan</center></label>                     
-            <input type="month" id="rekapBulan" />
-          </div>
         </div>
 
         <!-- 🔹 MODE REKAP -->
@@ -466,8 +459,15 @@
           </div>        
         </div>
 
+        <!-- 🔹 BULAN REKAP PALING ATAS -->
+        <div class="filter-row" style="margin-top:0.9rem; display:flex; justify-content:space-between;">
+          <div class="field" style="flex: 1;">
+            <input type="month" id="rekapBulan" />
+          </div>
+        </div>
+        
         <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
-        <div class="btn-row" style="margin-top:0.9rem; justify-content:center;">
+        <div class="btn-row" style="flex: 1; display: flex; justify-content: flex-end;">
           <div class="btn-row-left">
             <button class="btn-secondary" id="btnLoadRekapBulanan">
               <span class="icon">🔍</span> Tampilkan Rekap
