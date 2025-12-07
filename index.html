@@ -67,14 +67,6 @@
           <div class="panel-caption">Pilih tanggal dan kelas yang sesuai untuk mengisi data santri yang sakit.</div>
         </div>
 
-        <!-- Baris 1: hanya tanggal -->
-        <div class="filter-row filter-row-center">
-          <div class="field">
-            <label for="inputTanggal"><center>Pilih tanggal</center></label>          
-            <input type="date" id="inputTanggal" />
-          </div>
-        </div>
-
         <!-- Baris 1: Jenjang -->
         <div class="filter-row">
           <div class="field">
@@ -185,9 +177,13 @@
           </span>
         </div>
 
-        <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
-          <div class="btn-row-left">
-            <button class="btn-secondary" id="btnLoadInput">
+        <!-- Baris 1: hanya tanggal -->
+        <div class="filter-row" style="margin-top:0.9rem; display: flex; justify-content: space-between;">
+          <div class="field" style="flex: 1;">
+            <input type="date" id="inputTanggal" />
+          </div>
+          <div class="btn-row" style="flex: 1; display: flex; justify-content: flex-end;">
+            <button class="btn-secondary" id="btnLoadRekap">
               <span class="icon">🔍</span> Muat Data Santri
             </button>
           </div>
