@@ -177,19 +177,26 @@
           </span>
         </div>
 
-        <div class="filter-row filter-row-center" style="margin-top:1rem; width:100%; justify-content:center;">
-          
-          <div class="field" style="flex:1;">
-            <label><center>Pilih tanggal</center></label>
-            <input type="date" id="inputTanggal" />
+        <!-- BARIS TANGGAL + TOMBOL (MENYATU DI TENGAH) -->
+        <div class="filter-row filter-row-center"
+             style="margin-top:1rem; width:100%; justify-content:center; gap:0;">
+        
+          <div style="display:flex; width:100%; max-width:720px;">
+        
+            <!-- KIRI: TANGGAL -->
+            <div class="field" style="flex:1;">
+              <label for="inputTanggal"><center>Pilih tanggal</center></label>
+              <input type="date" id="inputTanggal" />
+            </div>
+        
+            <!-- KANAN: TOMBOL -->
+            <button class="btn-secondary" id="btnLoadInput"
+                    style="flex:1; justify-content:center;">
+              <span class="icon">🔍</span> Muat Data Santri
+            </button>
+        
           </div>
-        
-          <button class="btn-secondary" id="btnLoadInput" style="flex:1; justify-content:center;">
-            <span class="icon">🔍</span> Muat Data Santri
-          </button>
-        
         </div>
-      </div>
 
       <div id="panelDaftarInput" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
@@ -315,20 +322,26 @@
           </div>
         </div>
 
-        <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
-        <div class="filter-row filter-row-center" style="margin-top:1rem; width:100%; justify-content:center;">
+        <!-- BARIS TANGGAL + TOMBOL (MENYATU DI TENGAH) -->
+        <div class="filter-row filter-row-center"
+             style="margin-top:1rem; width:100%; justify-content:center; gap:0;">
         
-          <div class="field" style="flex:1;">
-            <label><center>Pilih tanggal</center></label>
-            <input type="date" id="rekapTanggal" />
+          <div style="display:flex; width:100%; max-width:720px;">
+        
+            <!-- KIRI: TANGGAL -->
+            <div class="field" style="flex:1;">
+              <label for="rekapTanggal"><center>Pilih tanggal</center></label>
+              <input type="date" id="rekapTanggal" />
+            </div>
+        
+            <!-- KANAN: TOMBOL -->
+            <button class="btn-secondary" id="btnLoadRekap"
+                    style="flex:1; justify-content:center;">
+              <span class="icon">🔍</span> Tampilkan Rekap
+            </button>
+        
           </div>
-        
-          <button class="btn-secondary" id="btnLoadRekap" style="flex:1; justify-content:center;">
-            <span class="icon">🔍</span> Tampilkan
-          </button>
-        
         </div>
-      </div>
 
       <!-- PANEL HASIL REKAP: TABEL + PDF -->
       <div id="panelRekapHarianResult" class="panel" style="margin-top:0.9rem; display:none;">
@@ -451,20 +464,26 @@
           </div>        
         </div>
 
-        <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
-        <div class="filter-row filter-row-center" style="margin-top:1rem; width:100%; justify-content:center;">
+        <!-- BARIS BULAN + TOMBOL (MENYATU DI TENGAH) -->
+        <div class="filter-row filter-row-center"
+             style="margin-top:1rem; width:100%; justify-content:center; gap:0;">
         
-          <div class="field" style="flex:1;">
-            <label><center>Pilih bulan</center></label>
-            <input type="month" id="rekapBulan" />
+          <div style="display:flex; width:100%; max-width:720px;">
+        
+            <!-- KIRI: BULAN -->
+            <div class="field" style="flex:1;">
+              <label for="rekapBulan"><center>Pilih bulan</center></label>
+              <input type="month" id="rekapBulan" />
+            </div>
+        
+            <!-- KANAN: TOMBOL -->
+            <button class="btn-secondary" id="btnLoadRekapBulanan"
+                    style="flex:1; justify-content:center;">
+              <span class="icon">🔍</span> Tampilkan Rekap
+            </button>
+        
           </div>
-        
-          <button class="btn-secondary" id="btnLoadRekapBulanan" style="flex:1; justify-content:center;">
-            <span class="icon">🔍</span> Tampilkan
-          </button>
-        
         </div>
-      </div>
 
       <!-- PANEL HASIL REKAP BULANAN -->
       <div id="panelRekapBulananResult" class="panel" style="margin-top:0.9rem; display:none;">
