@@ -177,18 +177,28 @@
           </span>
         </div>
 
-        <!-- Baris 1: hanya tanggal -->
-        <div class="filter-row filter-row-center">
-          <div class="field">
-            <input type="date" id="inputTanggal" />
-          </div>
-        </div>
-
-        <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
-          <div class="btn-row-left">
-            <button class="btn-secondary" id="btnLoadInput">
-              <span class="icon">🔍</span> Muat Data Santri
-            </button>
+        <!-- Baris tanggal + tombol Muat Data (satu baris kiri-kanan) -->
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem;">
+          <div class="filter-row-center-inner" style="gap:0;">
+            <!-- KIRI: DATE -->
+            <div class="field" style="flex:1 1 0;">
+              <label for="inputTanggal"><center>Pilih tanggal</center></label>
+              <input
+                type="date"
+                id="inputTanggal"
+                style="width:100%; border-top-right-radius:0; border-bottom-right-radius:0;"
+              />
+            </div>
+            <!-- KANAN: TOMBOL -->
+            <div class="field" style="flex:1 1 0; align-items:flex-end;">
+              <button
+                class="btn-secondary"
+                id="btnLoadInput"
+                style="width:100%; border-top-left-radius:0; border-bottom-left-radius:0;"
+              >
+                <span class="icon">🔍</span> Muat Data Santri
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -320,19 +330,28 @@
           </div>
         </div>
 
-        <!-- 🔹 TANGGAL REKAP (PALING ATAS, SEPERTI INPUT DATA) -->
-        <div class="filter-row filter-row-center" style="margin-top:0.9rem; justify-content:center; text-align:center;">
-          <div class="field">
-            <input type="date" id="rekapTanggal"/>
-          </div>
-        </div>
-
-        <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
-        <div class="btn-row" style="margin-top:0.9rem; justify-content:center; text-align:center;">
-          <div class="btn-row-left">
-            <button class="btn-secondary" id="btnLoadRekap">
-              <span class="icon">🔍</span> Tampilkan Rekap
-            </button>
+        <!-- Baris tanggal + tombol Tampilkan Rekap (satu baris kiri-kanan) -->
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem;">
+          <div class="filter-row-center-inner" style="gap:0;">
+            <!-- KIRI: DATE -->
+            <div class="field" style="flex:1 1 0;">
+              <label for="rekapTanggal"><center>Pilih tanggal rekap</center></label>
+              <input
+                type="date"
+                id="rekapTanggal"
+                style="width:100%; border-top-right-radius:0; border-bottom-right-radius:0;"
+              />
+            </div>
+            <!-- KANAN: TOMBOL -->
+            <div class="field" style="flex:1 1 0; align-items:flex-end;">
+              <button
+                class="btn-secondary"
+                id="btnLoadRekap"
+                style="width:100%; border-top-left-radius:0; border-bottom-left-radius:0;"
+              >
+                <span class="icon">🔍</span> Tampilkan Rekap
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -398,9 +417,6 @@
           <div class="filter-row-center-inner">
             <div class="field field-wide">
               <input type="hidden" id="rekapBulananMode" value="kelas" />
-              <div class="field">
-                <label><center>Pilih mode rekap</center></label>          
-              </div>
               <div class="rekap-mode-row chip-group" data-target="rekapBulananMode">
                 <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
                   Rekap per Kelas
@@ -461,19 +477,28 @@
           </div>        
         </div>
 
-        <!-- 🔹 BULAN REKAP PALING ATAS -->
-        <div class="filter-row filter-row-center" style="margin-top:0.9rem; justify-content:center; text-align:center;">
-          <div class="field">
-            <input type="month" id="rekapBulan" />
-          </div>
-        </div>
-
-        <!-- 🔹 TOMBOL TAMPILKAN REKAP (PALING BAWAH, RATA KIRI) -->
-        <div class="btn-row" style="margin-top:0.9rem; justify-content:center;">
-          <div class="btn-row-left">
-            <button class="btn-secondary" id="btnLoadRekapBulanan">
-              <span class="icon">🔍</span> Tampilkan Rekap
-            </button>
+        <!-- Baris bulan + tombol Tampilkan Rekap (satu baris kiri-kanan) -->
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem;">
+          <div class="filter-row-center-inner" style="gap:0;">
+            <!-- KIRI: MONTH -->
+            <div class="field" style="flex:1 1 0;">
+              <label for="rekapBulan"><center>Pilih bulan rekap</center></label>
+              <input
+                type="month"
+                id="rekapBulan"
+                style="width:100%; border-top-right-radius:0; border-bottom-right-radius:0;"
+              />
+            </div>
+            <!-- KANAN: TOMBOL -->
+            <div class="field" style="flex:1 1 0; align-items:flex-end;">
+              <button
+                class="btn-secondary"
+                id="btnLoadRekapBulanan"
+                style="width:100%; border-top-left-radius:0; border-bottom-left-radius:0;"
+              >
+                <span class="icon">🔍</span> Tampilkan Rekap
+              </button>
+            </div>
           </div>
         </div>
       </div>
