@@ -240,44 +240,89 @@
   }
 
   function updateLokasiVisibility() {
-    const jenjang = inputJenjang.value;
-    if (!fieldLokasi) return;
+    if (!inputJenjang || !fieldLokasi || !inputLokasi) return;
 
-    if (jenjang === "MTs") {
-      fieldLokasi.style.display = "";
-      if (!inputLokasi.value) {
-        inputLokasi.value = "HK 1";
+    // Pastikan baris lokasi selalu tampil di nav Input Data
+    fieldLokasi.style.display = "";
+
+    const lokasiGroup = document.querySelector(
+      '.chip-group[data-target="inputLokasi"]'
+    );
+    const jenjangGroup = document.querySelector(
+      '.chip-group[data-target="inputJenjang"]'
+    );
+    if (!lokasiGroup || !jenjangGroup) return;
+
+    let lokasi = inputLokasi.value || "HK 1";
+    let jenjang = inputJenjang.value || "MTs";
+
+    inputLokasi.value = lokasi;
+    inputJenjang.value = jenjang;
+
+    const btnHK1 = lokasiGroup.querySelector('.chip-option[data-value="HK 1"]');
+    const btnHK2 = lokasiGroup.querySelector('.chip-option[data-value="HK 2"]');
+
+    const btnMTs = jenjangGroup.querySelector('.chip-option[data-value="MTs"]');
+    const btnMA  = jenjangGroup.querySelector('.chip-option[data-value="MA"]');
+
+    // Aturan:
+    // - HK 1 : MTs & MA boleh
+    // - HK 2 : hanya MTs (MA tidak ada)
+    if (lokasi === "HK 2") {
+      // kalau sebelumnya jenjang MA, paksa pindah ke MTs
+      if (jenjang === "MA") {
+        jenjang = "MTs";
+        inputJenjang.value = "MTs";
+      }
+      if (btnMA) {
+        btnMA.style.display = "none";
       }
     } else {
-      fieldLokasi.style.display = "none";
-      inputLokasi.value = "";
+      // HK 1 → tampilkan kembali tombol MA
+      if (btnMA) {
+        btnMA.style.display = "";
+      }
     }
+
+    // Sinkronkan tombol aktif lokasi
+    [btnHK1, btnHK2].forEach((b) => {
+      if (!b) return;
+      const val = b.getAttribute("data-value");
+      b.classList.toggle("active", val === inputLokasi.value);
+    });
+
+    // Sinkronkan tombol aktif jenjang
+    [btnMTs, btnMA].forEach((b) => {
+      if (!b) return;
+      const val = b.getAttribute("data-value");
+      b.classList.toggle("active", val === inputJenjang.value);
+    });
   }
 
   function applyJenjangLayout() {
-    const jenjang = inputJenjang.value;
+    if (!inputJenjang) return;
+    const jenjang = inputJenjang.value; // "MTs" / "MA"
 
-    // MTs → lokasi + kelas (VII–IX), paralel A–O, jurusan hidden
+    const kelasChipGroup = chipGroupInputKelasMts || chipGroupInputKelasMa;
+    const paralelChipGroup = chipGroupInputParalel;
+
+    if (!kelasChipGroup || !paralelChipGroup) return;
+
+    // MTs → kelas (VII–IX), paralel A–O, jurusan disembunyikan
     if (jenjang === "MTs") {
-      if (fieldLokasi) fieldLokasi.style.display = "";
       if (fieldJurusan) fieldJurusan.style.display = "none";
 
       filterChipByJenjang(kelasChipGroup, "MTs");
       filterChipByJenjang(paralelChipGroup, "MTs");
-
-      inputJurusan.value = ""; // MA only
-      if (!inputLokasi.value) inputLokasi.value = "HK 1";
     }
 
-    // MA → kelas (X–XII) + jurusan, paralel 1–15, lokasi hidden
+    // MA → kelas (X–XII) + jurusan, paralel 1–15
     else if (jenjang === "MA") {
-      if (fieldLokasi) fieldLokasi.style.display = "none";
       if (fieldJurusan) fieldJurusan.style.display = "";
 
       filterChipByJenjang(kelasChipGroup, "MA");
       filterChipByJenjang(paralelChipGroup, "MA");
 
-      inputLokasi.value = ""; // MTs only
       if (!inputJurusan.value) inputJurusan.value = "IPA";
     }
   }
