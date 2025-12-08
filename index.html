@@ -66,8 +66,22 @@
           <div class="panel-title">Input Data Sakit</div>
           <div class="panel-caption">Pilih tanggal dan kelas yang sesuai untuk mengisi data santri yang sakit.</div>
         </div>
-
-        <!-- Baris 1: Jenjang -->
+    
+        <!-- 🔹 BARIS 1: Lokasi (HK 1 / HK 2) -->
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field field-wide" id="fieldLokasi">
+              <label>Lokasi Asrama:</label>
+              <input type="hidden" id="inputLokasi" value="HK 1" />
+              <div class="rekap-mode-row chip-group" data-target="inputLokasi">
+                <button type="button" class="chip-option active" data-value="HK 1">HK 1</button>
+                <button type="button" class="chip-option" data-value="HK 2">HK 2</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 🔹 BARIS 2: Jenjang -->
         <div class="filter-row">
           <div class="field">
             <label for="inputJenjang">Jenjang:</label>
@@ -80,17 +94,7 @@
         </div>
   
         <!-- Baris 2 -->
-        <div class="filter-row">
-          <!-- Lokasi (hanya MTs) -->
-          <div class="field" id="fieldLokasi">
-            <label for="inputLokasi">Lokasi:</label>
-            <input type="hidden" id="inputLokasi" value="HK 1" />
-            <div class="chip-group" data-target="inputLokasi">
-              <button type="button" class="chip-option active" data-value="HK 1">HK 1</button>
-              <button type="button" class="chip-option" data-value="HK 2">HK 2</button>
-            </div>
-          </div>
-        
+        <div class="filter-row">       
           <!-- Kelas -->
           <div class="field" id="fieldKelas">
             <label for="inputKelas">Kelas:</label>
