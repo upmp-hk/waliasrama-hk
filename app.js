@@ -255,80 +255,31 @@
   }
 
   function applyJenjangLayout() {
-    if (!inputJenjang) return;
     const jenjang = inputJenjang.value;
-  
-    // MTs → kelas VII–IX, paralel A–O, jurusan disembunyikan
+
+    // MTs → lokasi + kelas (VII–IX), paralel A–O, jurusan hidden
     if (jenjang === "MTs") {
+      if (fieldLokasi) fieldLokasi.style.display = "";
       if (fieldJurusan) fieldJurusan.style.display = "none";
-  
-      if (kelasChipGroup) {
-        filterChipByJenjang(kelasChipGroup, "MTs");
-      }
-      if (paralelChipGroup) {
-        filterChipByJenjang(paralelChipGroup, "MTs");
-      }
-  
-      if (inputJurusan) inputJurusan.value = "";
+
+      filterChipByJenjang(kelasChipGroup, "MTs");
+      filterChipByJenjang(paralelChipGroup, "MTs");
+
+      inputJurusan.value = ""; // MA only
+      if (!inputLokasi.value) inputLokasi.value = "HK 1";
     }
-  
-    // MA → kelas X–XII, paralel 1–15, jurusan tampil
+
+    // MA → kelas (X–XII) + jurusan, paralel 1–15, lokasi hidden
     else if (jenjang === "MA") {
+      if (fieldLokasi) fieldLokasi.style.display = "none";
       if (fieldJurusan) fieldJurusan.style.display = "";
-  
-      if (kelasChipGroup) {
-        filterChipByJenjang(kelasChipGroup, "MA");
-      }
-      if (paralelChipGroup) {
-        filterChipByJenjang(paralelChipGroup, "MA");
-      }
-  
-      if (inputJurusan && !inputJurusan.value) {
-        inputJurusan.value = "IPA";
-      }
+
+      filterChipByJenjang(kelasChipGroup, "MA");
+      filterChipByJenjang(paralelChipGroup, "MA");
+
+      inputLokasi.value = ""; // MTs only
+      if (!inputJurusan.value) inputJurusan.value = "IPA";
     }
-  }
-  
-  function applyLokasiLayout() {
-    if (!inputLokasi || !inputJenjang) return;
-  
-    const lokasi = inputLokasi.value; // "HK 1" atau "HK 2"
-    const jenjangGroup = document.querySelector(
-      '.chip-group[data-target="inputJenjang"]'
-    );
-    if (!jenjangGroup) {
-      applyJenjangLayout();
-      return;
-    }
-  
-    const jenjangButtons = jenjangGroup.querySelectorAll(".chip-option");
-    let activeJenjang = inputJenjang.value;
-  
-    jenjangButtons.forEach((btn) => {
-      const val = btn.dataset.value; // "MTs" / "MA"
-  
-      // HK 2 → hanya MTs yang boleh
-      if (lokasi === "HK 2" && val === "MA") {
-        btn.style.display = "none";
-        btn.classList.remove("active");
-        if (activeJenjang === "MA") {
-          activeJenjang = "MTs";
-        }
-      } else {
-        btn.style.display = "inline-flex";
-      }
-    });
-  
-    // pastikan hidden input & tombol aktif sinkron
-    if (activeJenjang !== inputJenjang.value) {
-      inputJenjang.value = activeJenjang;
-      jenjangButtons.forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.value === activeJenjang);
-      });
-    }
-  
-    // setelah lokasi + jenjang fix, terapkan layout kelas/paralel/jurusan
-    applyJenjangLayout();
   }
 
   function applyRekapHarianJenjangLayout() {
@@ -1862,20 +1813,9 @@
         });
     }
 
-    const lokasiGroup = document.querySelector(
-      '.chip-group[data-target="inputLokasi"]'
-    );
-    if (lokasiGroup) {
-      lokasiGroup
-        .querySelectorAll(".chip-option")
-        .forEach((btn) => {
-          btn.addEventListener("click", applyLokasiLayout);
-        });
-    }
-
-    // panggil saat awal load, supaya kombinasi HK & jenjang langsung konsisten
+    // panggil saat awal load, supaya layout MTs/MA langsung sesuai
     window.requestAnimationFrame(() => {
-      applyLokasiLayout();
+      applyJenjangLayout();
     });
 
     await loadSantriMaster();
