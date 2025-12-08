@@ -1873,9 +1873,9 @@
         });
     }
 
-    // panggil saat awal load, supaya layout MTs/MA langsung sesuai
+    // panggil saat awal load, supaya kombinasi HK & jenjang langsung konsisten
     window.requestAnimationFrame(() => {
-      applyJenjangLayout();
+      applyLokasiLayout();
     });
 
     await loadSantriMaster();
