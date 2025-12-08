@@ -248,6 +248,7 @@ h1 {
     transform 0.06s ease;
   white-space: nowrap;
 }
+
 /* navbar: kiri rata kiri, kanan rata kanan, ketemu di tengah */
 .tabs .tab-btn:first-child {
   border-top-left-radius: 999px;
