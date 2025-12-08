@@ -23,23 +23,22 @@
           <div class="header-title-row">
             <div class="header-icon">🩺</div>
             <div>
-              <h1>Rekap Santri Sakit Harian & Bulanan</h1>
+              <h1>Data Santri Sakit Harian & Bulanan</h1>
               <!-- 🔹 Badge kecil yang menegaskan fitur baru -->
-              <div class="header-badges">
-                <span class="header-badge primary">Versi 1.5.0</span>
-                <span class="header-badge subtle">Santri MTs & MA</span>
+              <div class="header-badge-row">
+                <span class="header-badge btn-primary">Input Data</span>
+                <span class="header-badge btn-secondary">Rekap Data</span>
               </div>
             </div>
           </div>
-
-          <p class="header-subtitle">
-            Pantau dan analisis data santri yang sakit setiap hari dan setiap bulan
-            untuk mendukung layanan kesehatan santri di <strong>Ponpes Husnul Khotimah</strong>.
+          <p class="subtitle">
+            Input laporan santri sakit harian, rekap per kelas (VII-XII) atau rekap gabungan seluruh santri dalam satu aplikasi.
           </p>
-
-          <div class="header-stats-row">
+        </div>
+        <div class="header-side">
+          <div class="stat-chip-row">
             <div class="stat-chip">
-              <span>🧕🏻</span><strong>MTs & MA</strong><span>seluruh jenjang</span>
+              <span>✏️</span><strong>Laporan</strong><span>input data sakit harian</span>
             </div>
             <div class="stat-chip">
               <span>📊</span><strong>Harian & Bulanan</strong><span>rekap sakit harian & bulanan</span>
@@ -52,53 +51,16 @@
       </div>
     </div>
 
+
     <!-- INSTALL APP BUTTON -->
-    <div id="installPromptContainer" class="install-app-row" style="display:none;">
-      <button id="btnInstallApp" class="btn-secondary">
-        <span class="icon">📱</span>
-        Instal Aplikasi
+    <div id="installPromptContainer" class="install-app-row">
+      <button id="btnInstallApp" class="btn-outline">
+        <span class="icon">📲</span> Instal aplikasi
       </button>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <main class="main">
-      <!-- =============== TAB INPUT DATA =============== -->
-      <section id="tab-input" class="tab-content">
-
-      <!-- 🔹 METODE INPUT: BY KELAS / BY NAMA -->
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">Metode Input Data</div>
-          <div class="panel-caption">
-            Pilih cara input: berdasarkan kelas atau langsung memilih nama santri.
-          </div>
-        </div>
-
-        <div class="filter-row filter-row-center">
-          <div class="filter-row-center-inner">
-            <div class="field field-wide">
-              <!-- hidden untuk JS -->
-              <input type="hidden" id="inputMode" value="kelas" />
-              <div class="chip-group" data-target="inputMode">
-                <button
-                  type="button"
-                  class="chip-option active"
-                  data-value="kelas"
-                >
-                  Input by Kelas
-                </button>
-                <button
-                  type="button"
-                  class="chip-option"
-                  data-value="nama"
-                >
-                  Input by Nama
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- =============== TAB INPUT DATA =============== -->
+    <section id="tab-input" class="tab-content">
       <div id="panelFilterInput" class="panel">
         <div class="panel-header">
           <div class="panel-title">Input Data Sakit</div>
@@ -115,13 +77,8 @@
               <button type="button" class="chip-option" data-value="MA">MA</button>
             </div>
           </div>
-
-          <div class="field">
-            <label for="inputTanggal">Tanggal:</label>
-            <input type="date" id="inputTanggal" />
-          </div>
         </div>
-
+  
         <!-- Baris 2 -->
         <div class="filter-row">
           <!-- Lokasi (hanya MTs) -->
@@ -133,25 +90,26 @@
               <button type="button" class="chip-option" data-value="HK 2">HK 2</button>
             </div>
           </div>
-
+        
           <!-- Kelas -->
           <div class="field" id="fieldKelas">
             <label for="inputKelas">Kelas:</label>
             <input type="hidden" id="inputKelas" value="VII" />
             <div class="chip-group" data-target="inputKelas">
+        
               <!-- MTs -->
               <button type="button" class="chip-option active" data-value="VII" data-jenjang="MTs">VII</button>
               <button type="button" class="chip-option" data-value="VIII" data-jenjang="MTs">VIII</button>
               <button type="button" class="chip-option" data-value="IX" data-jenjang="MTs">IX</button>
-
+        
               <!-- MA -->
               <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
               <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
               <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
-
+        
             </div>
           </div>
-
+        
           <!-- Jurusan (hanya MA) -->
           <div class="field" id="fieldJurusan">
             <label for="inputJurusan">Jurusan:</label>
@@ -164,66 +122,86 @@
           </div>
         </div>
 
-        <!-- Baris 3: Paralel -->
+        <!-- Baris 3 -->
         <div class="filter-row">
-          <div class="field" id="fieldParalel">
+          <div class="field field-wide" id="fieldParalel">
             <label for="inputParalel">Paralel:</label>
             <input type="hidden" id="inputParalel" value="A" />
             <div class="chip-group" data-target="inputParalel">
-              <!-- MTs: A–O -->
-              <button type="button" class="chip-option active" data-value="A" data-jenjang="MTs">A</button>
-              <button type="button" class="chip-option" data-value="B" data-jenjang="MTs">B</button>
-              <button type="button" class="chip-option" data-value="C" data-jenjang="MTs">C</button>
-              <button type="button" class="chip-option" data-value="D" data-jenjang="MTs">D</button>
-              <button type="button" class="chip-option" data-value="E" data-jenjang="MTs">E</button>
-              <button type="button" class="chip-option" data-value="F" data-jenjang="MTs">F</button>
-              <button type="button" class="chip-option" data-value="G" data-jenjang="MTs">G</button>
-              <button type="button" class="chip-option" data-value="H" data-jenjang="MTs">H</button>
-              <button type="button" class="chip-option" data-value="I" data-jenjang="MTs">I</button>
-              <button type="button" class="chip-option" data-value="J" data-jenjang="MTs">J</button>
-              <button type="button" class="chip-option" data-value="K" data-jenjang="MTs">K</button>
-              <button type="button" class="chip-option" data-value="L" data-jenjang="MTs">L</button>
-              <button type="button" class="chip-option" data-value="M" data-jenjang="MTs">M</button>
-              <button type="button" class="chip-option" data-value="N" data-jenjang="MTs">N</button>
-              <button type="button" class="chip-option" data-value="O" data-jenjang="MTs">O</button>
-
-              <!-- MA: 1–15 -->
-              <button type="button" class="chip-option" data-value="1" data-jenjang="MA">1</button>
-              <button type="button" class="chip-option" data-value="2" data-jenjang="MA">2</button>
-              <button type="button" class="chip-option" data-value="3" data-jenjang="MA">3</button>
-              <button type="button" class="chip-option" data-value="4" data-jenjang="MA">4</button>
-              <button type="button" class="chip-option" data-value="5" data-jenjang="MA">5</button>
-              <button type="button" class="chip-option" data-value="6" data-jenjang="MA">6</button>
-              <button type="button" class="chip-option" data-value="7" data-jenjang="MA">7</button>
-              <button type="button" class="chip-option" data-value="8" data-jenjang="MA">8</button>
-              <button type="button" class="chip-option" data-value="9" data-jenjang="MA">9</button>
-              <button type="button" class="chip-option" data-value="10" data-jenjang="MA">10</button>
-              <button type="button" class="chip-option" data-value="11" data-jenjang="MA">11</button>
-              <button type="button" class="chip-option" data-value="12" data-jenjang="MA">12</button>
-              <button type="button" class="chip-option" data-value="13" data-jenjang="MA">13</button>
-              <button type="button" class="chip-option" data-value="14" data-jenjang="MA">14</button>
-              <button type="button" class="chip-option" data-value="15" data-jenjang="MA">15</button>
+        
+              <div class="chip-group paralel-grid" data-target="inputParalel">
+              
+                <!-- MTs A–O -->
+                <button type="button" class="chip-option active" data-value="A" data-jenjang="MTs">A</button>
+                <button type="button" class="chip-option" data-value="B" data-jenjang="MTs">B</button>
+                <button type="button" class="chip-option" data-value="C" data-jenjang="MTs">C</button>
+                <button type="button" class="chip-option" data-value="D" data-jenjang="MTs">D</button>
+                <button type="button" class="chip-option" data-value="E" data-jenjang="MTs">E</button>
+                <button type="button" class="chip-option" data-value="F" data-jenjang="MTs">F</button>
+                <button type="button" class="chip-option" data-value="G" data-jenjang="MTs">G</button>
+                <button type="button" class="chip-option" data-value="H" data-jenjang="MTs">H</button>
+                <button type="button" class="chip-option" data-value="I" data-jenjang="MTs">I</button>
+                <button type="button" class="chip-option" data-value="J" data-jenjang="MTs">J</button>
+                <button type="button" class="chip-option" data-value="K" data-jenjang="MTs">K</button>
+                <button type="button" class="chip-option" data-value="L" data-jenjang="MTs">L</button>
+                <button type="button" class="chip-option" data-value="M" data-jenjang="MTs">M</button>
+                <button type="button" class="chip-option" data-value="N" data-jenjang="MTs">N</button>
+                <button type="button" class="chip-option" data-value="O" data-jenjang="MTs">O</button>
+              
+                <!-- MA 1–15 -->
+                <button type="button" class="chip-option" data-value="1" data-jenjang="MA">1</button>
+                <button type="button" class="chip-option" data-value="2" data-jenjang="MA">2</button>
+                <button type="button" class="chip-option" data-value="3" data-jenjang="MA">3</button>
+                <button type="button" class="chip-option" data-value="4" data-jenjang="MA">4</button>
+                <button type="button" class="chip-option" data-value="5" data-jenjang="MA">5</button>
+                <button type="button" class="chip-option" data-value="6" data-jenjang="MA">6</button>
+                <button type="button" class="chip-option" data-value="7" data-jenjang="MA">7</button>
+                <button type="button" class="chip-option" data-value="8" data-jenjang="MA">8</button>
+                <button type="button" class="chip-option" data-value="9" data-jenjang="MA">9</button>
+                <button type="button" class="chip-option" data-value="10" data-jenjang="MA">10</button>
+                <button type="button" class="chip-option" data-value="11" data-jenjang="MA">11</button>
+                <button type="button" class="chip-option" data-value="12" data-jenjang="MA">12</button>
+                <button type="button" class="chip-option" data-value="13" data-jenjang="MA">13</button>
+                <button type="button" class="chip-option" data-value="14" data-jenjang="MA">14</button>
+                <button type="button" class="chip-option" data-value="15" data-jenjang="MA">15</button>
+              
+              </div>      
             </div>
           </div>
         </div>
 
-        <!-- Tombol -->
-        <div class="btn-row">
-          <div class="btn-row-left">
-            <button class="btn-secondary" id="btnLoadInput">
-              <span class="icon">📥</span>
-              Tampilkan Daftar Santri
-            </button>
-          </div>
+        <div>
+          <span class="legend" style="margin-top:0.45rem">
+            <span class="legend-dot"></span>
+            Data santri akan diambil berdasarkan filter jenjang, lokasi, kelas, jurusan, dan paralel.
+          </span>
         </div>
 
-        <p class="legend">
-          <span class="legend-dot"></span>
-          Kolom <strong>Alasan Sakit</strong> boleh dikosongkan jika santri tidak sakit.
-        </p>
+        <!-- Baris tanggal + tombol Muat Data (satu baris kiri-kanan) -->
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem;">
+          <div class="filter-row-center-inner" style="gap:0;">
+            <!-- KIRI: DATE -->
+            <div class="field" style="flex:1 1 0;">
+              <input
+                type="date"
+                id="inputTanggal"
+                style="width:100%; border-top-right-radius:0; border-bottom-right-radius:0;"
+              />
+            </div>
+            <!-- KANAN: TOMBOL -->
+            <div class="field" style="flex:1 1 0; align-items:flex-end;">
+              <button
+                class="btn-secondary"
+                id="btnLoadInput"
+                style="width:100%; border-top-left-radius:0; border-bottom-left-radius:0;"
+              >
+                <span class="icon">🔍</span> Muat Data Santri
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- PANEL DAFTAR & INPUT ALASAN -->
       <div id="panelDaftarInput" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
           <div class="panel-title">Daftar Santri & Alasan Sakit</div>
@@ -238,7 +216,6 @@
                   <tr>
                     <th class="col-no">No</th>
                     <th>Nama Santri</th>
-                    <th>Kelas</th>
                     <th>Alasan Sakit</th>
                   </tr>
                 </thead>
@@ -250,94 +227,135 @@
           </div>
         </div>
 
-        <p class="legend">
+        <p class="legend" style="margin-top:0.9rem;">
           <span class="legend-dot"></span>
-          Kosongkan kolom <strong>Alasan Sakit</strong> untuk menghapus status sakit santri tersebut pada tanggal ini.
+          Kosong = tidak sakit.
         </p>
 
-        <div class="btn-row">
-          <div class="btn-row-left">
-            <button class="btn-ghost" type="button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
-              ⬆️ Kembali ke Filter
-            </button>
-          </div>
+        <p class="footer-note">
+          Wali asrama dapat mengulangi proses untuk kelas lain (ubah filter kelas & paralel, lalu tekan
+          <strong>Muat Data Santri</strong>).
+        </p>
+
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:flex-end;">
           <div class="btn-row-right">
             <button class="btn-secondary" id="btnSaveInput">
-              <span class="icon">💾</span>
-              Simpan Laporan
+              <span class="icon">💾</span> Simpan Laporan
             </button>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- ========== INPUT BY NAMA: BOX ATAS ========== -->
-      <div id="panelInputByNama" class="panel" style="margin-top:0.9rem; display:none;">
+    <!-- =============== TAB REKAP HARIAN =============== -->
+    <section id="tab-rekap-harian" class="tab-content" style="display:none;">
+      <!-- PANEL FILTER -->
+      <div id="panelRekapHarianFilter" class="panel">
         <div class="panel-header">
-          <div class="panel-title">Input Data Sakit per Nama</div>
-          <div class="panel-caption">
-            Pilih tanggal, ketik beberapa huruf nama santri, lalu tambahkan ke daftar di bawah.
+          <div class="panel-title">Rekap Sakit Harian</div>
+          <div class="panel-caption">Lihat dan edit rekap santri sakit berdasarkan tanggal.</div>
+        </div>
+       
+        <!-- 🔹 MODE REKAP -->
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field field-wide">
+              <!-- default: per kelas -->
+              <input type="hidden" id="rekapHarianMode" value="kelas" />
+              <div class="rekap-mode-row chip-group" data-target="rekapHarianMode">
+                <!-- kiri = per kelas, kanan = gabungan -->
+                <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
+                  Rekap per Kelas
+                </button>
+                <button type="button" class="chip-option rekap-mode-btn" data-value="gabungan">
+                  Rekap Gabungan
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Tanggal rekap -->
-        <div class="filter-row filter-row-center">
+        <!-- 🔹 FILTER PER KELAS: JENJANG / LOKASI / KELAS -->
+        <!-- hanya dipakai saat mode = "kelas" (di-toggle via JS) -->
+        <div id="fieldRekapHarianKelas" style="display:none;">
+          <!-- Jenjang -->
+          <div class="filter-row">
+            <div class="field">
+              <label for="rekapHarianJenjang">Jenjang:</label>
+              <input type="hidden" id="rekapHarianJenjang" value="MTs" />
+              <div class="chip-group" data-target="rekapHarianJenjang">
+                <button type="button" class="chip-option active" data-value="MTs">MTs</button>
+                <button type="button" class="chip-option" data-value="MA">MA</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lokasi (MTs) + Kelas -->
+          <div class="filter-row">
+            <!-- Lokasi (hanya relevan untuk MTs, disembunyikan saat MA) -->
+            <div class="field" id="fieldRekapHarianLokasi">
+              <label for="rekapHarianLokasi">Lokasi:</label>
+              <input type="hidden" id="rekapHarianLokasi" value="HK 1" />
+              <div class="chip-group" data-target="rekapHarianLokasi">
+                <button type="button" class="chip-option active" data-value="HK 1">HK 1</button>
+                <button type="button" class="chip-option" data-value="HK 2">HK 2</button>
+              </div>
+            </div>
+
+            <!-- Kelas (VII–IX untuk MTs, X–XII untuk MA) -->
+            <div class="field">
+              <label for="rekapHarianKelas">Kelas:</label>
+              <input type="hidden" id="rekapHarianKelas" value="VII" />
+              <div class="chip-group" data-target="rekapHarianKelas">
+                <!-- MTs -->
+                <button type="button" class="chip-option active" data-value="VII" data-jenjang="MTs">VII</button>
+                <button type="button" class="chip-option" data-value="VIII" data-jenjang="MTs">VIII</button>
+                <button type="button" class="chip-option" data-value="IX" data-jenjang="MTs">IX</button>
+                <!-- MA -->
+                <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
+                <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
+                <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span class="legend" style="margin-top:0.45rem">
+              <span class="legend-dot"></span>
+              Rekap santri akan diambil berdasarkan filter jenjang, lokasi, kelas, jurusan, dan paralel.
+            </span>
+          </div>
+        </div>
+
+        <!-- Baris tanggal + tombol Tampilkan Rekap (satu baris kiri-kanan) -->
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem;">
           <div class="filter-row-center-inner" style="gap:0;">
+            <!-- KIRI: DATE -->
             <div class="field" style="flex:1 1 0;">
-              <label for="inputTanggalByNama">Tanggal Rekap:</label>
               <input
                 type="date"
-                id="inputTanggalByNama"
-                style="width:100%;"
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- Input nama + tombol tambahkan -->
-        <div class="filter-row filter-row-center" style="margin-top:0.5rem;">
-          <div class="filter-row-center-inner" style="gap:0;">
-            <!-- KETIK NAMA -->
-            <div class="field" style="flex:2 1 0;">
-              <label for="searchNamaSantri">Nama Santri:</label>
-              <input
-                type="text"
-                id="searchNamaSantri"
-                list="namaSantriList"
-                placeholder="Ketik beberapa huruf nama santri..."
+                id="rekapTanggal"
                 style="width:100%; border-top-right-radius:0; border-bottom-right-radius:0;"
               />
-              <small class="legend" style="margin-top:0.15rem;">
-                <span class="legend-dot"></span>
-                Ketik minimal 2–3 huruf, lalu pilih nama yang sesuai dari daftar.
-              </small>
             </div>
-
-            <!-- TOMBOL TAMBAHKAN -->
+            <!-- KANAN: TOMBOL -->
             <div class="field" style="flex:1 1 0; align-items:flex-end;">
               <button
                 class="btn-secondary"
-                id="btnTambahSantriByNama"
-                style="width:100%; border-top-left-radius:0; border-bottom-left-radius:0; margin-top:1.25rem;"
+                id="btnLoadRekap"
+                style="width:100%; border-top-left-radius:0; border-bottom-left-radius:0;"
               >
-                <span class="icon">➕</span> Tambahkan
+                <span class="icon">🔍</span> Tampilkan Rekap
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ========== INPUT BY NAMA: BOX BAWAH (TABEL) ========== -->
-      <div
-        id="panelDaftarInputByNama"
-        class="panel"
-        style="margin-top:0.4rem; display:none;"
-      >
+      <!-- PANEL HASIL REKAP: TABEL + PDF -->
+      <div id="panelRekapHarianResult" class="panel" style="margin-top:0.9rem; display:none;">
         <div class="panel-header">
-          <div class="panel-title">Daftar Santri Sakit (Input by Nama)</div>
-          <div class="panel-caption">
-            Hanya santri yang muncul di tabel ini yang akan disimpan sebagai
-            <strong>santri sakit</strong> pada tanggal tersebut.
-          </div>
+          <div class="panel-title">Hasil Rekap Harian</div>
+          <div class="panel-caption">Tabel santri sakit sesuai filter di atas.</div>
         </div>
 
         <div class="table-container">
@@ -352,7 +370,7 @@
                     <th>Alasan Sakit</th>
                   </tr>
                 </thead>
-                <tbody id="inputByNamaTableBody">
+                <tbody id="rekapTableBody">
                   <!-- diisi via JS -->
                 </tbody>
               </table>
@@ -360,187 +378,56 @@
           </div>
         </div>
 
-        <p class="legend" style="margin-top:0.5rem;">
+        <p class="legend" style="margin-top:0.9rem;">
           <span class="legend-dot"></span>
-          Kosongkan kolom <strong>Alasan Sakit</strong> jika ingin
-          menghapus status sakit santri tersebut pada tanggal ini.
+          Klik kolom <strong>Alasan Sakit</strong> untuk mengedit. Kosongkan untuk menghapus dari rekap.
         </p>
 
-        <div class="btn-row" style="margin-top:0.5rem; justify-content:flex-end;">
+        <div class="btn-row">
+          <div class="btn-row-left">
+            <button class="btn-secondary" id="btnPrintRekap">
+              <span class="icon">📄</span> Download PDF
+            </button>
+          </div>
           <div class="btn-row-right">
-            <button class="btn-secondary" id="btnSaveInputByNama">
-              <span class="icon">💾</span> Simpan Laporan (by Nama)
+            <button class="btn-secondary" id="btnSaveRekap">
+              <span class="icon">💾</span> Simpan Revisi
             </button>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- =============== TAB REKAP HARIAN =============== -->
-      <section id="tab-rekap-harian" class="tab-content">
-        <div id="panelRekapHarianFilter" class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Rekap Harian Santri Sakit</div>
-            <div class="panel-caption">
-              Pilih tanggal untuk melihat daftar santri yang sakit, lalu bisa mengubah alasan sakit langsung dari tabel.
-            </div>
-          </div>
+    <!-- =============== TAB REKAP BULANAN =============== -->
+    <section id="tab-rekap-bulanan" class="tab-content" style="display:none;">
+      <!-- PANEL FILTER -->
+      <div id="panelRekapBulananFilter" class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Rekap Sakit Bulanan</div>
+          <div class="panel-caption">Lihat rekap santri sakit dalam satu bulan.</div>
+        </div>
 
-          <div class="filter-row">
-            <div class="field">
-              <label for="rekapTanggal">Tanggal:</label>
-              <input type="date" id="rekapTanggal" />
-            </div>
-
-            <div class="field">
-              <label>Mode Rekap:</label>
-              <input type="hidden" id="rekapHarianMode" value="gabungan" />
-              <div class="chip-group" data-target="rekapHarianMode">
-                <button type="button" class="chip-option active" data-value="gabungan">
-                  Rekap Gabungan
-                </button>
-                <button type="button" class="chip-option" data-value="kelas">
+        <!-- 🔹 MODE REKAP -->
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field field-wide">
+              <input type="hidden" id="rekapBulananMode" value="kelas" />
+              <div class="rekap-mode-row chip-group" data-target="rekapBulananMode">
+                <button type="button" class="chip-option rekap-mode-btn active" data-value="kelas">
                   Rekap per Kelas
                 </button>
+                <button type="button" class="chip-option rekap-mode-btn" data-value="gabungan">
+                  Rekap Gabungan
+                </button>
               </div>
-            </div>
-          </div>
-
-          <div class="filter-row" id="fieldRekapHarianKelas">
-            <!-- Jenjang Rekap Harian -->
-            <div class="field">
-              <label for="rekapHarianJenjang">Jenjang:</label>
-              <input type="hidden" id="rekapHarianJenjang" value="MTs" />
-              <div class="chip-group" data-target="rekapHarianJenjang">
-                <button type="button" class="chip-option active" data-value="MTs">MTs</button>
-                <button type="button" class="chip-option" data-value="MA">MA</button>
-              </div>
-            </div>
-
-            <!-- Lokasi Rekap Harian (MTs only) -->
-            <div class="field" id="fieldRekapHarianLokasi">
-              <label for="rekapHarianLokasi">Lokasi:</label>
-              <input type="hidden" id="rekapHarianLokasi" value="HK 1" />
-              <div class="chip-group" data-target="rekapHarianLokasi">
-                <button type="button" class="chip-option active" data-value="HK 1">HK 1</button>
-                <button type="button" class="chip-option" data-value="HK 2">HK 2</button>
-              </div>
-            </div>
-
-            <!-- Kelas Rekap Harian -->
-            <div class="field">
-              <label for="rekapHarianKelas">Kelas:</label>
-              <input type="hidden" id="rekapHarianKelas" value="VII" />
-              <div class="chip-group" data-target="rekapHarianKelas">
-                <!-- MTs -->
-                <button type="button" class="chip-option active" data-value="VII" data-jenjang="MTs">VII</button>
-                <button type="button" class="chip-option" data-value="VIII" data-jenjang="MTs">VIII</button>
-                <button type="button" class="chip-option" data-value="IX" data-jenjang="MTs">IX</button>
-
-                <!-- MA -->
-                <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
-                <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
-                <button type="button" class="chip-option" data-value="XII" data-jenjang="MA">XII</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="btn-row">
-            <div class="btn-row-left">
-              <button class="btn-secondary" id="btnLoadRekap">
-                <span class="icon">📊</span>
-                Tampilkan Rekap
-              </button>
-            </div>
-            <div class="btn-row-right">
-              <button class="btn-ghost" id="btnPrintRekap" type="button">
-                <span class="icon">🖨️</span>
-                Cetak Rekap
-              </button>
             </div>
           </div>
         </div>
 
-        <div id="panelRekapHarianResult" class="panel" style="display:none;">
-          <div class="panel-header">
-            <div class="panel-title">Daftar Santri Sakit (Harian)</div>
-            <div class="panel-caption">
-              Klik pada kolom <strong>Alasan Sakit</strong> untuk mengubah atau menghapus keterangan sakit.
-            </div>
-          </div>
-
-          <div class="table-container">
-            <div class="table-card">
-              <div class="table-scroll">
-                <table>
-                  <thead>
-                    <tr>
-                      <th class="col-no">No</th>
-                      <th>Nama Santri</th>
-                      <th>Kelas</th>
-                      <th>Alasan Sakit</th>
-                    </tr>
-                  </thead>
-                  <tbody id="rekapTableBody">
-                    <!-- diisi via JS -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <p class="legend">
-            <span class="legend-dot"></span>
-            Kosongkan kolom <strong>Alasan Sakit</strong> untuk menghapus status sakit santri tersebut pada tanggal ini.
-          </p>
-
-          <div class="btn-row">
-            <div class="btn-row-left">
-              <button class="btn-ghost" type="button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
-                ⬆️ Kembali ke Filter
-              </button>
-            </div>
-            <div class="btn-row-right">
-              <button class="btn-secondary" id="btnSaveRekap">
-                <span class="icon">💾</span>
-                Simpan Perubahan
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- =============== TAB REKAP BULANAN =============== -->
-      <section id="tab-rekap-bulanan" class="tab-content">
-        <div id="panelRekapBulananFilter" class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Rekap Bulanan Santri Sakit</div>
-            <div class="panel-caption">
-              Lihat gambaran besar frekuensi sakit santri dalam satu bulan per kelas, per santri, dan per jenis sakit.
-            </div>
-          </div>
-
+        <!-- 🔹 FILTER PER KELAS (untuk mode = "kelas") -->
+        <div id="fieldRekapBulananKelas" style="display:none;">
+          <!-- Jenjang -->
           <div class="filter-row">
-            <div class="field">
-              <label for="rekapBulan">Bulan:</label>
-              <input type="month" id="rekapBulan" />
-            </div>
-
-            <div class="field">
-              <label>Mode Rekap:</label>
-              <input type="hidden" id="rekapBulananMode" value="gabungan" />
-              <div class="chip-group" data-target="rekapBulananMode">
-                <button type="button" class="chip-option active" data-value="gabungan">
-                  Rekap Gabungan
-                </button>
-                <button type="button" class="chip-option" data-value="kelas">
-                  Rekap per Kelas
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="filter-row" id="fieldRekapBulananKelas">
-            <!-- Jenjang Rekap Bulanan -->
             <div class="field">
               <label for="rekapBulananJenjang">Jenjang:</label>
               <input type="hidden" id="rekapBulananJenjang" value="MTs" />
@@ -549,8 +436,10 @@
                 <button type="button" class="chip-option" data-value="MA">MA</button>
               </div>
             </div>
+          </div>
 
-            <!-- Lokasi Rekap Bulanan (MTs only) -->
+          <!-- Lokasi (MTs) + Kelas -->
+          <div class="filter-row">
             <div class="field" id="fieldRekapBulananLokasi">
               <label for="rekapBulananLokasi">Lokasi:</label>
               <input type="hidden" id="rekapBulananLokasi" value="HK 1" />
@@ -560,7 +449,6 @@
               </div>
             </div>
 
-            <!-- Kelas Rekap Bulanan -->
             <div class="field">
               <label for="rekapBulananKelas">Kelas:</label>
               <input type="hidden" id="rekapBulananKelas" value="VII" />
@@ -569,7 +457,6 @@
                 <button type="button" class="chip-option active" data-value="VII" data-jenjang="MTs">VII</button>
                 <button type="button" class="chip-option" data-value="VIII" data-jenjang="MTs">VIII</button>
                 <button type="button" class="chip-option" data-value="IX" data-jenjang="MTs">IX</button>
-
                 <!-- MA -->
                 <button type="button" class="chip-option" data-value="X" data-jenjang="MA">X</button>
                 <button type="button" class="chip-option" data-value="XI" data-jenjang="MA">XI</button>
@@ -577,43 +464,64 @@
               </div>
             </div>
           </div>
+          <div>
+            <span class="legend" style="margin-top:0.45rem">
+              <span class="legend-dot"></span>
+              Rekap santri akan diambil berdasarkan filter jenjang, lokasi, kelas, jurusan, dan paralel.
+            </span>
+          </div>        
+        </div>
 
-          <div class="btn-row">
-            <div class="btn-row-left">
-              <button class="btn-secondary" id="btnLoadRekapBulanan">
-                <span class="icon">📊</span>
-                Tampilkan Rekap Bulanan
-              </button>
+        <!-- Baris bulan + tombol Tampilkan Rekap (satu baris kiri-kanan) -->
+        <div class="filter-row filter-row-center" style="margin-top:0.9rem;">
+          <div class="filter-row-center-inner" style="gap:0;">
+            <!-- KIRI: MONTH -->
+            <div class="field" style="flex:1 1 0;">
+              <input
+                type="month"
+                id="rekapBulan"
+                style="width:100%; border-top-right-radius:0; border-bottom-right-radius:0;"
+              />
             </div>
-            <div class="btn-row-right">
-              <button class="btn-ghost" id="btnPrintRekapBulanan" type="button">
-                <span class="icon">🖨️</span>
-                Cetak Rekap Bulanan
+            <!-- KANAN: TOMBOL -->
+            <div class="field" style="flex:1 1 0; align-items:flex-end;">
+              <button
+                class="btn-secondary"
+                id="btnLoadRekapBulanan"
+                style="width:100%; border-top-left-radius:0; border-bottom-left-radius:0;"
+              >
+                <span class="icon">🔍</span> Tampilkan Rekap
               </button>
             </div>
           </div>
         </div>
+      </div>
 
-        <div id="panelRekapBulananResult" class="panel" style="display:none;">
-          <div class="panel-header">
-            <div class="panel-title">Analisis Bulanan Santri Sakit</div>
-            <div class="panel-caption">
-              Diagram batang horizontal dan tabel rekap untuk memudahkan analisis data santri sakit.
-            </div>
-          </div>
-
-          <div id="monthlyChartContainer" class="monthly-chart-container">
-            <!-- Diisi via JS -->
-          </div>
+      <!-- PANEL HASIL REKAP BULANAN -->
+      <div id="panelRekapBulananResult" class="panel" style="margin-top:0.9rem; display:none;">
+        <div class="panel-header">
+          <div class="panel-title">Hasil Rekap Bulanan</div>
+          <div class="panel-caption">Diagram rekap sakit bulanan sesuai filter.</div>
         </div>
-      </section>
 
-    </main>
+        <div id="monthlyChartContainer" class="monthly-chart-container">
+          <!-- isi via JS -->
+        </div>
 
-    <!-- DATAlist untuk alasan & nama -->
+        <div class="legend" style="margin-top:0.45rem;">
+          <span class="legend-dot"></span>
+          Diagram menampilkan kelas, santri, dan jenis sakit dengan frekuensi terbanyak dalam satu bulan.
+        </div>
+
+        <div class="btn-row" style="margin-top:0.9rem; justify-content:flex-start;">
+          <button class="btn-secondary" id="btnPrintRekapBulanan">
+            <span class="icon">📄</span> Download PDF
+          </button>
+        </div>
+      </div>
+    </section>
+
     <datalist id="alasanList"></datalist>
-    <datalist id="namaSantriList"></datalist>
-
   </div>
 
   <!-- NAV TABS (BOTTOM) -->
