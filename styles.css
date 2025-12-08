@@ -125,19 +125,34 @@ body {
 
 .header-badge-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  width: 100%;
+  gap: 0;                 /* tidak ada jarak, ketemu di tengah */
   margin-top: 0.18rem;
 }
 
+/* badge header: dua segmen kiri-kanan, ketemu di tengah */
 .header-badge {
   display: inline-flex;
   align-items: center;
-  border-radius: 999px;
+  justify-content: center;
+  flex: 1 1 0;            /* masing-masing ambil 50% */
+  border-radius: 0;
   font-size: 0.7rem;
   padding: 0.18rem 0.55rem;
   line-height: 1.2;
   white-space: nowrap;
+}
+
+/* kiri rounded kiri, tengahnya rata */
+.header-badge:first-child {
+  border-top-left-radius: 999px;
+  border-bottom-left-radius: 999px;
+}
+
+/* kanan rounded kanan */
+.header-badge:last-child {
+  border-top-right-radius: 999px;
+  border-bottom-right-radius: 999px;
 }
 
 .badge-primary {
