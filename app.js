@@ -325,6 +325,57 @@
 
       if (!inputJurusan.value) inputJurusan.value = "IPA";
     }
+      const chipGroupInputKelasMts = document.querySelector(
+    '.chip-group[data-target="inputKelas"]'
+    );
+    const chipGroupParalel = document.querySelector(
+      '.chip-group[data-target="inputParalel"]'
+    );
+    const chipGroupInputJenjang = document.querySelector(
+      '.chip-group[data-target="inputJenjang"]'
+    );
+    const chipGroupInputLokasi = document.querySelector(
+      '.chip-group[data-target="inputLokasi"]'
+    );
+  
+    // Handler tombol Jenjang (MTs / MA)
+    if (chipGroupInputJenjang) {
+      const jenjangButtons = chipGroupInputJenjang.querySelectorAll(".chip-option");
+      jenjangButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          jenjangButtons.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          inputJenjang.value = btn.getAttribute("data-value") || "MTs";
+  
+          // Update constraint lokasi ↔ jenjang + layout kelas/jurusan/paralel
+          updateLokasiVisibility();
+          applyJenjangLayout();
+        });
+      });
+    }
+  
+    // Handler tombol Lokasi (HK 1 / HK 2)
+    if (chipGroupInputLokasi) {
+      const lokasiButtons = chipGroupInputLokasi.querySelectorAll(".chip-option");
+      lokasiButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          lokasiButtons.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          inputLokasi.value = btn.getAttribute("data-value") || "HK 1";
+  
+          // HK 2 → paksa jenjang MTs, dan layout di-refresh
+          updateLokasiVisibility();
+          applyJenjangLayout();
+        });
+      });
+    }
+  
+    // Layout awal ketika halaman pertama kali dibuka
+    requestAnimationFrame(() => {
+      updateLokasiVisibility();
+      applyJenjangLayout();
+    });
+
   }
 
   function applyRekapHarianJenjangLayout() {
