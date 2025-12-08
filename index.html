@@ -61,6 +61,40 @@
 
     <!-- =============== TAB INPUT DATA =============== -->
     <section id="tab-input" class="tab-content">
+      <!-- 🔹 MODE INPUT: BY KELAS / BY NAMA -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Metode Input Data</div>
+          <div class="panel-caption">
+            Pilih cara input: berdasarkan kelas atau langsung memilih nama santri.
+          </div>
+        </div>
+
+        <div class="filter-row filter-row-center">
+          <div class="filter-row-center-inner">
+            <div class="field field-wide">
+              <input type="hidden" id="inputMode" value="kelas" />
+              <div class="rekap-mode-row chip-group" data-target="inputMode">
+                <button
+                  type="button"
+                  class="chip-option rekap-mode-btn active"
+                  data-value="kelas"
+                >
+                  Input by Kelas
+                </button>
+                <button
+                  type="button"
+                  class="chip-option rekap-mode-btn"
+                  data-value="nama"
+                >
+                  Input by Nama
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="panelFilterInput" class="panel">
         <div class="panel-header">
           <div class="panel-title">Input Data Sakit</div>
@@ -216,6 +250,7 @@
                   <tr>
                     <th class="col-no">No</th>
                     <th>Nama Santri</th>
+                    <th>Kelas</th>
                     <th>Alasan Sakit</th>
                   </tr>
                 </thead>
@@ -226,6 +261,112 @@
             </div>
           </div>
         </div>
+        
+        <!-- ========== INPUT BY NAMA: BOX ATAS ========== -->
+        <div id="panelInputByNama" class="panel" style="display:none;">
+          <div class="panel-header">
+            <div class="panel-title">Input Data Sakit per Nama</div>
+            <div class="panel-caption">
+              Pilih tanggal, ketik beberapa huruf nama santri, lalu tambahkan ke daftar di bawah.
+            </div>
+          </div>
+  
+          <!-- Tanggal rekap -->
+          <div class="filter-row filter-row-center">
+            <div class="filter-row-center-inner" style="gap:0;">
+              <div class="field" style="flex:1 1 0;">
+                <label for="inputTanggalByNama">Tanggal Rekap:</label>
+                <input
+                  type="date"
+                  id="inputTanggalByNama"
+                  style="width:100%;"
+                />
+              </div>
+            </div>
+          </div>
+  
+          <!-- Input nama + tombol tambahkan -->
+          <div class="filter-row filter-row-center" style="margin-top:0.5rem;">
+            <div class="filter-row-center-inner" style="gap:0;">
+              <!-- KETIK NAMA -->
+              <div class="field" style="flex:2 1 0;">
+                <label for="searchNamaSantri">Nama Santri:</label>
+                <input
+                  type="text"
+                  id="searchNamaSantri"
+                  list="namaSantriList"
+                  placeholder="Ketik beberapa huruf nama santri..."
+                  style="width:100%; border-top-right-radius:0; border-bottom-right-radius:0;"
+                />
+                <small class="legend" style="margin-top:0.15rem;">
+                  <span class="legend-dot"></span>
+                  Ketik minimal 2–3 huruf, lalu pilih nama yang sesuai dari daftar.
+                </small>
+              </div>
+  
+              <!-- TOMBOL TAMBAHKAN -->
+              <div class="field" style="flex:1 1 0; align-items:flex-end;">
+                <button
+                  class="btn-secondary"
+                  id="btnTambahSantriByNama"
+                  style="width:100%; border-top-left-radius:0; border-bottom-left-radius:0; margin-top:1.25rem;"
+                >
+                  <span class="icon">➕</span> Tambahkan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- ========== INPUT BY NAMA: BOX BAWAH (TABEL) ========== -->
+        <div
+          id="panelDaftarInputByNama"
+          class="panel"
+          style="margin-top:0.4rem; display:none;"
+        >
+          <div class="panel-header">
+            <div class="panel-title">Daftar Santri Sakit (Input by Nama)</div>
+            <div class="panel-caption">
+              Hanya santri yang muncul di tabel ini yang akan disimpan sebagai
+              <strong>santri sakit</strong> pada tanggal tersebut.
+            </div>
+          </div>
+  
+          <div class="table-container">
+            <div class="table-card">
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th class="col-no">No</th>
+                      <th>Nama Santri</th>
+                      <th>Kelas</th>
+                      <th>Alasan Sakit</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inputByNamaTableBody">
+                    <!-- diisi via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+  
+          <p class="legend" style="margin-top:0.5rem;">
+            <span class="legend-dot"></span>
+            Kosongkan kolom <strong>Alasan Sakit</strong> jika ingin
+            menghapus status sakit santri tersebut pada tanggal ini.
+          </p>
+  
+          <div class="btn-row" style="margin-top:0.5rem; justify-content:flex-end;">
+            <div class="btn-row-right">
+              <button class="btn-secondary" id="btnSaveInputByNama">
+                <span class="icon">💾</span> Simpan Laporan (by Nama)
+              </button>
+            </div>
+          </div>
+        </div>
+        
 
         <p class="legend" style="margin-top:0.9rem;">
           <span class="legend-dot"></span>
@@ -522,6 +663,7 @@
     </section>
 
     <datalist id="alasanList"></datalist>
+    <datalist id="namaSantriList"></datalist>   
   </div>
 
   <!-- NAV TABS (BOTTOM) -->
