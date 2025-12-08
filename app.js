@@ -15,8 +15,8 @@
   const tabRekapBulanan = document.getElementById("tab-rekap-bulanan");
   const panelFilterInput = document.getElementById("panelFilterInput");
   const panelDaftarInput = document.getElementById("panelDaftarInput");
-  
-    // 🔹 Input Mode & Input by Nama
+
+  // 🔹 Input Mode & Input by Nama
   const inputMode = document.getElementById("inputMode");
   const panelInputByNama = document.getElementById("panelInputByNama");
   const panelDaftarInputByNama = document.getElementById("panelDaftarInputByNama");
@@ -373,7 +373,6 @@
     }
   }
 
-
   // ===== UTIL TANGGAL =====
   function setTodayToInputs() {
     const today = new Date();
@@ -539,7 +538,7 @@
     newPanel.addEventListener("animationend", handleNewEnd);
   }
 
-    // ===== INPUT MODE (BY KELAS / BY NAMA) =====
+  // ===== INPUT MODE (BY KELAS / BY NAMA) =====
   function updateInputModeLayout() {
     if (!inputMode) return;
     const mode = inputMode.value || "kelas";
@@ -735,7 +734,7 @@
     searchNamaSantriInput.value = "";
     searchNamaSantriInput.focus();
   }
-  
+
   async function loadDistinctAlasanSakit() {
     const { data, error } = await db
       .from("santri_sakit")
@@ -828,8 +827,8 @@
       setButtonLoading(btnSaveInputByNama, false);
     }
   }
-  
-  // ===== INPUT DATA =====
+
+  // ===== INPUT DATA (BY KELAS) =====
   async function loadInputTable() {
     const tanggal = inputTanggal.value;
     const jenjang = inputJenjang.value;
@@ -892,7 +891,7 @@
 
       if (!santri || santri.length === 0) {
         inputTableBody.innerHTML =
-          '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
+          '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
         showToast("⚠️ tidak ada data.", "warning");
         return;
       }
@@ -1418,8 +1417,8 @@
         '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada santri sakit pada bulan ini.</div>';
       showToast("⚠️ tidak ada data.", "info");
       return;
-    }    
-  
+    }
+
     // Agregat per santri
     const bySantri = new Map();
     filteredData.forEach((row) => {
@@ -1435,11 +1434,11 @@
       const obj = bySantri.get(sid);
       obj.count += 1;
       obj.dates.add(row.tanggal);
-  
+
       const reason = (row.alasan_sakit || "").trim() || "tanpa keterangan";
       obj.reasons.set(reason, (obj.reasons.get(reason) || 0) + 1);
     });
-  
+
     const entries = Array.from(bySantri.entries());
     if (!entries.length) {
       monthlyChartContainer.innerHTML =
@@ -1875,10 +1874,10 @@
     );
 
     monthlyChartContainer.appendChild(tableWrapper);
-    
+
     if (panelRekapBulananResult) {
       panelRekapBulananResult.style.display = "block";
-    }   
+    }
     showToast("✅ berhasil memuat rekap.", "info");
   }
 
@@ -1939,50 +1938,66 @@
       if (window.history && window.history.pushState) {
         window.history.pushState({ sakit_app: true, tab }, "");
       }
-      if (btnTambahSantriByNama) {
-        btnTambahSantriByNama.addEventListener("click", tambahSantriByNama);
-      }
-    
-      if (searchNamaSantriInput) {
-        searchNamaSantriInput.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            tambahSantriByNama();
-          }
-        });
-      }
-    
-      if (btnSaveInputByNama) {
-        btnSaveInputByNama.addEventListener("click", saveInputDataByNama);
-      }
     });
   });
 
-  btnLoadInput.addEventListener("click", loadInputTable);
-  btnSaveInput.addEventListener("click", saveInputData);
+  if (btnLoadInput) {
+    btnLoadInput.addEventListener("click", loadInputTable);
+  }
+  if (btnSaveInput) {
+    btnSaveInput.addEventListener("click", saveInputData);
+  }
 
-  btnLoadRekap.addEventListener("click", () => loadRekapTable());
-  btnSaveRekap.addEventListener("click", saveRekapData);
+  if (btnLoadRekap) {
+    btnLoadRekap.addEventListener("click", () => loadRekapTable());
+  }
+  if (btnSaveRekap) {
+    btnSaveRekap.addEventListener("click", saveRekapData);
+  }
 
-  btnPrintRekap.addEventListener("click", () => {
-    if (!rekapTanggal.value) {
-      showToast("⚠️ pilih tanggal rekap.", "error");
-      return;
-    }
-    switchTab("rekap-harian");
-    window.print();
-  });
+  if (btnPrintRekap) {
+    btnPrintRekap.addEventListener("click", () => {
+      if (!rekapTanggal.value) {
+        showToast("⚠️ pilih tanggal rekap.", "error");
+        return;
+      }
+      switchTab("rekap-harian");
+      window.print();
+    });
+  }
 
-  btnLoadRekapBulanan.addEventListener("click", loadRekapBulanan);
+  if (btnLoadRekapBulanan) {
+    btnLoadRekapBulanan.addEventListener("click", loadRekapBulanan);
+  }
 
-  btnPrintRekapBulanan.addEventListener("click", () => {
-    if (!rekapBulan.value) {
-      showToast("⚠️ pilih bulan rekap.", "error");
-      return;
-    }
-    switchTab("rekap-bulanan");
-    window.print();
-  });
+  if (btnPrintRekapBulanan) {
+    btnPrintRekapBulanan.addEventListener("click", () => {
+      if (!rekapBulan.value) {
+        showToast("⚠️ pilih bulan rekap.", "error");
+        return;
+      }
+      switchTab("rekap-bulanan");
+      window.print();
+    });
+  }
+
+  // 🔹 Event khusus Input by Nama
+  if (btnTambahSantriByNama) {
+    btnTambahSantriByNama.addEventListener("click", tambahSantriByNama);
+  }
+
+  if (searchNamaSantriInput) {
+    searchNamaSantriInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        tambahSantriByNama();
+      }
+    });
+  }
+
+  if (btnSaveInputByNama) {
+    btnSaveInputByNama.addEventListener("click", saveInputDataByNama);
+  }
 
   // ===== BROWSER BACK BUTTON HANDLER =====
   window.addEventListener("popstate", (e) => {
@@ -2011,7 +2026,8 @@
     setTodayToInputs();
     setThisMonthToRekapBulan();
     initChipGroups();
-    
+
+    // 🔹 chip Input Mode (by kelas/nama)
     const inputModeGroup = document.querySelector(
       '.chip-group[data-target="inputMode"]'
     );
@@ -2022,7 +2038,7 @@
           btn.addEventListener("click", updateInputModeLayout);
         });
     }
-    
+
     // 🔹 Reaksi kalau mode rekap harian/bulanan diganti (gabungan / per kelas)
     const rekapModeGroups = document.querySelectorAll(
       '.chip-group[data-target="rekapHarianMode"], .chip-group[data-target="rekapBulananMode"]'
@@ -2034,7 +2050,7 @@
     });
     // set awal
     updateRekapModeLayout();
-    
+
     // 🔹 Reaksi perubahan jenjang di Rekap Harian/Bulanan
     const rekapHarianJenjangGroup = document.querySelector(
       '.chip-group[data-target="rekapHarianJenjang"]'
@@ -2083,7 +2099,6 @@
     });
 
     await loadSantriMaster();
-    fillNamaSantriDatalist();   
     await loadDistinctAlasanSakit();
 
     // Selalu mulai dari tab Input Data
@@ -2092,7 +2107,6 @@
     switchRekapHarianPanel("filter");
     switchRekapBulananPanel("filter");
     updateInputModeLayout();
-    
 
     // Set base state untuk tombol back
     if (window.history && window.history.replaceState) {
