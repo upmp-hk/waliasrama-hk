@@ -16,17 +16,6 @@
   const panelFilterInput = document.getElementById("panelFilterInput");
   const panelDaftarInput = document.getElementById("panelDaftarInput");
 
-  // 🔹 Input Mode & Input by Nama
-  const inputMode = document.getElementById("inputMode");
-  const panelInputByNama = document.getElementById("panelInputByNama");
-  const panelDaftarInputByNama = document.getElementById("panelDaftarInputByNama");
-  const inputTanggalByNama = document.getElementById("inputTanggalByNama");
-  const searchNamaSantriInput = document.getElementById("searchNamaSantri");
-  const btnTambahSantriByNama = document.getElementById("btnTambahSantriByNama");
-  const inputByNamaTableBody = document.getElementById("inputByNamaTableBody");
-  const btnSaveInputByNama = document.getElementById("btnSaveInputByNama");
-  const namaSantriList = document.getElementById("namaSantriList");
-
   const inputTanggal = document.getElementById("inputTanggal");
   const inputJenjang = document.getElementById("inputJenjang");
   const inputKelas = document.getElementById("inputKelas");
@@ -373,6 +362,7 @@
     }
   }
 
+
   // ===== UTIL TANGGAL =====
   function setTodayToInputs() {
     const today = new Date();
@@ -380,9 +370,8 @@
     const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
     const val = `${yyyy}-${mm}-${dd}`;
-    if (inputTanggal) inputTanggal.value = val;
-    if (rekapTanggal) rekapTanggal.value = val;
-    if (inputTanggalByNama) inputTanggalByNama.value = val;
+    inputTanggal.value = val;
+    rekapTanggal.value = val;
   }
 
   function setThisMonthToRekapBulan() {
@@ -538,34 +527,6 @@
     newPanel.addEventListener("animationend", handleNewEnd);
   }
 
-  // ===== INPUT MODE (BY KELAS / BY NAMA) =====
-  function updateInputModeLayout() {
-    if (!inputMode) return;
-    const mode = inputMode.value || "kelas";
-
-    if (mode === "kelas") {
-      // tampilkan alur lama: filter + daftar (class-based)
-      if (panelFilterInput) panelFilterInput.style.display = "block";
-      if (panelDaftarInput) {
-        // panel daftar dikontrol oleh switchInputPanel
-        if (inputStep === "daftar") {
-          panelDaftarInput.style.display = "block";
-        } else {
-          panelDaftarInput.style.display = "none";
-        }
-      }
-      if (panelInputByNama) panelInputByNama.style.display = "none";
-      if (panelDaftarInputByNama) panelDaftarInputByNama.style.display = "none";
-    } else {
-      // mode = "nama" → sembunyikan filter kelas, gunakan top/bottom box by nama
-      if (panelFilterInput) panelFilterInput.style.display = "none";
-      if (panelDaftarInput) panelDaftarInput.style.display = "none";
-
-      if (panelInputByNama) panelInputByNama.style.display = "block";
-      if (panelDaftarInputByNama) panelDaftarInputByNama.style.display = "block";
-    }
-  }
-
   // ===== DATAlist ALASAN =====
   function fillAlasanDatalist() {
     alasanList.innerHTML = "";
@@ -619,120 +580,8 @@
 
     santriMaster = data || [];
     santriById = new Map(santriMaster.map((s) => [s.id, s])); // s.id = santri.id
-    fillNamaSantriDatalist();
 
     console.log("santriMaster loaded:", santriMaster.length, "baris");
-  }
-
-  function fillNamaSantriDatalist() {
-    if (!namaSantriList) return;
-    namaSantriList.innerHTML = "";
-
-    const sorted = [...santriMaster].sort((a, b) =>
-      (a.nama || "").localeCompare(b.nama || "")
-    );
-
-    sorted.forEach((s) => {
-      if (!s || !s.nama) return;
-      const opt = document.createElement("option");
-      opt.value = s.nama;
-      opt.dataset.santriId = s.id;
-      const kelasLabel = getKelasLabel(s);
-      if (kelasLabel && kelasLabel !== "-") {
-        opt.label = `${s.nama} – ${kelasLabel}`;
-      }
-      namaSantriList.appendChild(opt);
-    });
-  }
-
-  function tambahSantriByNama() {
-    if (!inputByNamaTableBody || !searchNamaSantriInput) return;
-
-    const tanggal = inputTanggalByNama ? inputTanggalByNama.value : "";
-    if (!tanggal) {
-      showToast("⚠️ pilih tanggal rekap.", "error");
-      return;
-    }
-
-    const namaInput = searchNamaSantriInput.value.trim();
-    if (!namaInput) {
-      showToast("⚠️ ketik nama santri terlebih dahulu.", "warning");
-      return;
-    }
-
-    // cari di datalist dulu
-    let santriId = null;
-    if (namaSantriList) {
-      const opts = namaSantriList.options;
-      for (let i = 0; i < opts.length; i++) {
-        if (opts[i].value === namaInput) {
-          santriId = Number(opts[i].dataset.santriId);
-          break;
-        }
-      }
-    }
-
-    // fallback: cari di santriMaster
-    let santri = null;
-    if (santriId) {
-      santri = santriMaster.find((s) => s.id === santriId);
-    } else {
-      santri = santriMaster.find(
-        (s) => (s.nama || "").toLowerCase() === namaInput.toLowerCase()
-      );
-      if (santri) santriId = santri.id;
-    }
-
-    if (!santri || !santriId) {
-      showToast("❎ nama santri tidak ditemukan di data master.", "error");
-      return;
-    }
-
-    // cegah duplikat di tabel
-    const existingRows = inputByNamaTableBody.querySelectorAll("tr");
-    for (const row of existingRows) {
-      const inp = row.querySelector(".alasan-input");
-      if (inp && Number(inp.dataset.santriId) === Number(santriId)) {
-        showToast("ℹ️ santri ini sudah ada di daftar.", "info");
-        inp.focus();
-        return;
-      }
-    }
-
-    const rowNumber = existingRows.length + 1;
-    const tr = document.createElement("tr");
-
-    const tdNo = document.createElement("td");
-    tdNo.classList.add("col-no");
-    tdNo.textContent = rowNumber;
-
-    const tdNama = document.createElement("td");
-    tdNama.textContent = santri.nama;
-
-    const tdKelas = document.createElement("td");
-    const spanKelas = document.createElement("span");
-    spanKelas.classList.add("kelas-badge");
-    spanKelas.textContent = getKelasLabel(santri);
-    tdKelas.appendChild(spanKelas);
-
-    const tdAlasan = document.createElement("td");
-    const inpAlasan = document.createElement("input");
-    inpAlasan.type = "text";
-    inpAlasan.classList.add("alasan-input");
-    inpAlasan.setAttribute("list", "alasanList");
-    inpAlasan.dataset.santriId = santriId;
-    tdAlasan.appendChild(inpAlasan);
-
-    tr.appendChild(tdNo);
-    tr.appendChild(tdNama);
-    tr.appendChild(tdKelas);
-    tr.appendChild(tdAlasan);
-
-    inputByNamaTableBody.appendChild(tr);
-
-    // reset input nama, fokus lagi
-    searchNamaSantriInput.value = "";
-    searchNamaSantriInput.focus();
   }
 
   async function loadDistinctAlasanSakit() {
@@ -750,85 +599,7 @@
     fillAlasanDatalist();
   }
 
-  async function saveInputDataByNama() {
-    if (!inputByNamaTableBody) return;
-
-    const tanggal = inputTanggalByNama ? inputTanggalByNama.value : "";
-    if (!tanggal) {
-      showToast("⚠️ pilih tanggal rekap.", "error");
-      return;
-    }
-
-    const rows = inputByNamaTableBody.querySelectorAll("tr");
-    if (!rows.length) {
-      showToast("⚠️ belum ada santri di daftar.", "warning");
-      return;
-    }
-
-    setButtonLoading(
-      btnSaveInputByNama,
-      true,
-      '<span class="icon">⏳</span> Menyimpan...'
-    );
-
-    try {
-      const santriIds = [];
-      const payload = [];
-
-      rows.forEach((row) => {
-        const inp = row.querySelector(".alasan-input");
-        if (!inp) return;
-        const santriId = Number(inp.dataset.santriId);
-        const alasan = (inp.value || "").trim();
-        if (!santriId) return;
-
-        santriIds.push(santriId);
-        if (alasan) {
-          payload.push({
-            tanggal,
-            santri_id: santriId,
-            alasan_sakit: alasan,
-          });
-        }
-      });
-
-      if (!santriIds.length) {
-        showToast("⚠️ tidak ada data yang bisa disimpan.", "warning");
-        return;
-      }
-
-      const { error: delErr } = await db
-        .from("santri_sakit")
-        .delete()
-        .eq("tanggal", tanggal)
-        .in("santri_id", santriIds);
-
-      if (delErr) {
-        console.error("Gagal hapus data sakit lama (by nama):", delErr);
-        showToast("❎ gagal menghapus data lama.", "error");
-        return;
-      }
-
-      if (payload.length) {
-        const { error: insErr } = await db
-          .from("santri_sakit")
-          .insert(payload);
-
-        if (insErr) {
-          console.error("Gagal insert data sakit (by nama):", insErr);
-          showToast("❎ gagal menyimpan data.", "error");
-          return;
-        }
-      }
-
-      showToast("✅ berhasil menyimpan data (by nama).", "info");
-      await loadDistinctAlasanSakit();
-    } finally {
-      setButtonLoading(btnSaveInputByNama, false);
-    }
-  }
-
-  // ===== INPUT DATA (BY KELAS) =====
+  // ===== INPUT DATA =====
   async function loadInputTable() {
     const tanggal = inputTanggal.value;
     const jenjang = inputJenjang.value;
@@ -891,7 +662,7 @@
 
       if (!santri || santri.length === 0) {
         inputTableBody.innerHTML =
-          '<tr><td colspan="4" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
+          '<tr><td colspan="3" style="text-align:center; padding:1rem;">Tidak ada santri untuk filter ini.</td></tr>';
         showToast("⚠️ tidak ada data.", "warning");
         return;
       }
@@ -925,12 +696,6 @@
         const tdNama = document.createElement("td");
         tdNama.textContent = s.nama;
 
-        const tdKelas = document.createElement("td");
-        const spanKelas = document.createElement("span");
-        spanKelas.classList.add("kelas-badge");
-        spanKelas.textContent = getKelasLabel(s);
-        tdKelas.appendChild(spanKelas);
-
         const tdAlasan = document.createElement("td");
         const inp = document.createElement("input");
         inp.type = "text";
@@ -942,7 +707,6 @@
 
         tr.appendChild(tdNo);
         tr.appendChild(tdNama);
-        tr.appendChild(tdKelas);
         tr.appendChild(tdAlasan);
 
         inputTableBody.appendChild(tr);
@@ -1417,8 +1181,8 @@
         '<div style="text-align:center; padding:1rem; font-size:0.85rem; color:var(--gray);">Tidak ada santri sakit pada bulan ini.</div>';
       showToast("⚠️ tidak ada data.", "info");
       return;
-    }
-
+    }    
+  
     // Agregat per santri
     const bySantri = new Map();
     filteredData.forEach((row) => {
@@ -1434,11 +1198,11 @@
       const obj = bySantri.get(sid);
       obj.count += 1;
       obj.dates.add(row.tanggal);
-
+  
       const reason = (row.alasan_sakit || "").trim() || "tanpa keterangan";
       obj.reasons.set(reason, (obj.reasons.get(reason) || 0) + 1);
     });
-
+  
     const entries = Array.from(bySantri.entries());
     if (!entries.length) {
       monthlyChartContainer.innerHTML =
@@ -1874,10 +1638,10 @@
     );
 
     monthlyChartContainer.appendChild(tableWrapper);
-
+    
     if (panelRekapBulananResult) {
       panelRekapBulananResult.style.display = "block";
-    }
+    }   
     showToast("✅ berhasil memuat rekap.", "info");
   }
 
@@ -1941,63 +1705,31 @@
     });
   });
 
-  if (btnLoadInput) {
-    btnLoadInput.addEventListener("click", loadInputTable);
-  }
-  if (btnSaveInput) {
-    btnSaveInput.addEventListener("click", saveInputData);
-  }
+  btnLoadInput.addEventListener("click", loadInputTable);
+  btnSaveInput.addEventListener("click", saveInputData);
 
-  if (btnLoadRekap) {
-    btnLoadRekap.addEventListener("click", () => loadRekapTable());
-  }
-  if (btnSaveRekap) {
-    btnSaveRekap.addEventListener("click", saveRekapData);
-  }
+  btnLoadRekap.addEventListener("click", () => loadRekapTable());
+  btnSaveRekap.addEventListener("click", saveRekapData);
 
-  if (btnPrintRekap) {
-    btnPrintRekap.addEventListener("click", () => {
-      if (!rekapTanggal.value) {
-        showToast("⚠️ pilih tanggal rekap.", "error");
-        return;
-      }
-      switchTab("rekap-harian");
-      window.print();
-    });
-  }
+  btnPrintRekap.addEventListener("click", () => {
+    if (!rekapTanggal.value) {
+      showToast("⚠️ pilih tanggal rekap.", "error");
+      return;
+    }
+    switchTab("rekap-harian");
+    window.print();
+  });
 
-  if (btnLoadRekapBulanan) {
-    btnLoadRekapBulanan.addEventListener("click", loadRekapBulanan);
-  }
+  btnLoadRekapBulanan.addEventListener("click", loadRekapBulanan);
 
-  if (btnPrintRekapBulanan) {
-    btnPrintRekapBulanan.addEventListener("click", () => {
-      if (!rekapBulan.value) {
-        showToast("⚠️ pilih bulan rekap.", "error");
-        return;
-      }
-      switchTab("rekap-bulanan");
-      window.print();
-    });
-  }
-
-  // 🔹 Event khusus Input by Nama
-  if (btnTambahSantriByNama) {
-    btnTambahSantriByNama.addEventListener("click", tambahSantriByNama);
-  }
-
-  if (searchNamaSantriInput) {
-    searchNamaSantriInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        tambahSantriByNama();
-      }
-    });
-  }
-
-  if (btnSaveInputByNama) {
-    btnSaveInputByNama.addEventListener("click", saveInputDataByNama);
-  }
+  btnPrintRekapBulanan.addEventListener("click", () => {
+    if (!rekapBulan.value) {
+      showToast("⚠️ pilih bulan rekap.", "error");
+      return;
+    }
+    switchTab("rekap-bulanan");
+    window.print();
+  });
 
   // ===== BROWSER BACK BUTTON HANDLER =====
   window.addEventListener("popstate", (e) => {
@@ -2027,18 +1759,6 @@
     setThisMonthToRekapBulan();
     initChipGroups();
 
-    // 🔹 chip Input Mode (by kelas/nama)
-    const inputModeGroup = document.querySelector(
-      '.chip-group[data-target="inputMode"]'
-    );
-    if (inputModeGroup) {
-      inputModeGroup
-        .querySelectorAll(".chip-option")
-        .forEach((btn) => {
-          btn.addEventListener("click", updateInputModeLayout);
-        });
-    }
-
     // 🔹 Reaksi kalau mode rekap harian/bulanan diganti (gabungan / per kelas)
     const rekapModeGroups = document.querySelectorAll(
       '.chip-group[data-target="rekapHarianMode"], .chip-group[data-target="rekapBulananMode"]'
@@ -2050,7 +1770,7 @@
     });
     // set awal
     updateRekapModeLayout();
-
+    
     // 🔹 Reaksi perubahan jenjang di Rekap Harian/Bulanan
     const rekapHarianJenjangGroup = document.querySelector(
       '.chip-group[data-target="rekapHarianJenjang"]'
@@ -2106,7 +1826,6 @@
     switchInputPanel("filter", { instant: true });
     switchRekapHarianPanel("filter");
     switchRekapBulananPanel("filter");
-    updateInputModeLayout();
 
     // Set base state untuk tombol back
     if (window.history && window.history.replaceState) {
