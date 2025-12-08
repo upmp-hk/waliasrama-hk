@@ -676,7 +676,7 @@ table {
   min-width: 520px;
 }
 
-/* INPUT DATA layout */
+/* INPUT DATA layout (No | Nama | Kelas | Alasan) */
 #tab-input table {
   min-width: 0;
   width: 100%;
@@ -690,21 +690,25 @@ table {
 
 #tab-input th:nth-child(2),
 #tab-input td:nth-child(2) {
-  width: 45%;
+  width: 40%;
 }
 
 #tab-input th:nth-child(3),
 #tab-input td:nth-child(3) {
-  width: 55%;
+  width: 90px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#tab-input th:nth-child(4),
+#tab-input td:nth-child(4) {
+  width: auto;
 }
 
 #tab-input th:nth-child(2),
-#tab-input th:nth-child(3) {
-  white-space: normal;
-}
-
+#tab-input th:nth-child(4),
 #tab-input td:nth-child(2),
-#tab-input td:nth-child(3) {
+#tab-input td:nth-child(4) {
   white-space: normal;
   word-break: break-word;
 }
@@ -776,7 +780,11 @@ tbody tr:hover {
   text-align: center !important;
 }
 
+#tab-input td:nth-child(1),
 #tab-input td:nth-child(3),
+#tab-input td:nth-child(4),
+#tab-rekap-harian td:nth-child(1),
+#tab-rekap-harian td:nth-child(3),
 #tab-rekap-harian td:nth-child(4) {
   text-align: center;
 }
